@@ -2495,6 +2495,10 @@
     /* while panning/zooming: move the drawn picture on the GPU (see SSLiveVB) */
     /* market view is fixed: zoom buttons and the "scroll or pinch" hint are hidden */
     #mktZoomIn, #mktZoomOut, #mktZoomFit, #mktModal .mkt-hintchip { display: none !important; }
+    #cafeZin, #cafeZout, #cafeZfit { display: none !important; }
+    #mktPerson.pinned { pointer-events: auto; }
+    #mktPerson .pp-go { display: block; width: 100%; margin-top: 10px; min-height: 40px; cursor: pointer; border: 0; border-radius: 999px; background: #3A1B0B; color: #FFF3DC;
+      font: 600 12px 'Inter', system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; }
     #mktModal #mktRoofBtn[aria-pressed="true"] { background: #f3e7d3; color: #14110f; border-color: #f3e7d3; }
     .ss-live { will-change: transform; transform-origin: 50% 50%; overflow: visible; contain: none !important; }
     body:has(#mktModal:not([hidden])) #ssHub,
@@ -3596,7 +3600,7 @@
           <div class="cf-prof-soc" id="cafeProfSoc"></div>
           <p class="cf-prof-foot" id="cafeProfFoot"></p>
         </div>
-        <div class="cf-note" id="cafeNote" role="status" aria-live="polite">Drag to look around. Tap anyone or anything.</div>
+        <div class="cf-note" id="cafeNote" role="status" aria-live="polite">Tap anyone or anything.</div>
         <div class="cf-tools"><button type="button" id="cafeToMarket"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9l1.5-5h13L20 9"/><path d="M5 12v8h14v-8"/></svg>Market</button><button type="button" id="cafeToStudio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Studio</button><button type="button" id="cafeShuffle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l10 10h4M3 17h4l3-3M14 10l3-3h4M18 4l3 3-3 3M18 14l3 3-3 3"/></svg>Crowd</button><button type="button" id="cafeLevel" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/></svg><span id="cafeLevelTxt">Roof patio</span></button></div>
       </div>
     </div>
@@ -6649,7 +6653,7 @@
 
   // ---------- zoom & pan ----------
   var view = { z: 1, cx: 500, cy: 260 }, anim = null, moved = false;
-  function home() { var w = scene.getBoundingClientRect().width; return w && w < 560 ? { z: 1.5, cx: 500, cy: 290 } : { z: 1.22, cx: 500, cy: 215 }; }
+  function home() { var w = scene.getBoundingClientRect().width; return w && w < 560 ? { z: 1.08, cx: 500, cy: 250 } : { z: 1, cx: 500, cy: 215 }; }   // wide, fixed view
   var BOUNDS = [-260, -1000, 1700, 980];
   function insets() { var w = scene.getBoundingClientRect().width; return w >= 900 ? { l: 0, r: 440, t: 76, b: 0 } : { l: 0, r: 0, t: 72, b: w < 560 ? 200 : 180 }; }
   function baseBox() {
@@ -6700,10 +6704,12 @@
   var STATIC_VIEW = true, atCafe = false, shopView = null;
   function sceneXY(e) { var r = scene.getBoundingClientRect(); return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height]; }
   scene.addEventListener('wheel', function (e) { e.preventDefault(); if (STATIC_VIEW) return; var p = sceneXY(e); zoomAt(e.deltaY < 0 ? 1.18 : 1 / 1.18, p[0], p[1], false); }, { passive: false });
-  scene.addEventListener('pointermove', function (e) { if (hoverW && !(e.target.closest && e.target.closest('.mkt-walker.is-person'))) hidePerson(); }, true);
+  scene.addEventListener('pointerdown', function (e) { lastPT = e.pointerType || 'mouse'; }, true);
+  scene.addEventListener('click', function (e) { if (pinW && !(e.target.closest && (e.target.closest('.mkt-person') || pinW.g.contains(e.target)))) hidePerson(pinW, true); }, true);
+  scene.addEventListener('pointermove', function (e) { if (e.pointerType !== 'mouse') return; if (hoverW && !(e.target.closest && e.target.closest('.mkt-walker.is-person'))) hidePerson(); }, true);
   scene.addEventListener('pointerleave', function () { hidePerson(); });
   scene.addEventListener('pointerdown', function (e) {
-    if (e.target.closest('.mkt-zoom, .mkt-bubble, .mkt-chat')) return;
+    if (e.target.closest('.mkt-zoom, .mkt-bubble, .mkt-chat, .mkt-person')) return;
     ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; moved = false;
     var ids = Object.keys(ptrs);
     if (ids.length === 2) { var a = ptrs[ids[0]], b = ptrs[ids[1]]; pinch0 = { d: Math.hypot(a.x - b.x, a.y - b.y), z: view.z }; moved = true; }
@@ -6736,7 +6742,7 @@
     else if (e.key === '-' || e.key === '_') { zoomAt(1 / 1.4, 0.5, 0.5, true); }
     else if (e.key === '0') { var h = home(); setView(h.z, h.cx, h.cy, true); }
   });
-  window.addEventListener('resize', function () { if (built) { view = clampView(view); applyView(); } });
+  window.addEventListener('resize', function () { if (built) { if (STATIC_VIEW && !atCafe && !anim) { var h0 = home(); view = clampView({ z: h0.z, cx: h0.cx, cy: h0.cy }); shopView = { z: view.z, cx: view.cx, cy: view.cy }; } else view = clampView(view); applyView(); } });
 
   // ---------- wandering customers ----------
   var NODES = {
@@ -6824,7 +6830,7 @@
     g.addEventListener('pointerleave', function () { hidePerson(w); });
     g.addEventListener('focus', function () { showPerson(w); });
     g.addEventListener('blur', function () { hidePerson(w); });
-    g.addEventListener('click', function () { if (moved || !w.person || w.mode === 'gone') return; hidePerson(w); if (onPerson) onPerson(w.person); });
+    g.addEventListener('click', function () { if (moved || !w.person || w.mode === 'gone') return; personTap(w); });
     g.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && w.person) { e.preventDefault(); hidePerson(w); if (onPerson) onPerson(w.person); } });
     walk.querySelector('#mktWalkers').appendChild(g);
     return w;
@@ -6840,10 +6846,26 @@
       + '<span class="pp-loc">&#128205; ' + esc(p.city ? p.city.name + ', ' + p.city.country : '') + '</span>'
       + '<span class="pp-tier" style="--c:' + t[1] + '">' + t[0] + '</span>'
       + '<span class="pp-nums"><span><b>' + fmt(p.points) + '</b>points</span><span><b>' + fmt(p.followers) + '</b>followers</span><span><b>' + (p.posts ? p.posts.length : 0) + '</b>posts</span></span>'
-      + '<span class="pp-cta">Tap to visit profile</span>';
+      + (pinW === w ? '<button type="button" class="pp-cta pp-go">View profile</button>' : '<span class="pp-cta">Click to visit profile</span>');
+    personEl.classList.toggle('pinned', pinW === w);
     personEl.hidden = false; w.hover = true; hoverW = w; placePerson();
   }
-  function hidePerson(w) { if (w) w.hover = false; if (hoverW === w || !w) { hoverW = null; if (personEl) personEl.hidden = true; } }
+  function hidePerson(w, force) {
+    if (pinW && !force) return;   // a card opened by a tap stays until you tap elsewhere
+    if (force) pinW = null;
+    if (w) w.hover = false; if (hoverW === w || !w || force) { if (hoverW && hoverW !== w) hoverW.hover = false; hoverW = null; if (personEl) { personEl.hidden = true; personEl.classList.remove('pinned'); } }
+  }
+  // Mouse: hover shows the card, click opens the profile.
+  // Touch: the first tap shows the card (with a View profile button); a second tap or the button opens the profile.
+  var pinW = null, lastPT = 'mouse';
+  function openPerson(w) { var who = w.person; hidePerson(w, true); if (onPerson && who) onPerson(who); }
+  function personTap(w) {
+    if (lastPT === 'mouse') { openPerson(w); return; }
+    if (pinW === w) { openPerson(w); return; }
+    if (pinW) hidePerson(pinW, true);
+    pinW = w; showPerson(w);
+  }
+  if (personEl) personEl.addEventListener('click', function (e) { if (e.target.closest('.pp-go') && pinW) { e.stopPropagation(); openPerson(pinW); } });
   function placePerson() {
     if (!hoverW || !personEl || personEl.hidden) return;
     var a = hoverW.g.getBoundingClientRect(), s = scene.getBoundingClientRect(), pw = personEl.offsetWidth || 220, ph = personEl.offsetHeight || 220;
@@ -6934,7 +6956,7 @@
           var sdx = (dx - dy); if (Math.abs(sdx) > 0.01) w.face = sdx > 0 ? 1 : -1;
         }
       } else if (w.mode === 'leaving') {
-        w.fade -= dt * 1.4; if (w.fade <= 0) { w.fade = 0; w.mode = 'gone'; w.away = 6 + Math.random() * 12; if (hoverW === w) hidePerson(w); }
+        w.fade -= dt * 1.4; if (w.fade <= 0) { w.fade = 0; w.mode = 'gone'; w.away = 6 + Math.random() * 12; if (hoverW === w || pinW === w) hidePerson(w, true); }
       }
     });
   }
@@ -7031,7 +7053,7 @@
     g.addEventListener('pointerleave', function () { hidePerson(s); });
     g.addEventListener('focus', function () { showPerson(s); });
     g.addEventListener('blur', function () { hidePerson(s); });
-    g.addEventListener('click', function () { if (moved || !s.person) return; hidePerson(s); if (onPerson) onPerson(s.person); });
+    g.addEventListener('click', function () { if (moved || !s.person) return; personTap(s); });
     g.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && s.person) { e.preventDefault(); hidePerson(s); if (onPerson) onPerson(s.person); } });
     sitters.push(s);
     return s;
@@ -7491,7 +7513,7 @@
       if (walkOn) return;
       walkOn = true; lastT = performance.now(); rafId = requestAnimationFrame(loop);
     },
-    stop: function () { walkOn = false; if (rafId) cancelAnimationFrame(rafId); hideTip(); hidePerson(); },
+    stop: function () { walkOn = false; if (rafId) cancelAnimationFrame(rafId); hideTip(); hidePerson(null, true); },
     reset: function () { var h = home(); setView(h.z, h.cx, h.cy, true); }
   };
 })();
@@ -10637,7 +10659,7 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
   }
   function setLevel(l) {
     level = l; applyLevelClass(); fit();
-    noteEl.textContent = l === 'roof' ? 'Up on the rooftop patio. Tap a table or head back down.' : 'Back in the cafe. The roof patio is ghosted above.';
+    noteEl.textContent = l === 'roof' ? 'Up on the rooftop patio. Tap a table or head back down.' : 'Back in the cafe. Tap the rooftop sign to head up.';
   }
 
   // ---------- pan / zoom ----------
@@ -10646,7 +10668,8 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
     var r = scene.getBoundingClientRect(), asp = r.width / Math.max(1, r.height);
     view.h = view.w / asp;
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    view.x = Math.max(BASE.x - 300, Math.min(BASE.x + BASE.w + 300 - view.w, view.x)); view.y = Math.max(BASE.y - 250, Math.min(BASE.y + BASE.h + 300 - view.h, view.y));
+    var x0 = BASE.x - 300, x1 = BASE.x + BASE.w + 300 - view.w, y0 = BASE.y - 250, y1 = BASE.y + BASE.h + 300 - view.h;
+    view.x = x1 < x0 ? (x0 + x1) / 2 : Math.max(x0, Math.min(x1, view.x)); view.y = y1 < y0 ? (y0 + y1) / 2 : Math.max(y0, Math.min(y1, view.y));
     if (!liveVB) liveVB = window.SSLiveVB(function () { return [svg]; }, scene);
     liveVB.set(r1(view.x) + ' ' + r1(view.y) + ' ' + r1(view.w) + ' ' + r1(view.h));
   }
@@ -10654,8 +10677,9 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
   function fit() {
     var r = scene.getBoundingClientRect(), asp = r.width / Math.max(1, r.height);
     var top = level === 'roof' ? -400 : -60, bot = level === 'roof' ? 720 : 780, hh = bot - top;
-    var w = asp < 1 ? 640 : Math.max(1240, hh * asp); view.w = w; view.h = w / asp;
-    view.x = asp < 1 ? 640 - w / 2 : 620 - w / 2; view.y = asp < 1 ? (top + bot) / 2 - view.h / 2 + (level === 'roof' ? 0 : -20) : (top + bot) / 2 - view.h / 2;
+    // fixed, full view: the whole floor fits on screen (phones and desktop)
+    var w = Math.max(asp < 1 ? 1020 : 1160, hh * asp * 1.04); view.w = w; view.h = w / asp;
+    view.x = 620 - w / 2; view.y = (top + bot) / 2 - view.h / 2;
     applyView();
   }
   function zoom(f, cx, cy) {
@@ -10670,8 +10694,9 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
     if (ids.length === 2) { var a = ptrs[ids[0]], b = ptrs[ids[1]]; pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); }
     drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y }; moved = 0;
   });
+  var CAFE_STATIC = true;   // no dragging / pinching / wheel zoom in the cafe and patio
   scene.addEventListener('pointermove', function (e) {
-    if (!ptrs[e.pointerId]) return;
+    if (CAFE_STATIC || !ptrs[e.pointerId]) return;
     ptrs[e.pointerId] = [e.clientX, e.clientY];
     var ids = Object.keys(ptrs), r = scene.getBoundingClientRect();
     if (ids.length === 2) { var a = ptrs[ids[0]], b = ptrs[ids[1]], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (pinch) zoom(d / pinch, ((a[0] + b[0]) / 2 - r.left) / r.width, ((a[1] + b[1]) / 2 - r.top) / r.height); pinch = d; moved = 99; return; }
@@ -10682,11 +10707,11 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
   function up(e) { delete ptrs[e.pointerId]; pinch = 0; drag = Object.keys(ptrs).length ? drag : null; scene.classList.remove('drag'); }
   scene.addEventListener('pointerup', up); scene.addEventListener('pointercancel', up); scene.addEventListener('pointerleave', up);
   scene.addEventListener('click', function (e) { if (moved > 6) { e.stopPropagation(); e.preventDefault(); } }, true);
-  scene.addEventListener('wheel', function (e) { e.preventDefault(); var r = scene.getBoundingClientRect(); zoom(e.deltaY < 0 ? 1.15 : 1 / 1.15, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height); }, { passive: false });
+  scene.addEventListener('wheel', function (e) { e.preventDefault(); if (CAFE_STATIC) return; var r = scene.getBoundingClientRect(); zoom(e.deltaY < 0 ? 1.15 : 1 / 1.15, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height); }, { passive: false });
   document.getElementById('cafeZin').addEventListener('click', function () { zoom(1.3); });
   document.getElementById('cafeZout').addEventListener('click', function () { zoom(1 / 1.3); });
   document.getElementById('cafeZfit').addEventListener('click', fit);
-  window.addEventListener('resize', function () { if (!modal.hidden) applyView(); });
+  window.addEventListener('resize', function () { if (!modal.hidden) fit(); });   // fixed view: re-fit the whole floor on rotate / resize
   if (levelBtn) levelBtn.addEventListener('click', function () { setLevel(level === 'roof' ? 'ground' : 'roof'); });
 
   // ---------- open / close ----------
@@ -10696,7 +10721,7 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
     if (!modal.hidden) return;
     opener = from || null; level = 'ground';
     modal.hidden = false; inert(true);
-    render(); fit(); if (todTimer) clearInterval(todTimer); todTimer = setInterval(applyTod, 15000); noteEl.textContent = 'Welcome to the Cyber Cafe. Drag to look around, tap anyone or anything.';
+    render(); fit(); if (todTimer) clearInterval(todTimer); todTimer = setInterval(applyTod, 15000); noteEl.textContent = 'Welcome to the Cyber Cafe. Tap anyone or anything.';
     try { closeBtn.focus({ preventScroll: true }); } catch (e) {}
   }
   function close() {
