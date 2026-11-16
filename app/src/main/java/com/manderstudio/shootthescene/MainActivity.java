@@ -21,6 +21,11 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 import androidx.webkit.WebViewAssetLoader;
+import androidx.webkit.WebViewCompat;
+import androidx.webkit.WebViewFeature;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends Activity {
 
@@ -34,6 +39,39 @@ public class MainActivity extends Activity {
     private static final String REMOTE_URL = null;
 
     private static final String BG_COLOR = "#0c0f14"; // matches the game's background
+
+    /*
+     * Android-only display fixes, added to the page as a <style> tag.
+     * The Netlify/web version is not affected.
+     *  - Blurred "glass" panels (backdrop-filter) over the constantly redrawing
+     *    marketplace / lounge scenes make Android's WebView flash. Their
+     *    backgrounds are already ~75-85% opaque, so they look almost the same.
+     *  - The marketplace forces each full-screen scene layer onto its own GPU
+     *    layer (will-change) and then blends them; on Android that flickers.
+     *  - Glowing drop-shadow filters on animated fireflies redraw every frame.
+     */
+    private static final String APP_FIXES_CSS =
+            "*,*::before,*::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}" +
+            ".mkt-scene .mkt-svg{will-change:auto!important}" +
+            ".hub-scene .hub-fly{filter:none!important}";
+
+    private static final String APP_FIXES_JS =
+            "(function(){" +
+            // navigator.share -> Android share sheet (WebView has none built in)
+            "if(window.AndroidApp&&!navigator.__androidShare){navigator.__androidShare=1;" +
+            "navigator.share=function(o){o=o||{};" +
+            "window.AndroidApp.share(String(o.title||''),String(o.text||''),String(o.url||''));" +
+            "return Promise.resolve();};" +
+            "navigator.canShare=function(){return true;};}" +
+            // display fixes
+            "function add(){var d=document.documentElement;if(!d){return setTimeout(add,0);}" +
+            "d.classList.add('android-app');" +
+            "if(document.getElementById('android-app-fixes'))return;" +
+            "var s=document.createElement('style');s.id='android-app-fixes';" +
+            "s.textContent='" + APP_FIXES_CSS + "';" +
+            "(document.head||d).appendChild(s);}" +
+            "add();" +
+            "})();";
 
     private WebView webView;
     private WebViewAssetLoader assetLoader;
@@ -116,15 +154,21 @@ public class MainActivity extends Activity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                // WebView has no built-in share sheet; route navigator.share to Android's.
-                view.evaluateJavascript(
-                        "(function(){if(!window.AndroidApp)return;" +
-                        "navigator.share=function(o){o=o||{};" +
-                        "window.AndroidApp.share(String(o.title||''),String(o.text||''),String(o.url||''));" +
-                        "return Promise.resolve();};" +
-                        "navigator.canShare=function(){return true;};})();", null);
+                // Fallback for older WebViews without document-start scripts (safe to run twice).
+                view.evaluateJavascript(APP_FIXES_JS, null);
             }
         });
+
+        // Apply the Android fixes before the game's own scripts run.
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+            Set<String> origins = new HashSet<>();
+            origins.add("https://" + APP_HOST);
+            if (REMOTE_URL != null) {
+                Uri r = Uri.parse(REMOTE_URL);
+                origins.add(r.getScheme() + "://" + r.getHost());
+            }
+            WebViewCompat.addDocumentStartJavaScript(webView, APP_FIXES_JS, origins);
+        }
 
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState);
