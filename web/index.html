@@ -6270,6 +6270,223 @@
   }
   function hideTip() { if (tipEl) tipEl.hidden = true; }
 
+  // ---------- scene baker (shared with the cafe) ----------
+  // Big SVG scenes are thousands of shapes the browser has to re-draw whenever
+  // anything changes, which shows up as blotchy, half-drawn frames on phones.
+  // SSBake walks a scene and replaces runs of *static* shapes (floors, walls,
+  // furniture, trees...) with one pre-drawn image each, placed at exactly the same
+  // spot and depth. Anything that moves, animates, blends, shows text, or can be
+  // tapped stays live, so the game behaves exactly as before.
+  window.SSBake = window.SSBake || (function () {
+    var NS = 'http://www.w3.org/2000/svg', XL = 'http://www.w3.org/1999/xlink';
+    var SKIP = { defs: 1, clipPath: 1, mask: 1, linearGradient: 1, radialGradient: 1, pattern: 1, symbol: 1, marker: 1, filter: 1, style: 1, script: 1, title: 1, desc: 1, metadata: 1, foreignObject: 1, text: 1, image: 1 };
+    var CONT = { g: 1, svg: 1, a: 1 };
+    var PROPS = ['display', 'fill', 'fill-opacity', 'fill-rule', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-linecap', 'stroke-linejoin', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-miterlimit', 'opacity', 'visibility', 'clip-path', 'clip-rule', 'mask', 'filter', 'paint-order', 'shape-rendering', 'color'];
+    var cache = new Map(), cachePx = 0, CACHE_MAX = 36e6;   // pre-drawn pieces reused when a scene is reopened
+    function scaleOf(m) { return m ? Math.sqrt(Math.abs(m.a * m.d - m.b * m.c)) : 1; }
+    function bboxIn(n) {
+      var b; try { b = n.getBBox(); } catch (e) { return null; }
+      if (!b || (!b.width && !b.height)) return null;
+      var m = n.transform && n.transform.baseVal && n.transform.baseVal.numberOfItems ? n.transform.baseVal.consolidate().matrix : null;
+      var pts = [[b.x, b.y], [b.x + b.width, b.y], [b.x, b.y + b.height], [b.x + b.width, b.y + b.height]], x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      pts.forEach(function (p) { var x = p[0], y = p[1]; if (m) { var tx = m.a * x + m.c * y + m.e; y = m.b * x + m.d * y + m.f; x = tx; } x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); });
+      return [x0, y0, x1, y1];
+    }
+    function sub(n) { return [n].concat(Array.prototype.slice.call(n.getElementsByTagName('*'))); }
+    function evict() {
+      if (cachePx <= CACHE_MAX) return;
+      var used = new Set(), it = cache.keys(), k;
+      Array.prototype.forEach.call(document.querySelectorAll('image.ss-baked'), function (im) { used.add(im.getAttribute('href')); });
+      while (cachePx > CACHE_MAX * 0.7 && !(k = it.next()).done) {
+        var e = cache.get(k.value);
+        if (used.has(e.url)) continue;
+        if (e.url.slice(0, 5) === 'blob:') URL.revokeObjectURL(e.url); cachePx -= e.px; cache.delete(k.value);
+      }
+    }
+    function run(roots, o) {
+      o = o || {};
+      var token = {}, live = new Set(), deep = new Set(), hasLive = new Set(), mut = new Set(), stats = { images: 0, removed: 0, px: 0, res: 0, cached: 0 };
+      var maxPx = o.maxPx || 4.2e6, minNodes = o.minNodes || 6, budget = o.budget || 16e6;
+      roots.forEach(function (r) { r.__bakeTok = token; });
+      function alive() { return roots.every(function (r) { return r.isConnected && r.__bakeTok === token; }); }
+      function rootOf(e) { for (var i = 0; i < roots.length; i++) if (roots[i] === e || roots[i].contains(e)) return roots[i]; return null; }
+      function ppu(e) {   // CSS px per user unit of element e at the current view (ignores live CSS transforms)
+        var r = rootOf(e), vb = r.viewBox && r.viewBox.baseVal, rs = vb && vb.width ? Math.min(r.clientWidth / vb.width, r.clientHeight / vb.height) : 1;
+        if (e === r) return rs;
+        var a = r.getScreenCTM(), b = e.getScreenCTM(); if (!a || !b) return rs;
+        return rs * scaleOf(a.inverse().multiply(b));
+      }
+      var ob = new MutationObserver(function (ms) { ms.forEach(function (m) { if (m.target.nodeType === 1) mut.add(m.target); }); });
+      roots.forEach(function (r) { ob.observe(r, { subtree: true, attributes: true, childList: true }); });
+      return new Promise(function (resolve) {
+        setTimeout(function () {
+          ob.disconnect();
+          if (!alive()) return resolve(stats);
+          if (o.prepare) o.prepare();
+          var T = performance.now(); roots.forEach(classify); stats.tClassify = Math.round(performance.now() - T); T = performance.now();
+          var runs = [], plan = [], jobs = [];
+          roots.forEach(function (r) { collect(r, runs); });
+          runs.forEach(function (rn) { planRun(rn.parent, rn.nodes, plan); });
+          stats.tPlan = Math.round(performance.now() - T);
+          var area = 0; plan.forEach(function (j) { area += j.area; });
+          var res = Math.max(0.6, Math.min(o.res || 2, Math.sqrt(budget / Math.max(1, area))));
+          stats.res = res;
+          plan.forEach(function (j) { size(j, res, jobs); });
+          if (o.debug) stats.top = plan.slice().sort(function (a, b) { return b.area - a.area; }).slice(0, 12).map(function (j) { return Math.round(j.area) + ' ' + (j.parent.getAttribute('class') || j.parent.id || j.parent.localName) + ' n=' + j.count + ' items=' + j.nodes.length; });
+          T = performance.now(); jobs.forEach(serialize); stats.tSerialize = Math.round(performance.now() - T); T = performance.now();   // read everything while the scene is untouched (fast)
+          var i = 0, busy = 0, finished = false;
+          function finish() {               // swap every picture in at once, in a single frame
+            if (finished) return; finished = true;
+            stats.tRender = Math.round(performance.now() - T);
+            requestAnimationFrame(function () { if (alive()) jobs.forEach(function (j) { if (j.url) place(j); }); if (o.done) o.done(stats); resolve(stats); });
+          }
+          function pump() {                 // draw the pictures in the background, several at a time
+            if (!alive()) { finished = true; if (o.done) o.done(stats); return resolve(stats); }
+            while (busy < 6 && i < jobs.length) {
+              var j = jobs[i++]; busy++;
+              (function (j) { render(j).then(function (u) { j.url = u; busy--; pump(); }, function () { busy--; pump(); }); })(j);
+            }
+            if (!busy && i >= jobs.length) finish();
+          }
+          pump();
+        }, o.watch == null ? 700 : o.watch);
+
+        function classify(root) {
+          var all = root.querySelectorAll('*'), i, e, cs;
+          for (i = 0; i < all.length; i++) {
+            e = all[i]; var tag = e.localName;
+            if (SKIP[tag] || e.closest('defs,clipPath,mask,pattern,symbol,marker,filter,text')) { deep.add(e); if (tag === 'text' || tag === 'foreignObject') mark(e, root); continue; }
+            var shallow = o.shallow && e.matches(o.shallow);   // tappable, but its static insides may still be pre-drawn
+            if ((o.deep && e.matches(o.deep)) || (!shallow && (e.hasAttribute('role') || e.hasAttribute('tabindex')))) { deep.add(e); mark(e, root); continue; }
+            if (shallow) { live.add(e); mark(e, root); continue; }
+            cs = getComputedStyle(e);
+            if (cs.display === 'none') { deep.add(e); continue; }
+            if ((o.live && e.matches(o.live)) || e.hasAttribute('id') || e.hasAttribute('style') || mut.has(e) || cs.animationName !== 'none' || cs.mixBlendMode !== 'normal' ||
+                (o.hit && cs.pointerEvents !== 'none') || (cs.transform !== 'none' && !e.hasAttribute('transform'))) { live.add(e); mark(e, root); }
+          }
+        }
+        function mark(e, root) { var p = e.parentNode; while (p && p !== root && !hasLive.has(p)) { hasLive.add(p); p = p.parentNode; } }
+        function collect(el, out) {   // split el's children into runs of consecutive static elements
+          var cur = [];
+          function flush() { if (cur.length) out.push({ parent: el, nodes: cur }); cur = []; }
+          Array.prototype.forEach.call(el.children, function (c) {
+            if (deep.has(c) || c.__baked) { flush(); return; }
+            if (live.has(c) || hasLive.has(c)) { flush(); if (CONT[c.localName]) collect(c, out); return; }
+            cur.push(c);
+          });
+          flush();
+        }
+        function planRun(parent, nodes, plan) {
+          // Huge pieces (sky, ground, big walls) are cheap to draw live but expensive to store
+          // as pictures, so they stay live and split the run; containers among them are opened up.
+          var pp = ppu(parent), seg = [], vr = rootOf(parent), BIG = Math.max(2.5e5, 0.6 * vr.clientWidth * vr.clientHeight);
+          var segs = [];
+          nodes.forEach(function (n) {
+            var b = bboxIn(n), a = b ? (b[2] - b[0]) * pp * (b[3] - b[1]) * pp : 0;
+            if (a > BIG) {
+              if (seg.length) segs.push(seg); seg = [];
+              if (CONT[n.localName]) { var rr = []; collect(n, rr); rr.forEach(function (rn) { planRun(rn.parent, rn.nodes, plan); }); }
+            } else seg.push(n);
+          });
+          if (seg.length) segs.push(seg);
+          segs.forEach(function (sg) { cluster(parent, sg, pp, plan); });
+        }
+        function cluster(parent, nodes, pp, plan) {
+          // group the run into clusters of overlapping pieces, so each picture stays tight
+          var items = [];
+          nodes.forEach(function (n, i) { var b = bboxIn(n); if (b) items.push({ n: n, i: i, b: b, c: n.getElementsByTagName('*').length + 1 }); });
+          var par = items.map(function (_, i) { return i; });
+          function f(i) { while (par[i] !== i) i = par[i] = par[par[i]]; return i; }
+          var g = 4 / Math.max(pp, 1e-6);
+          for (var a = 0; a < items.length; a++) for (var b = a + 1; b < items.length; b++) {
+            var A = items[a].b, B = items[b].b;
+            if (A[0] - g < B[2] && B[0] - g < A[2] && A[1] - g < B[3] && B[1] - g < A[3]) par[f(a)] = f(b);
+          }
+          var groups = {};
+          items.forEach(function (it, i) { var k = f(i); (groups[k] = groups[k] || []).push(it); });
+          Object.keys(groups).forEach(function (k) {
+            var its = groups[k].sort(function (p, q) { return p.i - q.i; }), cnt = 0, x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+            its.forEach(function (it) { cnt += it.c; x0 = Math.min(x0, it.b[0]); y0 = Math.min(y0, it.b[1]); x1 = Math.max(x1, it.b[2]); y1 = Math.max(y1, it.b[3]); });
+            if (cnt < minNodes) return;
+            var sw = 0, flt = false;
+            its.forEach(function (it) { sub(it.n).forEach(function (e) { var cs = getComputedStyle(e); if (cs.stroke !== 'none') { var w = parseFloat(cs.strokeWidth) || 0; sw = Math.max(sw, cs.vectorEffect === 'non-scaling-stroke' ? w : w * pp); } if (cs.filter !== 'none') flt = true; }); });
+            var pad = Math.min(60, (sw / 2 + 2) / Math.max(1e-6, pp) + 2 + (flt ? 24 : 0));
+            var box = [x0 - pad, y0 - pad, x1 + pad, y1 + pad], area = (box[2] - box[0]) * pp * (box[3] - box[1]) * pp;
+            if (cnt * 30000 < area) return;   // a few big simple shapes: cheaper to keep drawing them live
+            plan.push({ parent: parent, nodes: its.map(function (it) { return it.n; }), box: box, pp: pp, count: cnt, area: (box[2] - box[0]) * pp * (box[3] - box[1]) * pp });
+          });
+        }
+        function size(j, res, jobs) {
+          var W = Math.ceil((j.box[2] - j.box[0]) * j.pp * res), H = Math.ceil((j.box[3] - j.box[1]) * j.pp * res);
+          if (W < 2 || H < 2) return;
+          if (W * H <= maxPx && W <= 4096 && H <= 4096) { j.W = W; j.H = H; jobs.push(j); return; }
+          var tmp = [];
+          if (j.nodes.length > 1) { var h = Math.ceil(j.nodes.length / 2); planRun(j.parent, j.nodes.slice(0, h), tmp); planRun(j.parent, j.nodes.slice(h), tmp); }
+          else if (CONT[j.nodes[0].localName]) { var rr = []; collect(j.nodes[0], rr); rr.forEach(function (rn) { planRun(rn.parent, rn.nodes, tmp); }); }
+          tmp.forEach(function (t) { size(t, res, jobs); });
+        }
+        function serialize(j) {
+          var nodes = j.nodes, refs = {}, body = '';
+          nodes.forEach(function (n) {
+            var c = n.cloneNode(true), src = sub(n), dst = sub(c);
+            for (var i = 0; i < src.length; i++) {
+              var cs = getComputedStyle(src[i]), st = '';
+              for (var p = 0; p < PROPS.length; p++) { var v = cs.getPropertyValue(PROPS[p]); if (v !== '') st += PROPS[p] + ':' + v + ';'; }
+              if (cs.vectorEffect === 'non-scaling-stroke' && cs.stroke !== 'none') st += 'stroke-width:' + ((parseFloat(cs.strokeWidth) || 1) / Math.max(1e-6, ppu(src[i]))) + 'px;';
+              dst[i].removeAttribute('class'); dst[i].setAttribute('style', st);
+              st.replace(/url\(["']?[^#"')]*#([^"')]+)["']?\)/g, function (_, id) { refs[id] = 1; });
+              var hr = src[i].getAttribute('href') || src[i].getAttributeNS(XL, 'href'); if (hr && hr.charAt(0) === '#') refs[hr.slice(1)] = 1;
+            }
+            body += new XMLSerializer().serializeToString(c);
+          });
+          var defs = '', seen = {}, queue = Object.keys(refs);
+          while (queue.length) {
+            var id = queue.shift(); if (!id || seen[id]) continue; seen[id] = 1;
+            var d = document.getElementById(id); if (!d) continue;
+            var s = new XMLSerializer().serializeToString(d); defs += s;
+            s.replace(/url\(["']?[^#"')]*#([^"')]+)["']?\)|href="#([^"]+)"/g, function (_, a, b) { queue.push(a || b); });
+          }
+          var bx = j.box;
+          j.svg = '<svg xmlns="' + NS + '" xmlns:xlink="' + XL + '" viewBox="' + bx[0] + ' ' + bx[1] + ' ' + (bx[2] - bx[0]) + ' ' + (bx[3] - bx[1]) + '" width="' + j.W + '" height="' + j.H + '"><defs>' + defs + '</defs>' + body + '</svg>';
+        }
+        function encode(img, W, H) {
+          // Synchronous PNG encoding: the async encoders (toBlob / convertToBlob) wait for idle
+          // time, which never comes while a scene is animating, so they can take seconds each.
+          var cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.getContext('2d').drawImage(img, 0, 0, W, H);
+          var u = cv.toDataURL('image/png'); cv.width = cv.height = 0;
+          return Promise.resolve(u);
+        }
+        function render(j) {
+          var hit = cache.get(j.svg);
+          if (hit) { cache.delete(j.svg); cache.set(j.svg, hit); stats.cached++; return Promise.resolve(hit.url); }
+          return new Promise(function (ok, fail) {
+            var img = new Image(), url = URL.createObjectURL(new Blob([j.svg], { type: 'image/svg+xml' }));
+            img.onload = function () {
+              URL.revokeObjectURL(url);
+              encode(img, j.W, j.H).then(function (u) {
+                cache.set(j.svg, { url: u, px: j.W * j.H }); cachePx += j.W * j.H; ok(u);
+              }, function () { ok(null); });
+            };
+            img.onerror = function () { URL.revokeObjectURL(url); fail(); };
+            img.src = url;
+          });
+        }
+        function place(j) {
+          var el = j.parent, nodes = j.nodes, bx = j.box;
+          if (!nodes.every(function (n) { return n.parentNode === el; })) return;
+          var im = document.createElementNS(NS, 'image');
+          im.setAttribute('x', bx[0]); im.setAttribute('y', bx[1]); im.setAttribute('width', bx[2] - bx[0]); im.setAttribute('height', bx[3] - bx[1]);
+          im.setAttribute('preserveAspectRatio', 'none'); im.setAttribute('href', j.url); im.setAttributeNS(XL, 'xlink:href', j.url);
+          im.setAttribute('class', 'ss-baked'); im.__baked = nodes;
+          el.insertBefore(im, nodes[0]); nodes.forEach(function (n) { el.removeChild(n); });
+          stats.images++; stats.removed += j.count; stats.px += j.W * j.H; j.svg = null;
+        }
+      });
+    }
+    function free(root) { if (root) root.__bakeTok = null; evict(); }   // stop any bake in progress (pictures stay cached for reuse)
+    return { run: run, free: free };
+  })();
+
   // ---------- smooth pan/zoom helper (shared with the cafe) ----------
   // Changing an SVG's viewBox makes the browser redraw every shape in the scene, every
   // frame. Phones can't keep up and show half-drawn, glitchy frames while you drag or
@@ -6594,7 +6811,8 @@
   function bobT(w) { return w.person ? 0 : 0; }
   var allItems = null, cullR = null, walkHolder = null;
   function sa(el, k, v) { var c = el['_' + k]; if (c !== v) { el['_' + k] = v; el.setAttribute(k, v); } }
-  function visIn(x, y, cz) { if (!cullR) return true; var sx = OX + (x - y) * TW, sy = OY + (x + y) * TH - (cz || 0) * ZS; return sx > cullR[0] && sx < cullR[2] && sy + 40 > cullR[1] && sy - 200 < cullR[3]; }
+  var bakeAll = false;
+  function visIn(x, y, cz) { if (!cullR || bakeAll) return true; var sx = OX + (x - y) * TW, sy = OY + (x + y) * TH - (cz || 0) * ZS; return sx > cullR[0] && sx < cullR[2] && sy + 40 > cullR[1] && sy - 200 < cullR[3]; }
   function cullStatic() {   // people, tables, trees and shops that are off-screen aren't drawn at all
     var k, t;
     for (k = 0; k < tables.length; k++) { t = tables[k]; var v = visIn(t.x, t.y, t.cz); if (t.vis !== v) { t.vis = v; t.g.style.display = v ? '' : 'none'; } }
@@ -7118,6 +7336,16 @@
     addSpot: function (cfg) { var sp = built ? addSpot(cfg) : (SPOT_CFG.push(cfg), null); return sp; },
     start: function () {
       var first = !built; build(); if (!first) { todLive = 0; applyTod(); } chatEnter();
+      if (first && window.SSBake) {
+        // pre-draw the static scenery once (see SSBake) so moving around stays smooth
+        var resetCull = function () { tables.concat(spots).forEach(function (t) { t.vis = undefined; }); cullStatic(); };
+        SSBake.run([back, walk], {
+          res: Math.min(window.devicePixelRatio || 1, 2.5) * 2.4 / Math.max(1, view.z),
+          shallow: '.mkt-walker', watch: 900,
+          prepare: function () { bakeAll = true; resetCull(); },
+          done: function () { bakeAll = false; resetCull(); }
+        });
+      }
       if (!first) assignPeople();
       var h = home(); view = clampView({ z: h.z, cx: h.cx, cy: h.cy }); applyView();
       if (reduced) { drawWalkers(); drawStreetThings(); return; }
@@ -10199,7 +10427,15 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
     var tp = P(13, 0.2, RZ + 0.9);
     out += '<g id="cfRtap" tabindex="0" role="button" aria-label="Go up to the rooftop patio" style="cursor:pointer"><rect x="' + r1(tp[0] - 150) + '" y="' + r1(tp[1] - 24) + '" width="300" height="34" rx="17" fill="#2A1A14" fill-opacity=".7" stroke="#FFE08A" stroke-width="2"/><text class="cf-ghosttag" x="' + r1(tp[0]) + '" y="' + r1(tp[1] - 1) + '" text-anchor="middle" font-family="Fredoka, Nunito, sans-serif" font-weight="700" font-size="18" fill="#FFF3DC" pointer-events="none">\u25B2 ROOFTOP PATIO \u00B7 tap to go up</text></g>';
     out += '<rect x="-400" y="-400" width="2200" height="1700" fill="url(#cfVig)" pointer-events="none"/>';
+    if (window.SSBake) SSBake.free(svg);
     svg.innerHTML = out;
+    if (window.SSBake) setTimeout(function () {   // pre-draw the static furniture & building (see SSBake) so panning stays smooth
+      if (modal.hidden || !svg.firstChild) return;
+      SSBake.run([svg], {
+        res: Math.min(window.devicePixelRatio || 1, 2.5) * Math.min(2.2, Math.max(1, view.w / MINW)),
+        deep: '.cf-tele, .cf-hot, .cf-pp', live: '.cf-pday, .cf-pnite, .cf-litw, .cf-ext, .cf-act', watch: 700
+      });
+    }, 0);
     Array.prototype.forEach.call(svg.querySelectorAll('.cf-hot'), function (g) {
       var id = g.getAttribute('data-hot');
       function say() { if (id === 'stairs') { setLevel('roof'); return; } if (id === 'stairHouse') { setLevel('ground'); return; } noteEl.textContent = notes[id]; }
@@ -10351,7 +10587,7 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
   }
   function close() {
     if (modal.hidden) return;
-    modal.hidden = true; inert(false); svg.innerHTML = ''; hideProf(true); if (todTimer) { clearInterval(todTimer); todTimer = null; }
+    modal.hidden = true; inert(false); if (window.SSBake) SSBake.free(svg); svg.innerHTML = ''; hideProf(true); if (todTimer) { clearInterval(todTimer); todTimer = null; }
     var o = opener && opener.isConnected ? opener : document.getElementById('mktBtn'); try { if (o) o.focus({ preventScroll: true }); } catch (e) {}
   }
   closeBtn.addEventListener('click', close);
