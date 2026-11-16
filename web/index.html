@@ -2101,11 +2101,13 @@
     @media (max-width: 640px) { .cf-note { bottom: 76px; font-size: 13px; } .cf-tools { left: 12px; right: 70px; flex-direction: row; bottom: 12px; } .cf-tools button { flex: 1; padding: 8px 6px; font-size: 12px; gap: 4px; } .cf-tools button svg { width: 16px; height: 16px; } .cf-zoom { right: 12px; bottom: 12px; flex-direction: column-reverse; } .cf-zoom button { width: 40px; height: 40px; } .cf-zoom { gap: 4px; } }
     @media (prefers-reduced-motion: reduce) { .cf-bob, .cf-rgb, .cf-flick, .cf-neon, .cf-wave { animation: none; } }
 
-    .cf-sv #cfG, .cf-sv #cfR { transition: opacity 0.45s; }
-    .cf-sv.ground #cfR { opacity: 0.3; pointer-events: none; }
+    /* No see-through floors: drawing a whole floor at partial opacity on top of (or under) the
+       other one was very expensive and flashed on phones. Each floor now shows on its own. */
+    .cf-sv.ground #cfR { display: none; }
     .cf-sv.ground #cfRtap { pointer-events: all; }
-    .cf-sv.roof #cfG { opacity: 0.12; pointer-events: none; }
+    .cf-sv.roof #cfG { display: none; }
     .cf-sv.roof #cfRtap { display: none; }
+    .cf-sv.cf-bakeall #cfR, .cf-sv.cf-bakeall #cfG { display: inline !important; }
     .cf-ghosttag { animation: cf-ghost 2.6s ease-in-out infinite; }
     @keyframes cf-ghost { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
     .cf-twinkle { animation: cf-flick 3.4s ease-in-out infinite; }
@@ -6334,6 +6336,7 @@
           plan.forEach(function (j) { size(j, res, jobs); });
           if (o.debug) stats.top = plan.slice().sort(function (a, b) { return b.area - a.area; }).slice(0, 12).map(function (j) { return Math.round(j.area) + ' ' + (j.parent.getAttribute('class') || j.parent.id || j.parent.localName) + ' n=' + j.count + ' items=' + j.nodes.length; });
           T = performance.now(); jobs.forEach(serialize); stats.tSerialize = Math.round(performance.now() - T); T = performance.now();   // read everything while the scene is untouched (fast)
+          if (o.afterRead) o.afterRead();
           var i = 0, busy = 0, finished = false;
           function finish() {               // swap every picture in at once, in a single frame
             if (finished) return; finished = true;
@@ -10433,7 +10436,9 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
       if (modal.hidden || !svg.firstChild) return;
       SSBake.run([svg], {
         res: Math.min(window.devicePixelRatio || 1, 2.5) * Math.min(2.2, Math.max(1, view.w / MINW)),
-        deep: '.cf-tele, .cf-hot, .cf-pp', live: '.cf-pday, .cf-pnite, .cf-litw, .cf-ext, .cf-act', watch: 700
+        deep: '.cf-tele, .cf-hot, .cf-pp', live: '.cf-pday, .cf-pnite, .cf-litw, .cf-ext, .cf-act', watch: 700,
+        // pre-draw both floors, even the hidden one, so switching floors stays smooth
+        prepare: function () { svg.classList.add('cf-bakeall'); }, afterRead: function () { svg.classList.remove('cf-bakeall'); }
       });
     }, 0);
     Array.prototype.forEach.call(svg.querySelectorAll('.cf-hot'), function (g) {
