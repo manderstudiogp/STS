@@ -2438,6 +2438,8 @@
        and stop drawing the room behind a full-screen scene. Without this, some Android
        GPUs blended the market's lighting through to the room underneath and flashed. */
     .mkt-scene, .cf-scene, .stu-scene, .hub-scene { isolation: isolate; }
+    /* while panning/zooming: move the drawn picture on the GPU (see SSLiveVB) */
+    .ss-live { will-change: transform; transform-origin: 50% 50%; overflow: visible; contain: none !important; }
     body:has(#mktModal:not([hidden])) #ssHub,
     body:has(#cafeModal:not([hidden])) #ssHub,
     body:has(#stuModal:not([hidden])) #ssHub { visibility: hidden; }
@@ -6268,6 +6270,39 @@
   }
   function hideTip() { if (tipEl) tipEl.hidden = true; }
 
+  // ---------- smooth pan/zoom helper (shared with the cafe) ----------
+  // Changing an SVG's viewBox makes the browser redraw every shape in the scene, every
+  // frame. Phones can't keep up and show half-drawn, glitchy frames while you drag or
+  // pinch. Instead, while the camera is moving we slide/scale the already-drawn picture
+  // with a CSS transform (handled by the GPU, no redraw), and only apply the real
+  // viewBox once movement stops (or every ~0.45s during a long drag so edges fill in).
+  window.SSLiveVB = window.SSLiveVB || function (getEls, box) {
+    var cur = null, pend = null, timer = 0, since = 0, live = false;
+    function commit() {
+      clearTimeout(timer); timer = 0;
+      if (!pend) return;
+      var list = getEls(), s = pend.join(' ');
+      for (var i = 0; i < list.length; i++) { var e = list[i]; if (!e) continue; e.setAttribute('viewBox', s); e.style.transform = ''; e.classList.remove('ss-live'); }
+      cur = pend; pend = null; live = false;
+    }
+    function set(vb) {
+      pend = String(vb).split(' ').map(Number);
+      var list = getEls(), r = box.getBoundingClientRect(), i, t = Date.now();
+      if (!cur || !r.width || !r.height) return commit();
+      var cs = cur.join(' ');
+      for (i = 0; i < list.length; i++) if (list[i] && list[i].getAttribute('viewBox') !== cs) return commit();
+      if (!live) { since = t; live = true; }
+      if (t - since > 450) return commit();
+      var s0 = Math.min(r.width / cur[2], r.height / cur[3]), s1 = Math.min(r.width / pend[2], r.height / pend[3]);
+      var k = s1 / s0, tx = s1 * ((cur[0] + cur[2] / 2) - (pend[0] + pend[2] / 2)), ty = s1 * ((cur[1] + cur[3] / 2) - (pend[1] + pend[3] / 2));
+      var tf = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + k.toFixed(5) + ')';
+      for (i = 0; i < list.length; i++) if (list[i]) { list[i].classList.add('ss-live'); list[i].style.transform = tf; }
+      clearTimeout(timer); timer = setTimeout(commit, 140);
+    }
+    return { set: set, commit: commit };
+  };
+  var liveVB = null;
+
   // ---------- zoom & pan ----------
   var view = { z: 1, cx: 500, cy: 260 }, anim = null, moved = false;
   function home() { var w = scene.getBoundingClientRect().width; return w && w < 560 ? { z: 1.5, cx: 500, cy: 290 } : { z: 1.22, cx: 500, cy: 215 }; }
@@ -6290,7 +6325,8 @@
   function applyView() {
     var b = baseBox(), w = b.w / view.z, h = b.h / view.z;
     var I = insets(), upp = b.ub / view.z, vb = r1(view.cx - w / 2 + (I.r - I.l) / 2 * upp) + ' ' + r1(view.cy - h / 2 + (I.b - I.t) / 2 * upp) + ' ' + r1(w) + ' ' + r1(h);
-    back.setAttribute('viewBox', vb); walk.setAttribute('viewBox', vb); front.setAttribute('viewBox', vb); if (fx) fx.setAttribute('viewBox', vb); if (todSvg) todSvg.setAttribute('viewBox', vb);
+    if (!liveVB) liveVB = window.SSLiveVB(function () { return [back, walk, front, fx, todSvg]; }, scene);
+    liveVB.set(vb);
     var sr = scene.getBoundingClientRect(), vk = Math.min(sr.width / w, sr.height / h) || 1, vw = sr.width / vk, vh = sr.height / vk, vcx = view.cx + (I.r - I.l) / 2 * upp, vcy = view.cy + (I.b - I.t) / 2 * upp;
     cullR = [vcx - vw / 2 - 130, vcy - vh / 2, vcx + vw / 2 + 130, vcy + vh / 2]; cullStatic();
     scene.classList.toggle('is-zoomed', view.z > 1.02); if (typeof placePerson === 'function') placePerson();
@@ -10261,8 +10297,10 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
     view.h = view.w / asp;
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
     view.x = Math.max(BASE.x - 300, Math.min(BASE.x + BASE.w + 300 - view.w, view.x)); view.y = Math.max(BASE.y - 250, Math.min(BASE.y + BASE.h + 300 - view.h, view.y));
-    svg.setAttribute('viewBox', r1(view.x) + ' ' + r1(view.y) + ' ' + r1(view.w) + ' ' + r1(view.h));
+    if (!liveVB) liveVB = window.SSLiveVB(function () { return [svg]; }, scene);
+    liveVB.set(r1(view.x) + ' ' + r1(view.y) + ' ' + r1(view.w) + ' ' + r1(view.h));
   }
+  var liveVB = null;
   function fit() {
     var r = scene.getBoundingClientRect(), asp = r.width / Math.max(1, r.height);
     var top = level === 'roof' ? -400 : -60, bot = level === 'roof' ? 720 : 780, hh = bot - top;
