@@ -6653,7 +6653,7 @@
 
   // ---------- zoom & pan ----------
   var view = { z: 1, cx: 500, cy: 260 }, anim = null, moved = false;
-  function home() { var w = scene.getBoundingClientRect().width; return w && w < 560 ? { z: 1.08, cx: 500, cy: 250 } : { z: 1, cx: 500, cy: 215 }; }   // wide, fixed view
+  function home() { var w = scene.getBoundingClientRect().width; return w && w < 560 ? { z: 1, cx: 655, cy: 200 } : { z: 1, cx: 500, cy: 215 }; }   // wide, fixed view (phones: shifted right so the Cyber Cafe door is on screen)
   var BOUNDS = [-260, -1000, 1700, 980];
   function insets() { var w = scene.getBoundingClientRect().width; return w >= 900 ? { l: 0, r: 440, t: 76, b: 0 } : { l: 0, r: 0, t: 72, b: w < 560 ? 200 : 180 }; }
   function baseBox() {
