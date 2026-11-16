@@ -1984,7 +1984,7 @@
     /* ================= PERSONAL STUDIO ================= */
     .stu-modal { padding: 0; background: #06161A; -webkit-backdrop-filter: none; backdrop-filter: none; }
     .stu-panel { position: relative; display: block; width: 100%; height: 100%; max-height: none; padding: 0; gap: 0; border: 0; border-radius: 0; box-shadow: none; background: #06161A; overflow: hidden; }
-    .stu-panel .cab-head { position: absolute; z-index: 3; top: 12px; left: 12px; right: 12px; padding: 8px 12px; gap: 10px; background: rgba(12, 42, 45, 0.8); border: 3px solid var(--cb-edge); border-radius: 20px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .stu-panel .cab-head { position: absolute; z-index: 3; top: 12px; left: 12px; right: 12px; padding: 8px 12px; gap: 10px; background: rgba(12, 42, 45, 0.8); border: 3px solid var(--cb-edge); border-radius: 20px; }
     .stu-panel .cab-head-tile { width: 40px; height: 40px; border-radius: 13px; }
     .stu-panel .cab-title { font-size: 22px; }
     .stu-panel .cab-sub { margin-top: 2px; font-size: 12px; }
@@ -2003,7 +2003,7 @@
     @keyframes stu-blink { 50% { opacity: 0; } }
     .stu-note {
       position: absolute; z-index: 3; left: 50%; bottom: 18px; transform: translateX(-50%); max-width: min(560px, calc(100% - 32px)); padding: 9px 16px; border-radius: 16px;
-      background: rgba(12, 42, 45, 0.86); border: 3px solid var(--cb-edge); color: var(--cb-text); font: 700 14px Nunito, 'Segoe UI', sans-serif; text-align: center; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      background: rgba(12, 42, 45, 0.86); border: 3px solid var(--cb-edge); color: var(--cb-text); font: 700 14px Nunito, 'Segoe UI', sans-serif; text-align: center; 
     }
     .stu-tools { position: absolute; z-index: 3; left: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
     .stu-tools button {
@@ -2032,7 +2032,7 @@
     .stu-scene[data-v="film"] { background: radial-gradient(ellipse at 55% 45%, #4A2418 0%, #24120C 48%, #0E0604 100%); }
     .stu-safe { animation: stu-safe 3.4s ease-in-out infinite; }
     @keyframes stu-safe { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-    .stu-pick { position: absolute; inset: 0; z-index: 8; display: grid; place-items: center; padding: 84px 16px 16px; background: rgba(6, 3, 18, 0.88); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); overflow: auto; }
+    .stu-pick { position: absolute; inset: 0; z-index: 8; display: grid; place-items: center; padding: 84px 16px 16px; background: rgba(6, 3, 18, 0.88); overflow: auto; }
     .stu-pick[hidden] { display: none; }
     .stu-pick-in { width: min(900px, 100%); text-align: center; color: var(--cb-text); }
     .stu-pick h3 { margin: 0; font: 600 28px Fredoka, 'Trebuchet MS', sans-serif; }
@@ -2068,7 +2068,7 @@
     /* ================= CYBER CAFE ================= */
     .cf-modal { padding: 0; background: #120B12; -webkit-backdrop-filter: none; backdrop-filter: none; }
     .cf-panel { position: relative; display: block; width: 100%; height: 100%; max-height: none; padding: 0; gap: 0; border: 0; border-radius: 0; box-shadow: none; background: #120B12; overflow: hidden; }
-    .cf-panel .cab-head { position: absolute; z-index: 3; top: 12px; left: 12px; right: 12px; padding: 8px 12px; gap: 10px; background: rgba(12, 42, 45, 0.8); border: 3px solid var(--cb-edge); border-radius: 20px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .cf-panel .cab-head { position: absolute; z-index: 3; top: 12px; left: 12px; right: 12px; padding: 8px 12px; gap: 10px; background: rgba(12, 42, 45, 0.8); border: 3px solid var(--cb-edge); border-radius: 20px; }
     .cf-panel .cab-head-tile { width: 40px; height: 40px; border-radius: 13px; }
     .cf-panel .cab-title { font-size: 22px; }
     .cf-panel .cab-sub { margin-top: 2px; font-size: 12px; }
@@ -2089,7 +2089,7 @@
     @keyframes cf-neon { 0%, 92%, 100% { opacity: 1; } 93% { opacity: 0.45; } 95% { opacity: 1; } 97% { opacity: 0.5; } }
     .cf-wave { animation: cf-wave 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 90%; }
     @keyframes cf-wave { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(14deg); } }
-    .cf-note { position: absolute; z-index: 3; left: 50%; bottom: 18px; transform: translateX(-50%); max-width: min(560px, calc(100% - 32px)); padding: 9px 16px; border-radius: 16px; background: rgba(12, 42, 45, 0.86); border: 3px solid var(--cb-edge); color: var(--cb-text); font: 700 14px Nunito, 'Segoe UI', sans-serif; text-align: center; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .cf-note { position: absolute; z-index: 3; left: 50%; bottom: 18px; transform: translateX(-50%); max-width: min(560px, calc(100% - 32px)); padding: 9px 16px; border-radius: 16px; background: rgba(12, 42, 45, 0.86); border: 3px solid var(--cb-edge); color: var(--cb-text); font: 700 14px Nunito, 'Segoe UI', sans-serif; text-align: center; }
     .cf-tools { position: absolute; z-index: 3; left: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
     .cf-tools button, .cf-zoom button { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 12px; cursor: pointer; background: linear-gradient(#FBD879, #E3A93A); color: #4A2410; border: 3px solid var(--wood-dark); border-radius: 14px; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35); font: 600 14px Fredoka, 'Trebuchet MS', sans-serif; }
     .cf-tools button svg { width: 20px; height: 20px; }
@@ -2132,7 +2132,7 @@
     .cf-tele .cf-spot { opacity: 0.18; }
     .cf-tele:hover .cf-spot, .cf-tele.on .cf-spot { opacity: 0.42; }
     @keyframes cf-ring { 0%, 100% { stroke-opacity: 0.45; } 50% { stroke-opacity: 1; } }
-    .cf-prof { position: absolute; z-index: 4; top: 84px; right: 16px; width: min(290px, calc(100% - 32px)); padding: 12px 14px 12px; color: var(--cb-text); background: rgba(12, 28, 40, 0.92); border: 3px solid #FFE08A; border-radius: 18px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.35), 0 0 28px rgba(255, 224, 138, 0.3); font: 700 13px Nunito, 'Segoe UI', sans-serif; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .cf-prof { position: absolute; z-index: 4; top: 84px; right: 16px; width: min(290px, calc(100% - 32px)); padding: 12px 14px 12px; color: var(--cb-text); background: rgba(12, 28, 40, 0.92); border: 3px solid #FFE08A; border-radius: 18px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.35), 0 0 28px rgba(255, 224, 138, 0.3); font: 700 13px Nunito, 'Segoe UI', sans-serif; }
     .cf-prof[hidden] { display: none; }
     .cf-prof-head { display: flex; align-items: center; gap: 10px; }
     .cf-prof-av { width: 56px; height: 56px; flex: 0 0 56px; border-radius: 50%; overflow: hidden; border: 3px solid #FFE08A; background: #12203A; }
@@ -2367,7 +2367,7 @@
     .mkt-panel .mkt-scene { position: absolute; inset: 0; width: auto; height: auto; max-height: none; aspect-ratio: auto; border: 0; border-radius: 0; }
     .mkt-panel .cab-head {
       position: absolute; z-index: 7; top: 12px; left: 12px; right: 12px; padding: 8px 12px; gap: 10px;
-      background: rgba(12, 42, 45, 0.8); border: 3px solid var(--cb-edge); border-radius: 20px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      background: rgba(12, 42, 45, 0.8); border: 3px solid var(--cb-edge); border-radius: 20px; 
     }
     .mkt-panel .cab-head-tile { width: 40px; height: 40px; border-radius: 13px; }
     .mkt-panel .cab-title { font-size: 22px; }
@@ -2432,7 +2432,7 @@
     @media (max-width: 899px) { .mkt-todpop { left: auto; right: calc(100% + 10px); bottom: auto; top: 0; } }
 
     /* ---- smoothness: each scene layer gets its own compositor layer so moving people don't repaint the street, shop and lights ---- */
-    .mkt-scene .mkt-svg { will-change: transform; }
+    /* will-change removed: forcing each full-screen scene layer onto its own GPU layer and then blending them (time-of-day tint) caused flicker on many GPUs */
     .mkt-scene .mkt-svg:not(#mktWalk) { contain: strict; }
 
     /* ---- market chat: a typing box bottom-left, with floating, scrolling lines above it ---- */
@@ -2450,7 +2450,7 @@
     .mkt-chatlog .cn::after { content: ':'; }
     .mkt-chatlog .cl.sys .cn { display: none; }
     .mkt-chatform { display: flex; gap: 6px; pointer-events: auto; }
-    .mkt-chatform input { flex: 1; min-width: 0; height: 40px; padding: 0 14px; font: 600 14px 'Nunito', system-ui, sans-serif; color: #fff; background: rgba(12, 22, 34, 0.62); border: 2px solid rgba(255, 255, 255, 0.28); border-radius: 20px; outline: none; backdrop-filter: blur(4px); }
+    .mkt-chatform input { flex: 1; min-width: 0; height: 40px; padding: 0 14px; font: 600 14px 'Nunito', system-ui, sans-serif; color: #fff; background: rgba(12, 22, 34, 0.62); border: 2px solid rgba(255, 255, 255, 0.28); border-radius: 20px; outline: none; }
     .mkt-chatform input::placeholder { color: rgba(255, 255, 255, 0.62); }
     .mkt-chatform input:focus { border-color: #FBD879; background: rgba(12, 22, 34, 0.8); }
     .mkt-chatform button { flex: none; width: 40px; height: 40px; padding: 0; display: grid; place-items: center; cursor: pointer; color: #4A2410; background: linear-gradient(#FBD879, #E3A93A); border: 3px solid var(--wood-dark); border-radius: 50%; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35); }
@@ -6557,12 +6557,36 @@
     for (k = 0; k < tables.length; k++) { t = tables[k]; var v = visIn(t.x, t.y, t.cz); if (t.vis !== v) { t.vis = v; t.g.style.display = v ? '' : 'none'; } }
     for (k = 0; k < spots.length; k++) { t = spots[k]; var v2 = visIn(t.x, t.y); if (t.vis !== v2) { t.vis = v2; t.g.style.display = v2 ? '' : 'none'; } }
   }
+  // Put the scene back in depth order while moving as few elements as possible.
+  // Re-appending everything (the old way) restarted every object's CSS animation
+  // ~9 times a second, which made the whole market flash. Static things (tables,
+  // stalls, seated people) are strongly preferred to stay put; walkers and cars move.
+  function reorderDepth(holder, items) {
+    var n = items.length, i, j, k, kids = holder.children;
+    for (k = 0; k < kids.length; k++) kids[k].__di = k;
+    var seq = [], wt = [], best = [], prev = [], keep = [];
+    for (i = 0; i < n; i++) {
+      seq[i] = items[i].g.parentNode === holder ? items[i].g.__di : -1;
+      wt[i] = (walkers.indexOf(items[i]) >= 0 || cars.indexOf(items[i]) >= 0) ? 1 : 100;
+      best[i] = seq[i] < 0 ? 0 : wt[i]; prev[i] = -1;
+      if (seq[i] < 0) continue;
+      for (j = 0; j < i; j++) if (seq[j] >= 0 && seq[j] < seq[i] && best[j] + wt[i] > best[i]) { best[i] = best[j] + wt[i]; prev[i] = j; }
+    }
+    var top = -1; for (i = 0; i < n; i++) if (top < 0 || best[i] > best[top]) top = i;
+    for (i = top; i >= 0; i = prev[i]) keep[i] = true;
+    var lastKept = top, ref;
+    for (i = n - 1; i >= 0; i--) {
+      if (keep[i]) continue;
+      ref = i === n - 1 ? (lastKept >= 0 ? items[lastKept].g.nextSibling : null) : items[i + 1].g;
+      if (ref !== items[i].g && items[i].g.nextSibling !== ref) holder.insertBefore(items[i].g, ref);
+    }
+  }
   function drawWalkers() {
     if (!allItems) allItems = walkers.concat(tables, cars, spots);
     allItems.sort(function (a, b) { return (a.x + a.y) - (b.x + b.y); });
     var holder = walkHolder || (walkHolder = walk.querySelector('#mktWalkers')), need = false, i;
     for (i = 0; i < allItems.length; i++) if (holder.children[i] !== allItems[i].g) { need = true; break; }
-    if (need) allItems.forEach(function (w) { holder.appendChild(w.g); });
+    if (need) reorderDepth(holder, allItems);
     walkers.forEach(function (w) {
       var vis = w.mode !== 'gone' && visIn(w.x, w.y);
       if (w.vis !== vis) { w.vis = vis; w.g.style.display = vis ? '' : 'none'; }
