@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Every GitHub Actions build gets a higher version number automatically.
+def ciRun = System.getenv("GITHUB_RUN_NUMBER")
+def buildNumber = ciRun != null ? ciRun.toInteger() : 1
+
+android {
+    namespace 'com.manderstudio.shootthescene'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.manderstudio.shootthescene'
+        minSdk 26
+        targetSdk 35
+        versionCode buildNumber
+        versionName "0.1.${buildNumber}"
+    }
+
+    signingConfigs {
+        // Fixed test key kept in the repo, so each new APK installs over the
+        // previous one without uninstalling (and your saved progress stays).
+        // For the Play Store you will use a separate, private release key.
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+
+    sourceSets {
+        main {
+            // Your game lives in the top-level "web" folder.
+            assets.srcDirs += ['../web']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.12.1'
+}
