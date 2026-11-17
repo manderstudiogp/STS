@@ -11,6 +11,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -51,6 +54,8 @@ public class MainActivity extends Activity {
             "})();";
 
     private WebView webView;
+    private GeolocationPermissions.Callback geoCb;
+    private String geoOrigin;
     private WebViewAssetLoader assetLoader;
 
     @SuppressWarnings("deprecation")
@@ -113,7 +118,17 @@ public class MainActivity extends Activity {
         WebView.setWebContentsDebuggingEnabled(debuggable);
 
         webView.addJavascriptInterface(new NativeBridge(), "AndroidApp");
-        webView.setWebChromeClient(new WebChromeClient()); // enables alert()/confirm()
+        s.setGeolocationEnabled(true);
+        webView.setWebChromeClient(new WebChromeClient() {   // also enables alert()/confirm()
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback cb) {
+                // Photo Planner "Use my location": ask Android once, then tell the page the answer.
+                if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    geoCb = cb; geoOrigin = origin;
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 7);
+                } else cb.invoke(origin, true, false);
+            }
+        });
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
@@ -187,14 +202,24 @@ public class MainActivity extends Activity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int code, String[] perms, int[] res) {
+        super.onRequestPermissionsResult(code, perms, res);
+        if (code == 7 && geoCb != null) {
+            geoCb.invoke(geoOrigin, res.length > 0 && res[0] == PackageManager.PERMISSION_GRANTED, false);
+            geoCb = null;
+        }
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public void onBackPressed() {
-        if (webView != null && webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
+        if (webView == null) { super.onBackPressed(); return; }
+        // Close the top window in the game first (Photo Planner, settings, shop...), then leave the app.
+        webView.evaluateJavascript("(function(){try{return window.__stsBack&&window.__stsBack()?1:0}catch(e){return 0}})()", v -> {
+            if ("1".equals(v)) return;
+            if (webView != null && webView.canGoBack()) webView.goBack(); else moveTaskToBack(true);
+        });
     }
 
     @Override

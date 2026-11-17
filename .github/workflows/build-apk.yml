@@ -5,6 +5,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:   # adds a "Run workflow" button on the Actions tab
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,3 +36,11 @@ jobs:
           name: ShootTheScene-build${{ github.run_number }}
           path: out/*.apk
           retention-days: 30
+
+      - name: Publish APK to a release (direct download link)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "build-${{ github.run_number }}" "out/ShootTheScene-build${{ github.run_number }}.apk" \
+            --title "Shoot the Scene build ${{ github.run_number }}" \
+            --notes "Test APK. Commit: ${{ github.sha }}" --latest

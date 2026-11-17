@@ -3,6 +3,10 @@
 
     <!-- Needed for Google Fonts, Unsplash photos, and later your backend. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Photo Planner "Use my location" (asked only when tapped). -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.location" android:required="false" />
 
     <application
         android:allowBackup="true"

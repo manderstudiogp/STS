@@ -12,6 +12,9 @@ A native Android app that runs the Shoot the Scene web game full-screen.
 New builds install over the old one, so saved progress is kept.
 To rebuild without changing anything: Actions → Build APK → **Run workflow**.
 
+## Direct download link
+Every build is also published as a GitHub Release: open the repo → **Releases** → the newest one → tap the `.apk` to download it on your phone.
+
 ## Update the game
 Replace `web/index.html` with your new version, then commit and push.
 Any extra files (images, .js, .css) also go in `web/`.
