@@ -2574,6 +2574,29 @@
 #wx .ck-pick small { color: var(--sub); }
 @media (max-width: 380px) { #wx .ck { padding: 7px 5px; } #wx .ck-t { font-size: 15px; } #wx .ck-n { font-size: 9.5px; } #wx .ck-s { font-size: 9px; } }
 
+#wx button.score { width: 100%; text-align: left; border: 0; color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+#wx button.score:active { filter: brightness(1.15); }
+#wx .sqouts { display: grid; gap: 8px; margin-top: 10px; } #wx .sqouts .score { margin-top: 0; }
+#wx .sqgo { font-size: 11.5px; font-weight: 600; color: var(--copper, #e7a66b); margin-top: 4px; }
+#wx .sqouts .score > b { flex: none; min-width: 84px; font-size: 30px; text-align: center; }
+#wx .sqwhen { font-size: 11.5px; color: var(--dim); margin-top: 3px; }
+#wx .sqchart { width: 100%; height: auto; display: block; touch-action: manipulation; }
+#wx .sqleg, #wx .sqkey { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11px; color: var(--sub); margin: 6px 0 4px; }
+#wx .sqleg i, #wx .sqkey i { display: inline-block; width: 12px; height: 8px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+#wx .sqleg i.band { background: rgba(240,162,90,.3); }
+#wx .sqsel { display: flex; gap: 14px; align-items: center; margin: 8px 0 6px; }
+#wx .sqbig { font: 400 44px/1 var(--serif); } #wx .sqbig small { font-size: 16px; opacity: .7; margin-left: 2px; }
+#wx .sqlv { font-weight: 700; font-size: 16px; }
+#wx .sqconf { font-size: 12.5px; color: var(--sub); background: rgba(243,231,211,.06); padding: 8px 10px; border-radius: 10px; margin-bottom: 8px; } #wx .sqconf b { color: var(--ink); }
+#wx .sqrows { display: grid; gap: 6px; }
+#wx .sqrow { display: grid; grid-template-columns: 128px 1fr 52px; gap: 8px; align-items: center; font-size: 12px; color: var(--sub); }
+#wx .sqrow i { height: 7px; border-radius: 4px; background: rgba(243,231,211,.1); overflow: hidden; display: block; } #wx .sqrow u { display: block; height: 100%; border-radius: 4px; text-decoration: none; } #wx .sqrow b { color: var(--ink); text-align: right; font-weight: 600; }
+#wx .sqdays { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--dim); padding: 0 6px; margin-bottom: 4px; } #wx .sqdays .on { color: var(--ink); font-weight: 700; }
+#wx .sqmapbox { position: relative; border-radius: 12px; overflow: hidden; line-height: 0; border: 1px solid var(--line); } #wx #sqMap { display: block; width: 100%; touch-action: manipulation; cursor: crosshair; }
+#wx .sqprobe { position: absolute; width: 164px; background: rgba(10,12,20,.94); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 11.5px; line-height: 1.4; color: var(--sub); pointer-events: none; } #wx .sqprobe b { color: #fff; } #wx .sqpx { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
+#wx .sqbest { font-size: 12.5px; color: var(--sub); margin-top: 8px; } #wx .sqbest b { color: var(--ink); }
+@media (max-width: 380px) { #wx .sqrow { grid-template-columns: 104px 1fr 46px; font-size: 11px; } #wx .sqbig { font-size: 38px; } }
+
     /* ================= START / HOME SCREEN CHOICE ================= */
     .ss-acct-row { gap: 10px; flex-wrap: wrap; }
     .nav-seg { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
@@ -4079,6 +4102,21 @@
         <div class="pl-date" id="plDateRow"><button class="wx-back" type="button" id="plPrev" aria-label="Previous day">‹</button><b id="plDate">–</b><button class="wx-back" type="button" id="plNext" aria-label="Next day">›</button><button class="btn" type="button" id="plToday">Today</button></div>
         <div id="plBody" style="display:grid;gap:12px"></div>
         <p class="foot">Sun and moon positions are calculated on your device (accurate to about a minute). Cloud forecast: NOAA NWS (US) · Open-Meteo (elsewhere).</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ SUNSET / SUNRISE OUTLOOK ============ -->
+  <section class="wx-screen" id="wxSunq" data-screen="sunq">
+    <header class="wx-bar">
+      <button class="wx-back" type="button" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="wx-title"><div class="wx-kicker" id="sqPlace">Sunset &amp; sunrise</div><h1 class="wx-h">Colour Outlook</h1></div>
+    </header>
+    <div class="wx-scroll">
+      <div class="wx-wrap">
+        <div id="sqBody" style="display:grid;gap:12px"></div>
+        <p class="foot">Cloud layers: ECMWF, GFS and ICON via Open-Meteo. Sun times and direction are calculated on your device. A forecast of colour is an estimate, not a promise.</p>
       </div>
     </div>
   </section>
@@ -10478,7 +10516,7 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
   var sb = $('ssStartBtn'), wxb = $('ssWxBtn'), wxEl = $('wx'), wxOn = false, wxBooted = false, wxOpener = null, wxWas = [];
   var wxBehind = function () { return [$('ssHub'), $('ssSoundBtn'), $('ssMe'), document.querySelector('.ss-start-wrap')]; };
   function wxOpen(from) {
-    if (!wxEl || wxOn) return; wxOn = true; wxOpener = from || null;
+    if (!wxEl || wxOn) return; wxOn = true; window.__wxOn = true; try { window.SSMusic && SSMusic.update && SSMusic.update(); } catch (e) {} wxOpener = from || null;
     var bh = wxBehind(); wxWas = bh.map(function (n) { return n ? n.inert : false; }); bh.forEach(function (n) { if (n) n.inert = true; });
     wxEl.style.display = 'block';
     if (!wxBooted) { wxBooted = true; try { window.__wxBoot(); } catch (e) { try { console.error(e); } catch (x) {} } if (window.WX) WX.onExit = wxClose; addHomeBtn(); addStartBtns(); }
@@ -10486,7 +10524,7 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
     setTimeout(function () { try { var bk = wxEl.querySelector('.wx-screen.on .wx-back'); if (bk) bk.focus({ preventScroll: true }); } catch (e) {} }, 60);
   }
   function wxClose() {
-    if (!wxEl || !wxOn) return; wxOn = false; wxEl.style.display = 'none';
+    if (!wxEl || !wxOn) return; wxOn = false; window.__wxOn = false; try { window.SSMusic && SSMusic.update && SSMusic.update(); } catch (e) {} wxEl.style.display = 'none';
     wxBehind().forEach(function (n, i) { if (n) n.inert = wxWas[i] || false; });
     var o = wxOpener && wxOpener.isConnected && !wxOpener.closest('[inert]') ? wxOpener : ($('ssHub') && !$('ssHub').hidden ? $('hubWxBtn') : $('ssWxBtn')); try { if (o) o.focus({ preventScroll: true }); } catch (e) {}
   }
@@ -10764,7 +10802,7 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
   })();
 
   /* ---------- screen router (Android back = history) ---------- */
-  const screens = { home: 'wxHome', global: 'wxGlobal', meteo: 'wxMeteo', planner: 'wxPlanner' };
+  const screens = { home: 'wxHome', global: 'wxGlobal', meteo: 'wxMeteo', planner: 'wxPlanner', sunq: 'wxSunq' };
   WX.cur = 'home';
   WX.show = function (name, push) {
     if (!screens[name]) name = 'home';
@@ -10774,8 +10812,8 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
     (WX.onShow[name] || []).forEach(function (f) { f(prev); });
     (WX.onHide[prev] || []).forEach(function (f) { if (prev !== name) f(); });
   };
-  WX.onShow = { home: [], global: [], meteo: [], planner: [] };
-  WX.onHide = { home: [], global: [], meteo: [], planner: [] };
+  WX.onShow = { home: [], global: [], meteo: [], planner: [], sunq: [] };
+  WX.onHide = { home: [], global: [], meteo: [], planner: [], sunq: [] };
   window.addEventListener('popstate', function (e) { WX.show((e.state && e.state.wx) || 'home', false); });
   root.addEventListener('click', function (e) {
     const go = e.target.closest('[data-go]'); if (go) { WX.show(go.getAttribute('data-go'), true); return; }
@@ -11024,8 +11062,35 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
       '<div><span>Daylight</span><b>' + (s.rise && s.set ? Math.floor((s.set - s.rise) / 3600000) + 'h ' + Math.round(((s.set - s.rise) / 60000) % 60) + 'm' : '–') + '</b></div>' +
       '<div class="moonkv">' + WX.moonSVG(mo.phase, 38) + '<div><span>Moon</span><b>' + esc(mo.name) + '</b> <small class="muted">· ' + Math.round(mo.illum * 100) + '% lit · full moon in ' + Math.round(mo.toFull) + ' days</small></div></div>' +
       '</div>' +
-      (score != null ? '<div class="score"><b>' + score + '/10</b><div><div style="font-weight:600">Sunset photo outlook</div><div class="muted" style="font-size:12.5px">' + esc(why) + '</div></div></div>' : '');
+      '<div class="sqouts"></div>';
+    SUNQ_ROWS(card, m, s, score, why);
     return card;
+  }
+
+  /* ---------- sunset + sunrise photo outlook rows (tap for the chart and colour map) ---------- */
+  function SUNQ_ROWS(card, m, s, sScore, sWhy) {
+    const p = m.place, now = new Date(), box = card.querySelector('.sqouts'); if (!box) return;
+    let rise = s.rise && s.rise > now ? s.rise : null;
+    if (!rise) { const t = WX.sunCross(new Date(now.getTime() + 86400000), p.lat, p.lon, -0.833); rise = t.rise; }
+    const near = function (t) { if (!t || !m.hours.length) return null; const h = m.hours.reduce(function (b, x) { return Math.abs(x.time - t) < Math.abs(b.time - t) ? x : b; }, m.hours[0]); return Math.abs(h.time - t) < 3 * 3600000 ? h : null; };
+    const heur = function (h) { const base = { clear: 7, partly: 9, cloudy: 4, rain: 2, showers: 5, thunder: 4, snow: 4, sleet: 2, fog: 5, haze: 6, wind: 7 }[h.kind] || 5; return Math.max(1, Math.min(10, base - ((h.pop || 0) > 60 ? 2 : 0))); };
+    const WHY = { clear: 'Clean light, but plain skies — great for silhouettes.', partly: 'Broken clouds catch colour — the best odds for a fiery sky.', cloudy: 'Heavy cloud may block the colour. Watch for a gap on the horizon.', rain: 'Rain likely. Try reflections and moody storm light.', showers: 'Showers may clear — watch for light under the cloud edge.', thunder: 'Stormy — dramatic, but stay safe.', snow: 'Soft snowy light; colour is unlikely.', sleet: 'Wet and grey; colour is unlikely.', fog: 'Fog can glow softly but hides the sun.', haze: 'Haze can deepen reds near the horizon.', wind: 'Clear and breezy — good for crisp light.' };
+    const rows = {};
+    [['set', 'Sunset', s.set], ['rise', 'Sunrise', rise]].forEach(function (r) {
+      const h = near(r[2]); if (!h && !(r[0] === 'set' && sScore != null)) return;
+      const sc = h ? heur(h) : sScore, b = document.createElement('button'); b.type = 'button'; b.className = 'score tap'; b.setAttribute('data-k', r[0]);
+      b.innerHTML = '<b>' + sc + '/10</b><div><div style="font-weight:600">' + r[1] + ' photo outlook</div><div class="muted" style="font-size:12.5px">' + esc((h && WHY[h.kind]) || sWhy || '') + '</div><div class="sqwhen">' + esc((r[0] === 'set' ? 'Tonight ' : 'Next ') + WX.hm(r[2])) + '</div><div class="sqgo">Chart &amp; colour map ›</div></div>';
+      b.onclick = function () { if (WX.sunq && WX.sunq.open) WX.sunq.open(r[0]); };
+      box.appendChild(b); rows[r[0]] = b;
+    });
+    // upgrade to the three-model cloud-layer score once it arrives
+    if (WX.sunq && WX.sunq.quick) WX.sunq.quick(p).then(function (o) {
+      ['set', 'rise'].forEach(function (k) {
+        const e = o[k], b = rows[k]; if (!e || !b) return; const lv = WX.sunq.level(e.s);
+        b.querySelector('b').textContent = (Math.round(e.s * 10) / 10).toString().replace(/^(\d+)$/, '$1') + '/10';
+        const w = b.querySelector('.sqwhen'); if (w) w.innerHTML = w.innerHTML + ' · <span style="color:' + lv[2] + '">' + lv[1] + '</span> · ' + e.confL + ' confidence';
+      });
+    }, function () {});
   }
 
   /* ---------- units ---------- */
@@ -11069,7 +11134,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
   const BR = window.WX_BORDERS || {};
   function decodeL(s, d) { return s ? decode(s, d) : []; }
   const bC110 = decodeL(BR.c110, 1), bC50 = decodeL(BR.c50, 2), bUS = decodeL(BR.usa, 2), bReg = decodeL(BR.reg, 2);
-  WX.land110 = land110;
+  WX.land110 = land110; WX.geo = { land110: land110, land50: land50, c110: bC110, c50: bC50, us: bUS };
 
   /* ---------- regions ---------- */
   const REGIONS = [
@@ -14379,6 +14444,245 @@ window.__wxBoot = function () {
   if (!build()) document.addEventListener('DOMContentLoaded', build);
 })();
 </script>
+<script>
+/* ===== Sunset / sunrise photo outlook: model-agreement chart + scrubbable colour map ===== */
+(function () {
+  'use strict';
+  const WX = window.WX, esc = WX.esc, el = WX.el;
+  const CITIES = 'New York,40.71,-74.01,1|Los Angeles,34.05,-118.24,1|Chicago,41.88,-87.63,1|Houston,29.76,-95.37,1|Phoenix,33.45,-112.07,1|Philadelphia,39.95,-75.17,1|San Antonio,29.42,-98.49,2|San Diego,32.72,-117.16,1|Dallas,32.78,-96.8,1|San Jose,37.34,-121.89,2|Austin,30.27,-97.74,2|Jacksonville,30.33,-81.66,2|Fort Worth,32.75,-97.33,3|Columbus,39.96,-83,2|Charlotte,35.23,-80.84,2|San Francisco,37.77,-122.42,1|Indianapolis,39.77,-86.16,2|Seattle,47.61,-122.33,1|Denver,39.74,-104.99,1|Washington DC,38.91,-77.04,1|Boston,42.36,-71.06,1|El Paso,31.76,-106.49,2|Nashville,36.16,-86.78,2|Detroit,42.33,-83.05,2|Oklahoma City,35.47,-97.52,2|Portland,45.52,-122.68,1|Las Vegas,36.17,-115.14,1|Memphis,35.15,-90.05,2|Louisville,38.25,-85.76,2|Baltimore,39.29,-76.61,2|Milwaukee,43.04,-87.91,2|Albuquerque,35.08,-106.65,2|Tucson,32.22,-110.97,2|Fresno,36.74,-119.79,2|Sacramento,38.58,-121.49,2|Kansas City,39.1,-94.58,2|Atlanta,33.75,-84.39,1|Miami,25.76,-80.19,1|Omaha,41.26,-95.93,2|Raleigh,35.78,-78.64,2|Minneapolis,44.98,-93.27,1|New Orleans,29.95,-90.07,2|Tampa,27.95,-82.46,2|Cleveland,41.5,-81.69,2|Pittsburgh,40.44,-80,2|Cincinnati,39.1,-84.51,2|St. Louis,38.63,-90.2,2|Salt Lake City,40.76,-111.89,2|Boise,43.62,-116.2,2|Spokane,47.66,-117.43,2|Tacoma,47.25,-122.44,2|Everett,47.98,-122.2,3|Bellingham,48.75,-122.48,3|Olympia,47.04,-122.9,3|Yakima,46.6,-120.51,3|Wenatchee,47.42,-120.31,3|Bend,44.06,-121.31,3|Eugene,44.05,-123.09,2|Salem,44.94,-123.04,3|Medford,42.33,-122.87,3|Astoria,46.19,-123.83,3|Port Angeles,48.12,-123.43,3|Vancouver BC,49.28,-123.12,1|Victoria,48.43,-123.37,2|Kelowna,49.89,-119.5,3|Calgary,51.05,-114.07,1|Edmonton,53.55,-113.49,1|Winnipeg,49.9,-97.14,2|Toronto,43.65,-79.38,1|Ottawa,45.42,-75.7,2|Montreal,45.5,-73.57,1|Quebec City,46.81,-71.21,2|Halifax,44.65,-63.57,2|Anchorage,61.22,-149.9,2|Honolulu,21.31,-157.86,2|Reno,39.53,-119.81,3|Billings,45.78,-108.5,3|Cheyenne,41.14,-104.82,3|Santa Fe,35.69,-105.94,3|Wichita,37.69,-97.34,3|Des Moines,41.59,-93.62,3|Madison,43.07,-89.4,3|Grand Rapids,42.96,-85.67,3|Buffalo,42.89,-78.88,3|Albany,42.65,-73.76,3|Hartford,41.76,-72.67,3|Providence,41.82,-71.41,3|Richmond,37.54,-77.44,3|Charleston,32.78,-79.93,3|Savannah,32.08,-81.09,3|Birmingham,33.52,-86.8,3|Little Rock,34.75,-92.29,3|Jackson,32.3,-90.18,3|Orlando,28.54,-81.38,2|Corpus Christi,27.8,-97.4,3|Lubbock,33.58,-101.86,3|Amarillo,35.22,-101.83,3|Tulsa,36.15,-95.99,3|Santa Barbara,34.42,-119.7,3|Palm Springs,33.83,-116.55,3|Bakersfield,35.37,-119.02,3|Monterey,36.6,-121.89,3|Redding,40.59,-122.39,3|Flagstaff,35.2,-111.65,3|St. George,37.1,-113.58,3|Missoula,46.87,-113.99,3|Great Falls,47.5,-111.3,3|Bismarck,46.81,-100.78,3|Fargo,46.88,-96.79,3|Sioux Falls,43.55,-96.73,3|Rapid City,44.08,-103.23,3|Duluth,46.79,-92.1,3|Green Bay,44.52,-88.02,3|Knoxville,35.96,-83.92,3|Chattanooga,35.05,-85.31,3|Lexington,38.04,-84.5,3|Norfolk,36.85,-76.29,3|Wilmington,34.23,-77.94,3|Key West,24.56,-81.78,3|Pensacola,30.42,-87.22,3|Mobile,30.69,-88.04,3|Baton Rouge,30.45,-91.15,3|Shreveport,32.53,-93.75,3|Portland ME,43.66,-70.26,3|Burlington,44.48,-73.21,3|Syracuse,43.05,-76.15,3|Rochester,43.16,-77.61,3|Toledo,41.65,-83.54,3|Peoria,40.69,-89.59,3|Lincoln,40.81,-96.7,3|Colorado Springs,38.83,-104.82,3|Grand Junction,39.06,-108.55,3|Mexico City,19.43,-99.13,1|Guadalajara,20.66,-103.35,2|Monterrey,25.69,-100.32,2|Tijuana,32.51,-117.04,2|Cancun,21.16,-86.85,3|Havana,23.11,-82.37,2|London,51.51,-0.13,1|Manchester,53.48,-2.24,2|Edinburgh,55.95,-3.19,2|Dublin,53.35,-6.26,2|Paris,48.86,2.35,1|Lyon,45.76,4.84,2|Marseille,43.3,5.37,2|Madrid,40.42,-3.7,1|Barcelona,41.39,2.17,2|Lisbon,38.72,-9.14,2|Rome,41.9,12.5,1|Milan,45.46,9.19,2|Naples,40.85,14.27,2|Berlin,52.52,13.4,1|Hamburg,53.55,9.99,2|Munich,48.14,11.58,2|Frankfurt,50.11,8.68,2|Amsterdam,52.37,4.9,2|Brussels,50.85,4.35,2|Zurich,47.38,8.54,2|Vienna,48.21,16.37,2|Prague,50.08,14.44,2|Warsaw,52.23,21.01,2|Copenhagen,55.68,12.57,2|Stockholm,59.33,18.07,2|Oslo,59.91,10.75,2|Helsinki,60.17,24.94,2|Reykjavik,64.15,-21.94,2|Athens,37.98,23.73,2|Istanbul,41.01,28.98,1|Moscow,55.76,37.62,1|Kyiv,50.45,30.52,2|Cairo,30.04,31.24,1|Lagos,6.52,3.38,1|Nairobi,-1.29,36.82,2|Johannesburg,-26.2,28.05,1|Cape Town,-33.92,18.42,2|Casablanca,33.57,-7.59,2|Dubai,25.2,55.27,1|Riyadh,24.71,46.68,2|Tel Aviv,32.09,34.78,2|Tehran,35.69,51.39,2|Karachi,24.86,67.01,2|Delhi,28.61,77.21,1|Mumbai,19.08,72.88,1|Bangalore,12.97,77.59,2|Kolkata,22.57,88.36,2|Dhaka,23.81,90.41,2|Bangkok,13.76,100.5,1|Singapore,1.35,103.82,1|Jakarta,-6.21,106.85,1|Manila,14.6,120.98,1|Hong Kong,22.32,114.17,1|Shanghai,31.23,121.47,1|Beijing,39.9,116.41,1|Seoul,37.57,126.98,1|Tokyo,35.68,139.69,1|Osaka,34.69,135.5,2|Taipei,25.03,121.57,2|Sydney,-33.87,151.21,1|Melbourne,-37.81,144.96,1|Brisbane,-27.47,153.03,2|Perth,-31.95,115.86,2|Adelaide,-34.93,138.6,2|Auckland,-36.85,174.76,2|Wellington,-41.29,174.78,2|Sao Paulo,-23.55,-46.63,1|Rio de Janeiro,-22.91,-43.17,1|Buenos Aires,-34.6,-58.38,1|Santiago,-33.45,-70.67,2|Lima,-12.05,-77.04,2|Bogota,4.71,-74.07,2|Panama City,8.98,-79.52,3|Caracas,10.48,-66.9,3'.split('|').map(function (s) { const a = s.split(','); return { n: a[0], lat: +a[1], lon: +a[2], t: +a[3] }; });
+  const MODELS = ['ecmwf_ifs025', 'gfs_seamless', 'icon_seamless'], MODEL_NAME = { ecmwf_ifs025: 'ECMWF', gfs_seamless: 'GFS', icon_seamless: 'ICON' };
+  const D2R = Math.PI / 180, DAY = 86400000, HOUR = 3600000, cl = function (x, a, b) { return Math.max(a, Math.min(b, x)); };
+  /* ---------- the colour model: 0..10 ---------- */
+  function factors(f) {            // f: H, M, L (%), Ls (low cloud toward the sun, %), pr (mm/h), vis (m), rh (%)
+    const C = Math.min(110, f.H + .8 * f.M);
+    const fc = C <= 55 ? .45 + .55 * Math.pow(C / 55, .8) : 1 - (C - 55) / 62;
+    const fl = 1 - Math.pow(cl(f.Ls / 75, 0, 1), 1.2), fo = 1 - .45 * cl(f.L / 100, 0, 1);
+    const fp = f.pr > .3 ? .35 : f.pr > .05 ? .7 : 1, fv = f.vis != null ? cl(f.vis / 20000, .6, 1) : 1, fh = f.rh > 92 ? .9 : 1;
+    return { fc: Math.max(.05, fc), fl: fl, fo: fo, fp: fp, fv: fv, fh: fh };
+  }
+  function score(f) { const k = factors(f), q = k.fc * k.fl * k.fo * k.fp * k.fv * k.fh; return cl(Math.round((.8 + 9.2 * q) * 10) / 10, 1, 10); }
+  const LEVELS = [[8.5, 'Epic', '#ff7a4a'], [7, 'Great', '#f0629a'], [5.5, 'Good', '#e7a66b'], [4, 'Fair', '#b9a98f'], [0, 'Poor', '#8f93a8']];
+  function level(s) { for (let i = 0; i < LEVELS.length; i++) if (s >= LEVELS[i][0]) return LEVELS[i]; return LEVELS[4]; }
+  /* ---------- data ---------- */
+  const hrs = function (d) { return d.hourly.time.map(function (s) { return Date.parse(s + 'Z'); }); };
+  function at(T, arr, t) { if (!arr) return null; const x = (t - T[0]) / HOUR, i = Math.floor(x); if (i < 0 || i + 1 >= T.length) return null; const a = arr[i], b = arr[i + 1]; if (a == null || b == null) return null; return a + (b - a) * (x - i); }
+  function fetchPoint(p) {
+    const u = 'https://api.open-meteo.com/v1/forecast?latitude=' + p.lat.toFixed(3) + '&longitude=' + p.lon.toFixed(3) + '&hourly=cloud_cover_low,cloud_cover_mid,cloud_cover_high,relative_humidity_2m,precipitation,visibility&models=' + MODELS.join(',') + '&forecast_days=7&timezone=UTC';
+    return WX.getJSON(u, { ttl: 30, timeout: 20000 }).then(function (d) {
+      const T = hrs(d), out = [];
+      MODELS.forEach(function (m) { const g = function (k) { return d.hourly[k + '_' + m] || d.hourly[k]; }; const o = { m: m, T: T, L: g('cloud_cover_low'), M: g('cloud_cover_mid'), H: g('cloud_cover_high'), rh: g('relative_humidity_2m'), pr: g('precipitation'), vis: g('visibility') }; if (o.H && o.H.some(function (v) { return v != null; })) out.push(o); });
+      if (!out.length) throw new Error('no data'); return out;
+    });
+  }
+  function ringPts(p) { const r = []; for (let b = 0; b < 360; b += 45) r.push({ lat: p.lat + Math.cos(b * D2R), lon: p.lon + Math.sin(b * D2R) / Math.max(.2, Math.cos(p.lat * D2R)) }); return r; }
+  function fetchRing(p) {
+    const r = ringPts(p), u = 'https://api.open-meteo.com/v1/forecast?latitude=' + r.map(function (q) { return q.lat.toFixed(3); }).join(',') + '&longitude=' + r.map(function (q) { return q.lon.toFixed(3); }).join(',') + '&hourly=cloud_cover_low&forecast_days=7&timezone=UTC';
+    return WX.getJSON(u, { ttl: 30, timeout: 20000 }).then(function (d) { d = Array.isArray(d) ? d : [d]; return d.map(function (x) { return { T: hrs(x), L: x.hourly.cloud_cover_low }; }); }).catch(function () { return null; });
+  }
+  function events(p, days) {
+    const now = Date.now(), out = [];
+    for (let d = 0; d < days; d++) ['rise', 'set'].forEach(function (k) {
+      const s = WX.sunCross(new Date(now + d * DAY), p.lat, p.lon, -0.833), t = s[k]; if (t && t.getTime() > now - 1800000) out.push({ d: d, k: k, t: t.getTime() });
+    });
+    return out;
+  }
+  const sunAz = function (t, lat, lon) { try { return WX.astro.sunPos(t, lat, lon).az; } catch (e) { return 270; } };
+  const pending = {};
+  function load(p) {
+    const key = p.lat.toFixed(2) + ',' + p.lon.toFixed(2); if (pending[key]) return pending[key];
+    return (pending[key] = Promise.all([fetchPoint(p), fetchRing(p)]).then(function (r) {
+      const evs = events(p, 7), models = r[0], ring = r[1];
+      evs.forEach(function (e) {
+        const az = sunAz(e.t, p.lat, p.lon); e.az = az; e.per = [];
+        models.forEach(function (o) {
+          let Ls = at(o.T, o.L, e.t);
+          if (ring) { const x = (az % 360) / 45, i = Math.floor(x) % 8, j = (i + 1) % 8, w = x - Math.floor(x), a = at(ring[i].T, ring[i].L, e.t), b = at(ring[j].T, ring[j].L, e.t); if (a != null && b != null) Ls = .3 * (Ls == null ? a : Ls) + .7 * (a + (b - a) * w); }
+          const f = { H: at(o.T, o.H, e.t), M: at(o.T, o.M, e.t), L: at(o.T, o.L, e.t), Ls: Ls, pr: at(o.T, o.pr, e.t) || 0, vis: at(o.T, o.vis, e.t), rh: at(o.T, o.rh, e.t) || 0 };
+          if (f.H == null || f.M == null || f.L == null) return; if (f.Ls == null) f.Ls = f.L; f.m = o.m; f.s = score(f); e.per.push(f);
+        });
+        if (!e.per.length) { e.s = null; return; }
+        const ss = e.per.map(function (f) { return f.s; }); e.s = ss.reduce(function (a, b) { return a + b; }, 0) / ss.length; e.lo = Math.min.apply(null, ss); e.hi = Math.max.apply(null, ss);
+        const avg = function (k) { return e.per.reduce(function (a, f) { return a + (f[k] || 0); }, 0) / e.per.length; };
+        e.f = { H: avg('H'), M: avg('M'), L: avg('L'), Ls: avg('Ls'), pr: avg('pr'), vis: e.per.reduce(function (a, f) { return a + (f.vis == null ? 20000 : f.vis); }, 0) / e.per.length, rh: avg('rh') };
+        const base = [.95, .9, .8, .65, .5, .4, .3][Math.min(6, e.d)]; e.conf = base * (1 - Math.min(.6, (e.hi - e.lo) / 6));
+        e.confL = e.conf >= .7 ? 'High' : e.conf >= .45 ? 'Medium' : 'Low';
+      });
+      return { evs: evs.filter(function (e) { return e.s != null; }), models: models.map(function (o) { return MODEL_NAME[o.m] || o.m; }) };
+    }, function (er) { delete pending[key]; throw er; }));
+  }
+  /* quick headline numbers for the Today card */
+  WX.sunq = { quick: function (p) { return load(p).then(function (r) { const o = {}; r.evs.forEach(function (e) { if (!o[e.k]) o[e.k] = e; }); return o; }); }, level: level, score: score, load: load };
+  /* ---------- explanation text ---------- */
+  function explain(e) {
+    const f = e.f, k = factors(f), r = Math.round, bits = [];
+    const C = f.H + .8 * f.M;
+    if (C < 12) bits.push('Almost no high or mid cloud, so the sky will be clean — a smooth gradient rather than fire.');
+    else if (C <= 75) bits.push('High/mid cloud (' + r(f.H) + '% high, ' + r(f.M) + '% mid) is in the sweet spot to catch the light.');
+    else bits.push('Too much high/mid cloud (' + r(f.H) + '% high, ' + r(f.M) + '% mid) — the sky may go flat and grey.');
+    if (f.Ls > 45) bits.push('Low cloud toward the ' + (e.k === 'set' ? 'sunset' : 'sunrise') + ' (' + r(f.Ls) + '%) can block the sun at the horizon.'); else if (f.Ls < 20) bits.push('The horizon toward the sun looks open, so light can reach the clouds from below.');
+    if (f.pr > .1) bits.push('Rain around that time lowers the odds.');
+    if (f.vis < 10000) bits.push('Haze/low visibility (' + (f.vis / 1000).toFixed(0) + ' km).');
+    return bits.join(' ');
+  }
+  /* ---------- screen ---------- */
+  const root = document.getElementById('wxSunq'); if (!root) return;
+  const body = root.querySelector('#sqBody'), ST = { p: null, data: null, sel: null, kind: 'set', day: 0, zoom: 1, grid: {}, probe: null };
+  const ZOOMS = [{ n: 'Local', h: 1.3 }, { n: 'Regional', h: 4 }, { n: 'Wide', h: 12 }];
+  WX.sunq.open = function (kind) { ST.kind = kind === 'rise' ? 'rise' : 'set'; ST.p = WX.home; ST.sel = null; ST.day = 0; WX.show('sunq', true); };
+  WX.onShow.sunq.push(function () { build(); });
+  function build() {
+    const p = WX.home; if (!p) { body.innerHTML = '<div class="card"><p class="muted">Pick a place on the Weather Station home screen first.</p></div>'; return; }
+    ST.p = p; root.querySelector('#sqPlace').textContent = p.name || (p.lat.toFixed(2) + ', ' + p.lon.toFixed(2));
+    body.innerHTML = '<div class="card"><div class="status"><span class="spin"></span><span>Reading the cloud layers from three forecast models…</span></div></div>';
+    load(p).then(function (r) {
+      ST.data = r; const first = r.evs.filter(function (e) { return e.k === ST.kind; })[0] || r.evs[0]; if (!ST.sel || !r.evs.includes(ST.sel)) ST.sel = first; ST.day = ST.sel ? ST.sel.d : 0;
+      paint();
+    }, function () { body.innerHTML = '<div class="card"><p class="err">Couldn\'t load cloud-layer forecasts. Check your connection and try again.</p></div>'; });
+  }
+  function chart(evs) {
+    const W = 340, H = 196, L = 26, R = 8, T = 10, B = 24, pw = W - L - R, ph = H - T - B, x = function (d) { return L + (d + .5) / 7 * pw; }, y = function (s) { return T + (1 - s / 10) * ph; };
+    let s = '<svg class="sqchart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Sunrise and sunset colour outlook for the next 7 days">';
+    [[8.5, 10, '#ff7a4a', 'Epic'], [7, 8.5, '#f0629a', 'Great'], [5.5, 7, '#e7a66b', 'Good'], [4, 5.5, '#b9a98f', 'Fair'], [0, 4, '#8f93a8', 'Poor']].forEach(function (b) { s += '<rect x="' + L + '" y="' + y(b[1]) + '" width="' + pw + '" height="' + (y(b[0]) - y(b[1])) + '" fill="' + b[2] + '" opacity=".11"/><text x="' + (W - R - 3) + '" y="' + (y((b[0] + b[1]) / 2) + 3) + '" text-anchor="end" fill="' + b[2] + '" font-size="8.5" opacity=".9">' + b[3] + '</text>'; });
+    [0, 2.5, 5, 7.5, 10].forEach(function (v) { s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="rgba(243,231,211,.12)"/><text x="' + (L - 4) + '" y="' + (y(v) + 3) + '" text-anchor="end" fill="#b9a98f" font-size="8.5">' + v + '</text>'; });
+    const now = Date.now();
+    for (let d = 0; d < 7; d++) s += '<text x="' + x(d) + '" y="' + (H - 8) + '" text-anchor="middle" fill="#b9a98f" font-size="9.5">' + esc(d === 0 ? 'Today' : new Date(now + d * DAY).toLocaleDateString(undefined, { weekday: 'short', timeZone: WX.tz })) + '</text>';
+    [['rise', '#f08fc0'], ['set', '#f0a25a']].forEach(function (sr) {
+      const pts = evs.filter(function (e) { return e.k === sr[0]; }); if (!pts.length) return;
+      s += '<path d="M' + pts.map(function (e) { return x(e.d).toFixed(1) + ',' + y(e.hi).toFixed(1); }).join(' L') + ' L' + pts.slice().reverse().map(function (e) { return x(e.d).toFixed(1) + ',' + y(e.lo).toFixed(1); }).join(' L') + ' Z" fill="' + sr[1] + '" opacity=".16"/>';
+      s += '<path d="M' + pts.map(function (e) { return x(e.d).toFixed(1) + ',' + y(e.s).toFixed(1); }).join(' L') + '" fill="none" stroke="' + sr[1] + '" stroke-width="2" ' + (sr[0] === 'rise' ? 'stroke-dasharray="5 3"' : '') + '/>';
+      pts.forEach(function (e) { const sel = e === ST.sel; s += '<circle cx="' + x(e.d).toFixed(1) + '" cy="' + y(e.s).toFixed(1) + '" r="' + (sel ? 6 : 4) + '" fill="' + sr[1] + '" stroke="' + (sel ? '#fff' : '#14121a') + '" stroke-width="' + (sel ? 2 : 1.2) + '"/><circle class="sqhit" data-e="' + sr[0] + '-' + e.d + '" cx="' + x(e.d).toFixed(1) + '" cy="' + y(e.s).toFixed(1) + '" r="15" fill="transparent"/>'; });
+    });
+    return s + '</svg>';
+  }
+  const bar = function (label, pct, good, note) { return '<div class="sqrow"><span>' + esc(label) + '</span><i><u style="width:' + cl(pct, 0, 100) + '%;background:' + (good ? '#8fd19e' : '#ef8f7a') + '"></u></i><b>' + esc(note) + '</b></div>'; };
+  function detail(e) {
+    if (!e) return ''; const f = e.f, r = Math.round, lv = level(e.s), k = factors(f);
+    return '<div class="sqsel"><div class="sqbig" style="color:' + lv[2] + '">' + e.s.toFixed(1) + '<small>/10</small></div><div><div class="sqlv" style="color:' + lv[2] + '">' + lv[1] + ' ' + (e.k === 'set' ? 'sunset' : 'sunrise') + '</div><div class="muted" style="font-size:12.5px">' + esc(WX.fmt(new Date(e.t), { weekday: 'long', month: 'short', day: 'numeric' })) + ' · ' + esc(WX.hm(new Date(e.t))) + '</div></div></div>' +
+      '<div class="sqconf"><b>Predictability: ' + e.confL + '</b> — ' + e.per.length + ' models say ' + e.lo.toFixed(1) + '–' + e.hi.toFixed(1) + (e.hi - e.lo < 1.2 ? ' (they agree)' : e.hi - e.lo < 2.5 ? ' (some disagreement)' : ' (they disagree — check again later)') + '. Forecasts firm up as the day gets closer.</div>' +
+      '<div class="sqrows">' + bar('High cloud (lights up)', f.H, f.H > 15 && f.H < 85, r(f.H) + '%') + bar('Mid cloud (lights up)', f.M, f.M < 80, r(f.M) + '%') + bar('Low cloud overhead', f.L, f.L < 40, r(f.L) + '%') + bar('Low cloud toward the sun', f.Ls, f.Ls < 35, r(f.Ls) + '%') + bar('Clear air', f.vis / 200, f.vis >= 12000, (f.vis / 1000).toFixed(0) + ' km') + bar('Rain risk', f.pr * 100, f.pr < .05, f.pr > .05 ? f.pr.toFixed(1) + ' mm' : 'dry') + '</div>' +
+      '<p class="learn" style="margin-top:8px">' + esc(explain(e)) + '</p>';
+  }
+  function paint() {
+    const r = ST.data, evs = r.evs, now = Date.now();
+    let h = '<div class="card"><h3>Colour outlook · next 7 days<span class="src">tap a point</span></h3>' + chart(evs) +
+      '<div class="sqleg"><span><i style="background:#f0a25a"></i>Sunset</span><span><i style="background:#f08fc0"></i>Sunrise (dashed)</span><span><i class="band"></i>Models\' range = how sure</span></div><div id="sqDetail">' + detail(ST.sel) + '</div></div>';
+    h += '<div class="card"><h3>Sky colour map<span class="src">' + esc(ST.kind === 'set' ? 'Sunset' : 'Sunrise') + '</span></h3><div class="seg" id="sqKind"><button type="button" data-k="set" class="' + (ST.kind === 'set' ? 'on' : '') + '">Sunset</button><button type="button" data-k="rise" class="' + (ST.kind === 'rise' ? 'on' : '') + '">Sunrise</button></div>' +
+      '<div class="mwlab" style="margin-top:10px"><span>Scrub the day</span><b id="sqDayLab"></b></div><input type="range" class="mwrange" id="sqDay" min="0" max="5" step="1" value="' + ST.day + '" aria-label="Day"><div class="sqdays" id="sqDays"></div>' +
+      '<div class="chips" id="sqZoom" style="margin:6px 0">' + ZOOMS.map(function (z, i) { return '<button type="button" class="chip' + (i === ST.zoom ? ' on' : '') + '" data-z="' + i + '">' + z.n + '</button>'; }).join('') + '</div>' +
+      '<div class="sqmapbox"><canvas id="sqMap"></canvas><div class="sqprobe" id="sqProbe" hidden></div></div>' +
+      '<div class="sqkey"><span><i style="background:rgba(255,255,255,.7)"></i>Cloudy / blocked</span><span><i style="background:transparent;border:1px solid rgba(255,255,255,.3)"></i>Clear</span><span><i style="background:#ffb4d0"></i>Nice colour</span><span><i style="background:#ff6aa0"></i>Hot pink</span><span><i style="background:#ff7a3a"></i>Hot spot</span></div>' +
+      '<div class="sqbest" id="sqBest"></div></div>' +
+      '<div class="card"><h3>How this is worked out</h3><p class="learn">Each score (1–10) mixes the forecast <b>high &amp; mid cloud</b> (they catch the light — about 30–70% is ideal), <b>low cloud toward the sun</b> (blocks it), low cloud overhead, <b>rain</b> and <b>haze</b>, evaluated at the exact ' + (ST.kind === 'set' ? 'sunset' : 'sunrise') + ' time and sun direction for each point. The line uses the average of ' + esc(r.models.join(', ')) + '; the shaded band is how far they disagree. It is an estimate — real colour also depends on aerosols and thin cirrus the models can miss.</p></div>';
+    body.innerHTML = h; wire(); drawMap();
+  }
+  function wire() {
+    body.querySelectorAll('.sqhit').forEach(function (c) { c.addEventListener('click', function () { const q = c.getAttribute('data-e').split('-'), e = ST.data.evs.filter(function (x) { return x.k === q[0] && x.d === +q[1]; })[0]; if (e) { ST.sel = e; ST.kind = e.k; ST.day = Math.min(5, e.d); paint(); } }); });
+    body.querySelectorAll('#sqKind button').forEach(function (b) { b.onclick = function () { ST.kind = b.getAttribute('data-k'); const e = ST.data.evs.filter(function (x) { return x.k === ST.kind && x.d === ST.day; })[0] || ST.data.evs.filter(function (x) { return x.k === ST.kind; })[0]; ST.sel = e || ST.sel; paint(); }; });
+    body.querySelectorAll('#sqZoom .chip').forEach(function (b) { b.onclick = function () { ST.zoom = +b.getAttribute('data-z'); ST.probe = null; paint(); }; });
+    const sl = body.querySelector('#sqDay'); sl.addEventListener('input', function () { ST.day = +sl.value; const e = ST.data.evs.filter(function (x) { return x.k === ST.kind && x.d === ST.day; })[0]; if (e) { ST.sel = e; const dt = body.querySelector('#sqDetail'); if (dt) dt.innerHTML = detail(e); } ST.probe = null; drawMap(); });
+    const cv = body.querySelector('#sqMap'); cv.addEventListener('click', function (ev) { const rc = cv.getBoundingClientRect(); probeAt(ev.clientX - rc.left, ev.clientY - rc.top, rc.width, rc.height); });
+  }
+  /* ---------- map ---------- */
+  const GN = 9;
+  function view() { const z = ZOOMS[ST.zoom], p = ST.p, cw = body.querySelector('#sqMap').parentNode.clientWidth || 320, ch = Math.round(cw * .8), k = ch / (2 * z.h); return { p: p, h: z.h, w: cw, hpx: ch, k: k, cos: Math.cos(p.lat * D2R), z: z }; }
+  const proj = function (V, lon, lat) { return [V.w / 2 + (lon - V.p.lon) * V.cos * V.k, V.hpx / 2 - (lat - V.p.lat) * V.k]; };
+  function gridPts(V) { const pts = [], hw = V.w / 2 / (V.k * V.cos); for (let j = 0; j < GN; j++) for (let i = 0; i < GN; i++) pts.push({ lat: V.p.lat + V.h * (1 - 2 * j / (GN - 1)), lon: V.p.lon - hw + 2 * hw * i / (GN - 1) }); return pts; }
+  function loadGrid(V) {
+    const key = [V.p.lat.toFixed(2), V.p.lon.toFixed(2), ST.zoom, V.w].join(','); if (ST.grid[key]) return ST.grid[key];
+    const pts = gridPts(V), u = 'https://api.open-meteo.com/v1/forecast?latitude=' + pts.map(function (q) { return q.lat.toFixed(2); }).join(',') + '&longitude=' + pts.map(function (q) { return q.lon.toFixed(2); }).join(',') + '&hourly=cloud_cover_low,cloud_cover_mid,cloud_cover_high,precipitation&forecast_days=7&timezone=UTC';
+    return (ST.grid[key] = WX.getJSON(u, { ttl: 30, timeout: 25000 }).then(function (d) { d = Array.isArray(d) ? d : [d]; return { pts: pts, d: d.map(function (x) { return { T: hrs(x), L: x.hourly.cloud_cover_low, M: x.hourly.cloud_cover_mid, H: x.hourly.cloud_cover_high, pr: x.hourly.precipitation }; }) }; }).catch(function (e) { delete ST.grid[key]; throw e; }));
+  }
+  function field(G, V, kind, day) {   // per grid point: event time, then cloud layers at that time
+    const base = Date.now() + day * DAY, F = [];
+    G.pts.forEach(function (q, i) {
+      const s = WX.sunCross(new Date(base), q.lat, q.lon, -0.833), t = s[kind], o = G.d[i]; if (!t || !o) { F.push(null); return; }
+      const tt = t.getTime(), v = { H: at(o.T, o.H, tt), M: at(o.T, o.M, tt), L: at(o.T, o.L, tt), pr: at(o.T, o.pr, tt) || 0, t: tt }; if (v.H == null || v.M == null || v.L == null) { F.push(null); return; } v.az = sunAz(tt, q.lat, q.lon); F.push(v);
+    });
+    const bil = function (lat, lon, key) { const fy = cl((1 - (lat - (V.p.lat - V.h)) / (2 * V.h)) * (GN - 1), 0, GN - 1), hw = V.w / 2 / (V.k * V.cos), fx = cl((lon - (V.p.lon - hw)) / (2 * hw) * (GN - 1), 0, GN - 1), i0 = Math.min(GN - 2, Math.floor(fx)), j0 = Math.min(GN - 2, Math.floor(fy)), ax = fx - i0, ay = fy - j0; let s = 0, w = 0; [[0, 0, (1 - ax) * (1 - ay)], [1, 0, ax * (1 - ay)], [0, 1, (1 - ax) * ay], [1, 1, ax * ay]].forEach(function (c) { const v = F[(j0 + c[1]) * GN + i0 + c[0]]; if (v && c[2] > 0) { s += v[key] * c[2]; w += c[2]; } }); return w ? s / w : null; };
+    // light-path: low cloud ~110 km toward the sun's direction decides if the horizon is blocked (scaled to the map so far-away cells matter less)
+    const out = F.map(function (v, i) {
+      if (!v) return null; const q = G.pts[i], dk = .9, la = q.lat + dk * Math.cos(v.az * D2R), lo = q.lon + dk * Math.sin(v.az * D2R) / Math.max(.2, Math.cos(q.lat * D2R)), Ls0 = bil(la, lo, 'L'), Ls = Ls0 == null ? v.L : .3 * v.L + .7 * Ls0;
+      const f = { H: v.H, M: v.M, L: v.L, Ls: Ls, pr: v.pr, vis: 20000, rh: 60 }; return { f: f, s: score(f), cloud: 1 - (1 - v.H / 100) * (1 - v.M / 100) * (1 - v.L / 100), t: v.t };
+    });
+    return out;
+  }
+  const lerp3 = function (a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; };
+  function hot(s) {   // -> [r,g,b,a]
+    const st = [[5, [255, 205, 225], 0], [6.2, [255, 175, 208], .42], [7.6, [255, 100, 160], .68], [9, [255, 120, 50], .86]];
+    if (s <= st[0][0]) return [0, 0, 0, 0]; for (let i = 1; i < st.length; i++) if (s <= st[i][0]) { const t = (s - st[i - 1][0]) / (st[i][0] - st[i - 1][0]), c = lerp3(st[i - 1][1], st[i][1], t); return [c[0], c[1], c[2], st[i - 1][2] + (st[i][2] - st[i - 1][2]) * t]; } const l = st[st.length - 1]; return [l[1][0], l[1][1], l[1][2], l[2]];
+  }
+  function cityName(lat, lon, maxKm) { let best = null, bd = 1e9; CITIES.forEach(function (c) { const dx = (c.lon - lon) * Math.cos(lat * D2R) * 111, dy = (c.lat - lat) * 111, d = Math.hypot(dx, dy); if (d < bd) { bd = d; best = c; } }); return best && bd <= (maxKm || 80) ? { n: best.n, km: bd } : null; }
+  function drawMap() {
+    const cv = body.querySelector('#sqMap'); if (!cv) return; const V = view(), D = Math.min(2, window.devicePixelRatio || 1);
+    cv.style.width = V.w + 'px'; cv.style.height = V.hpx + 'px'; cv.width = V.w * D; cv.height = V.hpx * D; const g = cv.getContext('2d'); g.setTransform(D, 0, 0, D, 0, 0);
+    const lab = body.querySelector('#sqDayLab'), days = body.querySelector('#sqDays'), now = Date.now();
+    lab.textContent = ST.day === 0 ? 'Today' : ST.day === 1 ? 'Tomorrow' : new Date(now + ST.day * DAY).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: WX.tz });
+    days.innerHTML = [0, 1, 2, 3, 4, 5].map(function (d) { return '<span class="' + (d === ST.day ? 'on' : '') + '">' + (d === 0 ? 'Now' : new Date(now + d * DAY).toLocaleDateString(undefined, { weekday: 'short', timeZone: WX.tz }).slice(0, 3)) + '</span>'; }).join('');
+    // base map
+    const bg = g.createLinearGradient(0, 0, 0, V.hpx); bg.addColorStop(0, '#0b1730'); bg.addColorStop(1, '#0a142a'); g.fillStyle = bg; g.fillRect(0, 0, V.w, V.hpx);
+    const geo = WX.geo || {}, land = V.h > 6 ? geo.land110 : geo.land50;
+    const ring = function (r) { const s = 1; for (let i = 0; i < r.length; i += 2 * s) { const q = proj(V, r[i], r[i + 1]); if (i === 0) g.moveTo(q[0], q[1]); else g.lineTo(q[0], q[1]); } };
+    const vis = function (r) { let mnx = 999, mxx = -999, mny = 999, mxy = -999; for (let i = 0; i < r.length; i += 2) { const x = r[i], y = r[i + 1]; if (x < mnx) mnx = x; if (x > mxx) mxx = x; if (y < mny) mny = y; if (y > mxy) mxy = y; } const hw = V.w / 2 / (V.k * V.cos); return !(mxx < V.p.lon - hw - 1 || mnx > V.p.lon + hw + 1 || mxy < V.p.lat - V.h - 1 || mny > V.p.lat + V.h + 1); };
+    if (land) { g.fillStyle = '#16233d'; g.beginPath(); land.forEach(function (r) { if (vis(r)) { ring(r); g.closePath(); } }); g.fill(); }
+    const gridP = loadGrid(V), self = ++ST.tick || (ST.tick = 1);
+    const probeBox = body.querySelector('#sqProbe');
+    gridP.then(function (G) {
+      if (self !== ST.tick) return;
+      const F = field(G, V, ST.kind, ST.day); ST.F = F; ST.G = G; ST.V = V;
+      // colour field at 1/3 resolution, bilinear on the 9x9 grid
+      const sw = Math.ceil(V.w / 3), sh = Math.ceil(V.hpx / 3), im = g.createImageData(sw, sh), hw = V.w / 2 / (V.k * V.cos);
+      for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) {
+        const lon = V.p.lon + ((x + .5) * 3 - V.w / 2) / (V.k * V.cos), lat = V.p.lat - ((y + .5) * 3 - V.hpx / 2) / V.k;
+        const fy = cl((1 - (lat - (V.p.lat - V.h)) / (2 * V.h)) * (GN - 1), 0, GN - 1), fx = cl((lon - (V.p.lon - hw)) / (2 * hw) * (GN - 1), 0, GN - 1), i0 = Math.min(GN - 2, Math.floor(fx)), j0 = Math.min(GN - 2, Math.floor(fy)), ax = fx - i0, ay = fy - j0;
+        let s = 0, c = 0, w = 0; [[0, 0, (1 - ax) * (1 - ay)], [1, 0, ax * (1 - ay)], [0, 1, (1 - ax) * ay], [1, 1, ax * ay]].forEach(function (q) { const v = F[(j0 + q[1]) * GN + i0 + q[0]]; if (v && q[2] > 0) { s += v.s * q[2]; c += v.cloud * q[2]; w += q[2]; } });
+        const o = (y * sw + x) * 4; if (!w) { im.data[o + 3] = 0; continue; } s /= w; c /= w;
+        const hc = hot(s), hk = cl((s - 5) / 3.5, 0, 1), wa = .62 * Math.pow(c, 1.15) * (1 - hk * .85);
+        // white (cloudy) first, then colour on top
+        const a1 = wa, a2 = hc[3], aa = a2 + a1 * (1 - a2);
+        im.data[o] = aa ? (hc[0] * a2 + 255 * a1 * (1 - a2)) / aa : 0; im.data[o + 1] = aa ? (hc[1] * a2 + 255 * a1 * (1 - a2)) / aa : 0; im.data[o + 2] = aa ? (hc[2] * a2 + 255 * a1 * (1 - a2)) / aa : 0; im.data[o + 3] = aa * 255;
+      }
+      const off = document.createElement('canvas'); off.width = sw; off.height = sh; off.getContext('2d').putImageData(im, 0, 0);
+      g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.drawImage(off, 0, 0, sw * 3, sh * 3);
+      overlay(g, V, F, G);
+    }, function () { g.fillStyle = 'rgba(255,255,255,.7)'; g.font = '13px Inter'; g.textAlign = 'center'; g.fillText('Map data unavailable — check your connection', V.w / 2, V.hpx / 2); });
+    if (!gridP) return; void probeBox;
+  }
+  function overlay(g, V, F, G) {
+    const geo = WX.geo || {};
+    const lines = function (arr, st, wd) { if (!arr) return; g.strokeStyle = st; g.lineWidth = wd; g.beginPath(); arr.forEach(function (r) { let mnx = 999, mxx = -999, mny = 999, mxy = -999; for (let i = 0; i < r.length; i += 2) { const x = r[i], y = r[i + 1]; if (x < mnx) mnx = x; if (x > mxx) mxx = x; if (y < mny) mny = y; if (y > mxy) mxy = y; } const hw = V.w / 2 / (V.k * V.cos); if (mxx < V.p.lon - hw - 1 || mnx > V.p.lon + hw + 1 || mxy < V.p.lat - V.h - 1 || mny > V.p.lat + V.h + 1) return; const s = 1; for (let i = 0; i < r.length; i += 2 * s) { const q = proj(V, r[i], r[i + 1]); if (i === 0) g.moveTo(q[0], q[1]); else g.lineTo(q[0], q[1]); } }); g.stroke(); };
+    const LND = V.h > 6 ? geo.land110 : geo.land50;
+    if (LND) { g.strokeStyle = 'rgba(190,210,255,.28)'; g.lineWidth = 1; g.beginPath(); LND.forEach(function (r) { let mnx = 999, mxx = -999, mny = 999, mxy = -999; for (let i = 0; i < r.length; i += 2) { const x = r[i], y = r[i + 1]; if (x < mnx) mnx = x; if (x > mxx) mxx = x; if (y < mny) mny = y; if (y > mxy) mxy = y; } const hw = V.w / 2 / (V.k * V.cos); if (mxx < V.p.lon - hw - 1 || mnx > V.p.lon + hw + 1 || mxy < V.p.lat - V.h - 1 || mny > V.p.lat + V.h + 1) return; const s = 1; for (let i = 0; i < r.length; i += 2 * s) { const q = proj(V, r[i], r[i + 1]); if (i === 0) g.moveTo(q[0], q[1]); else g.lineTo(q[0], q[1]); } g.closePath(); }); g.stroke(); }
+    lines(geo.us, 'rgba(255,255,255,.28)', .8); lines(V.h > 6 ? geo.c110 : geo.c50, 'rgba(255,255,255,.38)', 1);
+    // best spots
+    let top = []; F.forEach(function (v, i) { if (v) top.push({ s: v.s, i: i }); }); top.sort(function (a, b) { return b.s - a.s; });
+    const picked = []; top.forEach(function (c) { const q = G.pts[c.i]; const xy0 = proj(V, G.pts[c.i].lon, G.pts[c.i].lat); if (xy0[0] > 12 && xy0[0] < V.w - 12 && xy0[1] > 12 && xy0[1] < V.hpx - 12 && picked.length < 3 && c.s >= 5.5 && picked.every(function (o) { return Math.hypot((G.pts[o.i].lon - q.lon) * V.cos, G.pts[o.i].lat - q.lat) > V.h * .45; })) picked.push(c); });
+    // cities
+    const boxes = [], maxT = V.h < 2 ? 3 : V.h < 6 ? 2 : 1; g.font = '600 10.5px Inter'; g.textAlign = 'left';
+    const place = function (txt, x, y, strong) { const w = g.measureText(txt).width + 8, bx = [x + 5, y - 11, x + 5 + w, y + 3]; if (bx[0] < 2 || bx[2] > V.w - 2 || bx[1] < 2 || bx[3] > V.hpx - 2) return false; if (boxes.some(function (b) { return !(bx[2] < b[0] || bx[0] > b[2] || bx[3] < b[1] || bx[1] > b[3]); })) return false; boxes.push(bx); g.fillStyle = strong ? '#fff' : 'rgba(255,255,255,.82)'; g.shadowColor = 'rgba(0,0,0,.85)'; g.shadowBlur = 3; g.fillText(txt, x + 7, y); g.shadowBlur = 0; return true; };
+    CITIES.filter(function (c) { return c.t <= maxT; }).sort(function (a, b) { return a.t - b.t; }).forEach(function (c) { const q = proj(V, c.lon, c.lat); if (q[0] < 0 || q[0] > V.w || q[1] < 0 || q[1] > V.hpx) return; if (place(c.n, q[0], q[1], c.t === 1)) { g.fillStyle = '#fff'; g.beginPath(); g.arc(q[0], q[1], 2.2, 0, 7); g.fill(); } });
+    // hot-spot stars
+    ST.spots = picked.map(function (c, n) { const q = G.pts[c.i], xy = proj(V, q.lon, q.lat), near = cityName(q.lat, q.lon, V.h * 111 * .6); g.fillStyle = '#fff'; g.strokeStyle = '#ff5a8a'; g.lineWidth = 2; g.beginPath(); g.arc(xy[0], xy[1], 7, 0, 7); g.fill(); g.stroke(); g.fillStyle = '#c0245a'; g.font = '700 9px Inter'; g.textAlign = 'center'; g.fillText(String(n + 1), xy[0], xy[1] + 3); g.textAlign = 'left'; return { s: c.s, near: near, lat: q.lat, lon: q.lon, km: near ? near.km : null }; });
+    // you are here
+    const me = proj(V, V.p.lon, V.p.lat); g.strokeStyle = '#6fe0d0'; g.lineWidth = 2.2; g.fillStyle = 'rgba(111,224,208,.25)'; g.beginPath(); g.arc(me[0], me[1], 8, 0, 7); g.fill(); g.stroke(); g.fillStyle = '#6fe0d0'; g.beginPath(); g.arc(me[0], me[1], 2.6, 0, 7); g.fill();
+    g.font = '700 10.5px Inter'; g.fillStyle = '#9ff2e6'; g.shadowColor = 'rgba(0,0,0,.9)'; g.shadowBlur = 3; g.textAlign = 'right'; g.fillText('You', me[0] - 11, me[1] + 4); g.textAlign = 'left'; g.shadowBlur = 0;
+    const best = body.querySelector('#sqBest'), mine = F[Math.round((GN - 1) / 2) * GN + Math.round((GN - 1) / 2)];
+    let t = ''; if (mine) t += '<b>Here:</b> ' + mine.s.toFixed(1) + '/10 (' + level(mine.s)[1] + ')'; 
+    if (ST.spots && ST.spots.length) t += ' · <b>Best colour in view:</b> ' + ST.spots.map(function (s, i) { return (i + 1) + '. ' + (s.near ? 'near ' + esc(s.near.n) : s.lat.toFixed(2) + ', ' + s.lon.toFixed(2)) + ' (' + s.s.toFixed(1) + ')'; }).join(' · '); else if (mine) t += ' · No standout colour spots in this view — try a wider zoom or another day.';
+    best.innerHTML = t + '<div class="tiny" style="margin-top:4px">Tap the map for any town\'s clouds and score.</div>';
+  }
+  function probeAt(x, y, w, h) {
+    if (!ST.F || !ST.V) return; const V = ST.V, hw = V.w / 2 / (V.k * V.cos), lon = V.p.lon + (x - V.w / 2) / (V.k * V.cos), lat = V.p.lat - (y - V.hpx / 2) / V.k;
+    const fy = cl((1 - (lat - (V.p.lat - V.h)) / (2 * V.h)) * (GN - 1), 0, GN - 1), fx = cl((lon - (V.p.lon - hw)) / (2 * hw) * (GN - 1), 0, GN - 1), v = ST.F[Math.round(fy) * GN + Math.round(fx)], box = body.querySelector('#sqProbe'); if (!v) return;
+    const near = cityName(lat, lon, 60), f = v.f, r = Math.round;
+    box.hidden = false; box.style.left = cl(x - 80, 4, V.w - 170) + 'px'; box.style.top = cl(y - 86, 4, V.hpx - 84) + 'px';
+    box.innerHTML = '<b>' + (near ? 'Near ' + esc(near.n) : lat.toFixed(2) + ', ' + lon.toFixed(2)) + '</b><br><span style="color:' + level(v.s)[2] + '">' + v.s.toFixed(1) + '/10 · ' + level(v.s)[1] + '</span><br>High ' + r(f.H) + '% · Mid ' + r(f.M) + '% · Low ' + r(f.L) + '%<br>Toward sun: low ' + r(f.Ls) + '%<br>' + esc(ST.kind === 'set' ? 'Sunset ' : 'Sunrise ') + esc(WX.hm(new Date(v.t)));
+    const tok = ST.ptok = (ST.ptok || 0) + 1, kd = ST.kind, dd = ST.day;
+    load({ lat: lat, lon: lon }).then(function (r) { if (tok !== ST.ptok || box.hidden) return; const e = r.evs.filter(function (x) { return x.k === kd && x.d === dd; })[0]; if (!e) return; const lv = level(e.s); box.innerHTML += '<div class="sqpx">3-model score here: <b style="color:' + lv[2] + '">' + e.s.toFixed(1) + '</b> (' + e.lo.toFixed(1) + '–' + e.hi.toFixed(1) + ')</div>'; }, function () {});
+    clearTimeout(probeAt.t); probeAt.t = setTimeout(function () { box.hidden = true; }, 9000);
+  }
+})();
+
+</script>
 
 
 <script>
@@ -15717,7 +16021,7 @@ window.__wxBoot = function () {
         fxOut.gain.setTargetAtTime(st.muted ? 0 : st.master * st.fx, t, k);
       }
       function roomOn() { return !!hub && !hub.hidden && !!ov && !ov.classList.contains('ss-leaving'); }
-      function want() { return !st.muted && st.music > 0.001 && roomOn() && !document.hidden; }
+      function want() { return !st.muted && st.music > 0.001 && roomOn() && !document.hidden && !window.__wxOn; }
       function styleNow() { return (shopEl && !shopEl.hidden) ? 'town' : 'lounge'; }
       function getEng(name) { if (!engines[name]) engines[name] = Engine(ctx, musicOut, name); return engines[name]; }
       function fadeIn(name) {
@@ -15834,6 +16138,7 @@ window.__wxBoot = function () {
       function setMuted(v) { st.muted = !!v; save(); applyLevels(); update(); sync(); }
       function setLevel(k, v) { st[k] = clamp01(v); save(); applyLevels(); update(); sync(); }
       window.SSMusic = {
+        update: function () { try { update(); } catch (e) {} },
         isMuted: function () { return st.muted; }, isPlaying: function () { return playing; }, style: function () { return cur; },
         setMuted: setMuted, setMaster: function (v) { setLevel('master', v); }, setMusic: function (v) { setLevel('music', v); }, setFx: function (v) { setLevel('fx', v); },
         levels: function () { return { muted: st.muted, master: st.master, music: st.music, fx: st.fx }; }, chime: chime, ambient: function () { return !!amb; }
