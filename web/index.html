@@ -2489,6 +2489,7 @@
 .hub-gear.hub-wx { right: calc(var(--hub-pad) + var(--me) + 18px + 3 * (54px + 12px)); top: calc(env(safe-area-inset-top, 0px) + clamp(10px, 2.2vh, 24px) + 70px); }
 .hub-wx:hover svg { transform: none; }
 @media (max-width: 640px) { .hub-gear.hub-wx { top: 62px; right: auto; left: 138px; width: 38px; height: 38px; border-radius: 12px; } }
+@media (max-width: 640px) { .hub-wxchip .hub-chip-text small { display: none; } .hub-wxchip { flex: 1.5 1 0 !important; } .hub-wxchip .hub-chip-text b { font-size: 14px; } }
 
     /* ================= START / HOME SCREEN CHOICE ================= */
     .ss-acct-row { gap: 10px; flex-wrap: wrap; }
@@ -3703,6 +3704,7 @@
           </span>
           <span class="hub-chip-text"><small>Daily pulls</small><b class="hub-soon">Soon</b></span>
         </button>
+        <button class="hub-chip hub-wxchip" id="hubWxChip" type="button" aria-haspopup="dialog" aria-controls="wx" aria-label="Weather Station and Photo Planner"><span class="hub-chip-ic" style="background:#7FB4E6" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#2A1408" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11.5 2A3 3 0 0 0 7 18z"/><path d="M12 3v2M5.6 5.6L7 7M19 5.6L17.6 7"/></svg></span><span class="hub-chip-text"><small>Forecast &amp; planner</small><b>Weather</b></span></button>
       </div>
       <div class="hub-play">
         <button class="hub-hike hub-explore-tile" id="hubExploreBig" type="button" aria-label="Explore Photographers" aria-haspopup="dialog" aria-expanded="false" aria-controls="socModal">
@@ -10392,6 +10394,7 @@ const AV_COLORS = [["#7c5cff","#39d0ff"],["#ff4d9d","#ffb04a"],["#00c9a7","#3d7b
   function wxBack() { if (!wxOn) return false; if (window.WX && WX.cur !== 'home') { history.back(); return true; } wxClose(); return true; }
   window.SSWeather = { open: wxOpen, close: wxClose, isOpen: function () { return wxOn; }, back: wxBack };
   var hb = $('hubWxBtn'); if (hb) hb.addEventListener('click', function () { wxOpen(hb); });
+  var hc = $('hubWxChip'); if (hc) hc.addEventListener('click', function () { wxOpen(hc); });
   if (wxb) {
     wxb.addEventListener('click', function () { wxOpen(wxb); });
     var sync = function () { wxb.classList.toggle('show', !!sb && sb.classList.contains('show')); };
