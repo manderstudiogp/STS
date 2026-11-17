@@ -2542,6 +2542,13 @@
 #wx .mwchips.tight .chip { padding: 0 10px; height: 30px; font-size: 12px; }
 @media (max-width: 420px) { #wx .wkt { font-size: 10.5px; } #wx .wx-scroll { padding-left: 10px; padding-right: 10px; } }
 
+#wx .lybox { background: var(--glass); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-top: 8px; }
+#wx .lybox .chip { height: 30px; font-size: 12px; }
+#wx .objp { background: rgba(127,214,255,.08); border: 1px solid rgba(127,214,255,.35); border-radius: 12px; padding: 10px 12px; margin-top: 8px; font-size: 13.5px; }
+#wx .oc-head { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-top: 12px; background: var(--glass); }
+#wx .oc-head h4 { margin: 0 0 4px; font-size: 16px; color: var(--ink); }
+#wx .savedbar { border: 1px solid rgba(143,209,158,.5); background: rgba(143,209,158,.1); border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 13px; color: var(--ink); }
+
     /* ================= START / HOME SCREEN CHOICE ================= */
     .ss-acct-row { gap: 10px; flex-wrap: wrap; }
     .nav-seg { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
@@ -11759,6 +11766,108 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
 
 </script>
 <script>
+window.WX_SKYDATA={"stars":[["Sirius",6.752,-16.716,-1.46],["Canopus",6.399,-52.696,-0.74],["Arcturus",14.261,19.182,-0.05],["Rigil Kentaurus",14.66,-60.835,-0.01],["Vega",18.616,38.784,0.03],["Capella",5.278,45.998,0.08],["Rigel",5.242,-8.202,0.13],["Procyon",7.655,5.225,0.34],["Betelgeuse",5.919,7.407,0.5],["Achernar",1.629,-57.237,0.46],["Hadar",14.064,-60.373,0.61],["Altair",19.846,8.868,0.77],["Acrux",12.443,-63.099,0.76],["Aldebaran",4.599,16.509,0.85],["Antares",16.49,-26.432,0.96],["Spica",13.42,-11.161,0.97],["Pollux",7.755,28.026,1.14],["Fomalhaut",22.961,-29.622,1.16],["Deneb",20.69,45.28,1.25],["Mimosa",12.795,-59.689,1.25],["Regulus",10.14,11.967,1.35],["Adhara",6.977,-28.972,1.5],["Castor",7.577,31.888,1.58],["Gacrux",12.519,-57.113,1.64],["Shaula",17.56,-37.104,1.63],["Bellatrix",5.419,6.35,1.64],["Elnath",5.438,28.608,1.65],["Miaplacidus",9.22,-69.717,1.68],["Alnilam",5.604,-1.202,1.69],["Alnitak",5.679,-1.943,1.77],["Alnair",22.137,-46.961,1.74],["Alioth",12.9,55.96,1.77],["Dubhe",11.062,61.751,1.79],["Mirfak",3.405,49.861,1.79],["Wezen",7.14,-26.393,1.84],["Sargas",17.622,-42.998,1.86],["Kaus Australis",18.403,-34.385,1.85],["Alkaid",13.792,49.313,1.86],["Menkalinan",5.992,44.947,1.9],["Atria",16.811,-69.028,1.92],["Polaris",2.53,89.264,1.98],["Mintaka",5.533,-0.299,2.23],["Saiph",5.796,-9.67,2.06],["Alphard",9.46,-8.659,2.0],["Hamal",2.12,23.462,2.0],["Diphda",0.726,-17.987,2.04],["Nunki",18.921,-26.297,2.05],["Alpheratz",0.14,29.091,2.06],["Mirach",1.162,35.621,2.05],["Rasalhague",17.582,12.56,2.08],["Kochab",14.845,74.156,2.08],["Almach",2.065,42.33,2.1],["Denebola",11.818,14.572,2.14],["Algol",3.136,40.956,2.1],["Mizar",13.399,54.925,2.04],["Merak",11.031,56.382,2.37],["Phecda",11.897,53.695,2.44],["Megrez",12.257,57.033,3.31],["Schedar",0.675,56.537,2.24],["Caph",0.153,59.15,2.28],["Navi",0.945,60.717,2.47],["Ruchbah",1.43,60.235,2.68],["Segin",1.907,63.67,3.37],["Sadr",20.37,40.257,2.23],["Gienah",20.77,33.97,2.48],["Albireo",19.512,27.96,3.08],["Delta Cygni",19.75,45.131,2.87],["Eltanin",17.943,51.489,2.23],["Sheliak",18.835,33.363,3.52],["Sulafat",18.982,32.69,3.25],["Zeta Lyrae",18.746,37.605,4.3],["Delta Lyrae",18.909,36.899,4.2],["Enif",21.736,9.875,2.39],["Markab",23.079,15.205,2.49],["Scheat",23.063,28.083,2.42],["Algenib",0.22,15.184,2.83],["Alphecca",15.578,26.715,2.23],["Dschubba",16.005,-22.622,2.32],["Graffias",16.091,-19.805,2.62],["Sabik",17.173,-15.725,2.43],["Kaus Media",18.35,-29.828,2.7],["Kaus Borealis",18.466,-25.422,2.81],["Ascella",19.044,-29.88,2.6],["Tau Sagittarii",19.116,-27.67,3.3],["Phi Sagittarii",18.761,-26.991,3.17],["Alnasl",18.097,-30.424,2.99],["Pi Scorpii",15.981,-26.114,2.89],["Sigma Scorpii",16.353,-25.593,2.9],["Tau Scorpii",16.598,-28.216,2.8],["Larawag",16.836,-34.293,2.3],["Mu Scorpii",16.864,-38.047,3.0],["Zeta Scorpii",16.909,-42.362,3.6],["Eta Scorpii",17.203,-43.239,3.3],["Iota Scorpii",17.793,-40.127,3.0],["Kappa Scorpii",17.708,-39.03,2.4],["Upsilon Scorpii",17.693,-37.296,2.7],["Meissa",5.585,9.934,3.5],["Imai",12.252,-58.749,2.8],["Tarazed",19.771,10.613,2.72],["Alshain",19.922,6.407,3.71],["Algieba",10.333,19.842,2.0],["Zosma",11.235,20.524,2.56],["Chertan",11.237,15.43,3.33],["Eta Leonis",10.122,16.763,3.5],["Adhafera",10.278,23.417,3.4],["Rasalas",9.879,26.007,3.9],["Epsilon Leonis",9.764,23.774,2.98],["Zeta Tauri",5.627,21.143,3.0],["Ain",4.477,19.18,3.5],["Gamma Tauri",4.33,15.628,3.65],["Theta Tauri",4.478,15.871,3.4],["Lambda Tauri",4.011,12.49,3.5],["Alhena",6.629,16.399,1.93],["Tejat",6.383,22.514,2.88],["Mebsuta",6.732,25.131,3.06],["Wasat",7.335,21.982,3.53],["Propus",6.248,22.507,3.3],["Mirzam",6.378,-17.956,1.98],["Aludra",7.402,-29.303,2.45],["Gomeisa",7.452,8.289,2.9],["Hassaleh",4.95,33.166,2.69],["Atik",3.902,31.884,2.85],["Gamma Persei",3.08,53.506,2.9],["Delta Persei",3.715,47.788,3.0],["Epsilon Persei",3.964,40.01,2.9],["Izar",14.75,27.074,2.37],["Nekkar",15.032,40.391,3.5],["Seginus",14.535,38.308,3.04],["Muphrid",13.911,18.398,2.68],["Porrima",12.694,-1.449,2.74],["Vindemiatrix",13.036,10.959,2.83],["Zavijava",11.845,1.765,3.6],["Heze",13.578,-0.596,3.37],["Kornephoros",16.504,21.49,2.77],["Zeta Herculis",16.688,31.603,2.81],["Eta Herculis",16.715,38.922,3.5],["Pi Herculis",17.251,36.809,3.16],["Epsilon Herculis",17.005,30.926,3.9],["Cebalrai",17.725,4.567,2.77],["Menkent",14.111,-36.37,2.06],["Avior",8.375,-59.509,1.86],["Aspidiske",9.285,-59.275,2.25],["Regor",8.159,-47.337,1.78],["Alsephina",8.745,-54.709,1.96],["Kappa Velorum",9.368,-55.011,2.5],["Suhail",9.133,-43.433,2.2],["Peacock",20.427,-56.735,1.94],["Delta Andromedae",0.655,30.861,3.27],["Epsilon Cassiopeiae",1.907,63.67,3.4]],"cons":[["Andromeda",1.0,38.0],["Aquarius",22.3,-10.0],["Aquila",19.7,3.0],["Aries",2.6,20.0],["Auriga",5.9,42.0],["Bootes",14.7,31.0],["Cancer",8.6,20.0],["Canes Venatici",13.0,40.0],["Canis Major",6.8,-22.0],["Canis Minor",7.6,6.0],["Capricornus",21.0,-18.0],["Carina",9.0,-62.0],["Cassiopeia",1.0,62.0],["Centaurus",13.0,-47.0],["Cepheus",22.0,70.0],["Cetus",1.5,-8.0],["Corona Borealis",15.8,32.0],["Crux",12.5,-60.0],["Cygnus",20.6,43.0],["Delphinus",20.7,14.0],["Draco",17.0,65.0],["Eridanus",3.4,-25.0],["Gemini",7.0,22.0],["Grus",22.5,-45.0],["Hercules",17.2,30.0],["Hydra",10.0,-14.0],["Leo",10.7,15.0],["Lepus",5.5,-19.0],["Libra",15.2,-15.0],["Lupus",15.2,-42.0],["Lyra",18.8,36.0],["Monoceros",7.1,-3.0],["Musca",12.6,-70.0],["Norma",16.0,-52.0],["Ophiuchus",17.1,-8.0],["Orion",5.6,0.0],["Pavo",19.6,-65.0],["Pegasus",22.7,18.0],["Perseus",3.2,45.0],["Phoenix",0.9,-48.0],["Pisces",0.5,10.0],["Piscis Austrinus",22.3,-30.0],["Sagitta",19.7,18.0],["Sagittarius",19.0,-28.0],["Scorpius",16.8,-30.0],["Scutum",18.6,-10.0],["Taurus",4.7,16.0],["Triangulum",2.2,31.0],["Triangulum Australe",16.0,-65.0],["Ursa Major",11.3,56.0],["Ursa Minor",15.0,78.0],["Vela",9.0,-47.0],["Virgo",13.2,-4.0],["Vulpecula",20.2,24.0]],"dso":[["M1","Crab Nebula",["m1","messier 1","crab nebula","ngc 1952"],"snr",5.575,22.015,8.4,6.0,"Taurus","Supernova remnant from the year 1054; needs a telescope."],["M2","M2",["m2","messier 2","ngc 7089"],"gc",21.558,-0.823,6.5,13.0,"Aquarius","Rich globular cluster."],["M3","M3",["m3","messier 3","ngc 5272"],"gc",13.703,28.377,6.2,18.0,"Canes Venatici","One of the finest northern globular clusters."],["M4","M4",["m4","messier 4","ngc 6121"],"gc",16.393,-26.526,5.6,36.0,"Scorpius","Nearest globular cluster, right beside Antares."],["M5","M5",["m5","messier 5","ngc 5904"],"gc",15.31,2.081,5.6,23.0,"Serpens","Bright, dense globular cluster."],["M6","Butterfly Cluster",["m6","messier 6","butterfly cluster","ngc 6405"],"oc",17.668,-32.217,4.2,25.0,"Scorpius","Open cluster in the Scorpius Milky Way."],["M7","Ptolemy's Cluster",["m7","messier 7","ptolemy cluster","ngc 6475"],"oc",17.898,-34.793,3.3,80.0,"Scorpius","Large naked-eye open cluster."],["M8","Lagoon Nebula",["m8","messier 8","lagoon nebula","ngc 6523"],"neb",18.063,-24.38,6.0,90.0,"Sagittarius","Big emission nebula in the Milky Way core region."],["M10","M10",["m10","messier 10","ngc 6254"],"gc",16.952,-4.1,6.6,20.0,"Ophiuchus","Globular cluster."],["M11","Wild Duck Cluster",["m11","messier 11","wild duck cluster","ngc 6705"],"oc",18.851,-6.27,5.8,14.0,"Scutum","Dense open cluster in the Scutum star cloud."],["M12","M12",["m12","messier 12","ngc 6218"],"gc",16.787,-1.949,6.7,16.0,"Ophiuchus","Globular cluster."],["M13","Great Hercules Cluster",["m13","messier 13","hercules cluster","great hercules cluster","ngc 6205"],"gc",16.695,36.46,5.8,20.0,"Hercules","The showpiece globular of the northern sky."],["M15","M15",["m15","messier 15","ngc 7078"],"gc",21.5,12.167,6.2,18.0,"Pegasus","Compact globular cluster."],["M16","Eagle Nebula",["m16","messier 16","eagle nebula","pillars of creation","ngc 6611"],"neb",18.313,-13.79,6.4,35.0,"Serpens","Home of the Pillars of Creation."],["M17","Omega (Swan) Nebula",["m17","messier 17","omega nebula","swan nebula","ngc 6618"],"neb",18.346,-16.18,6.0,11.0,"Sagittarius","Bright emission nebula."],["M20","Trifid Nebula",["m20","messier 20","trifid nebula","ngc 6514"],"neb",18.043,-23.03,6.3,28.0,"Sagittarius","Red emission and blue reflection nebula split by dust lanes."],["M22","M22",["m22","messier 22","ngc 6656"],"gc",18.607,-23.905,5.1,32.0,"Sagittarius","One of the brightest globular clusters."],["M24","Sagittarius Star Cloud",["m24","messier 24","sagittarius star cloud"],"sc",18.28,-18.55,4.6,90.0,"Sagittarius","A bright patch of the Milky Way."],["M27","Dumbbell Nebula",["m27","messier 27","dumbbell nebula","ngc 6853"],"pn",19.993,22.721,7.5,8.0,"Vulpecula","Large, bright planetary nebula."],["M31","Andromeda Galaxy",["m31","messier 31","andromeda","andromeda galaxy","ngc 224"],"gal",0.712,41.269,3.4,190.0,"Andromeda","Nearest big galaxy, visible to the naked eye in dark skies."],["M33","Triangulum Galaxy",["m33","messier 33","triangulum galaxy","ngc 598"],"gal",1.564,30.66,5.7,70.0,"Triangulum","Large, faint face-on spiral."],["M35","M35",["m35","messier 35","ngc 2168"],"oc",6.148,24.33,5.3,28.0,"Gemini","Large open cluster."],["M36","M36",["m36","messier 36","ngc 1960"],"oc",5.603,34.14,6.0,12.0,"Auriga","Open cluster."],["M37","M37",["m37","messier 37","ngc 2099"],"oc",5.873,32.55,5.6,24.0,"Auriga","Richest of the Auriga open clusters."],["M38","M38",["m38","messier 38","ngc 1912"],"oc",5.478,35.85,6.4,21.0,"Auriga","Open cluster."],["M39","M39",["m39","messier 39","ngc 7092"],"oc",21.536,48.43,4.6,32.0,"Cygnus","Large, loose open cluster."],["M41","M41",["m41","messier 41","ngc 2287"],"oc",6.767,-20.76,4.5,38.0,"Canis Major","Open cluster just south of Sirius."],["M42","Orion Nebula",["m42","messier 42","orion nebula","great orion nebula","ngc 1976"],"neb",5.588,-5.391,4.0,65.0,"Orion","The brightest nebula in the sky; naked eye in Orion's sword."],["M43","De Mairan's Nebula",["m43","messier 43","ngc 1982"],"neb",5.592,-5.27,9.0,20.0,"Orion","Neighbour of the Orion Nebula."],["M44","Beehive Cluster",["m44","messier 44","beehive cluster","praesepe","ngc 2632"],"oc",8.667,19.67,3.7,95.0,"Cancer","Naked-eye open cluster."],["M45","Pleiades",["m45","messier 45","pleiades","seven sisters"],"oc",3.79,24.117,1.6,110.0,"Taurus","Bright blue cluster with reflection nebulosity."],["M46","M46",["m46","messier 46","ngc 2437"],"oc",7.696,-14.81,6.1,27.0,"Puppis","Open cluster."],["M47","M47",["m47","messier 47","ngc 2422"],"oc",7.61,-14.5,4.4,30.0,"Puppis","Open cluster."],["M51","Whirlpool Galaxy",["m51","messier 51","whirlpool galaxy","ngc 5194"],"gal",13.498,47.195,8.4,11.0,"Canes Venatici","Classic face-on spiral with a companion."],["M52","M52",["m52","messier 52","ngc 7654"],"oc",23.404,61.59,6.9,13.0,"Cassiopeia","Open cluster."],["M57","Ring Nebula",["m57","messier 57","ring nebula","ngc 6720"],"pn",18.893,33.029,8.8,1.4,"Lyra","Small planetary nebula."],["M63","Sunflower Galaxy",["m63","messier 63","sunflower galaxy","ngc 5055"],"gal",13.263,42.03,8.6,12.0,"Canes Venatici","Spiral galaxy."],["M64","Black Eye Galaxy",["m64","messier 64","black eye galaxy","ngc 4826"],"gal",12.945,21.683,8.5,10.0,"Coma Berenices","Galaxy with a dark dust lane."],["M65","Leo Triplet (M65)",["m65","messier 65","ngc 3623","leo triplet"],"gal",11.315,13.09,9.3,10.0,"Leo","Part of the Leo Triplet."],["M66","Leo Triplet (M66)",["m66","messier 66","ngc 3627"],"gal",11.337,12.99,8.9,9.0,"Leo","Part of the Leo Triplet."],["M76","Little Dumbbell",["m76","messier 76","little dumbbell","ngc 650"],"pn",1.703,51.575,10.1,3.0,"Perseus","Faint planetary nebula."],["M81","Bode's Galaxy",["m81","messier 81","bodes galaxy","ngc 3031"],"gal",9.926,69.065,6.9,27.0,"Ursa Major","Bright spiral galaxy."],["M82","Cigar Galaxy",["m82","messier 82","cigar galaxy","ngc 3034"],"gal",9.932,69.68,8.4,11.0,"Ursa Major","Starburst galaxy next to M81."],["M83","Southern Pinwheel",["m83","messier 83","southern pinwheel","ngc 5236"],"gal",13.617,-29.866,7.5,13.0,"Hydra","Southern face-on spiral."],["M92","M92",["m92","messier 92","ngc 6341"],"gc",17.285,43.136,6.4,14.0,"Hercules","Globular cluster."],["M94","M94",["m94","messier 94","ngc 4736"],"gal",12.848,41.12,8.2,11.0,"Canes Venatici","Compact spiral galaxy."],["M101","Pinwheel Galaxy",["m101","messier 101","pinwheel galaxy","ngc 5457"],"gal",14.053,54.349,7.9,29.0,"Ursa Major","Big, faint face-on spiral."],["M104","Sombrero Galaxy",["m104","messier 104","sombrero galaxy","ngc 4594"],"gal",12.666,-11.623,8.0,9.0,"Virgo","Edge-on galaxy with a dust lane."],["M106","M106",["m106","messier 106","ngc 4258"],"gal",12.316,47.3,8.4,19.0,"Canes Venatici","Spiral galaxy."],["NGC 7000","North America Nebula",["ngc 7000","north america nebula","north american nebula"],"neb",20.98,44.33,4.0,120.0,"Cygnus","Huge emission nebula next to Deneb."],["IC 5070","Pelican Nebula",["ic 5070","pelican nebula"],"neb",20.85,44.35,8.0,60.0,"Cygnus","Neighbour of the North America Nebula."],["NGC 6960","Western Veil Nebula",["ngc 6960","western veil","witch's broom","witchs broom","veil nebula","cygnus loop"],"snr",20.76,30.72,7.0,70.0,"Cygnus","Part of the Veil supernova remnant."],["NGC 6992","Eastern Veil Nebula",["ngc 6992","eastern veil"],"snr",20.94,31.72,7.0,60.0,"Cygnus","Brightest arc of the Veil."],["NGC 7293","Helix Nebula",["ngc 7293","helix nebula"],"pn",22.494,-20.837,7.6,16.0,"Aquarius","The largest-looking planetary nebula."],["NGC 2237","Rosette Nebula",["ngc 2237","rosette nebula","rosette"],"neb",6.54,4.95,9.0,80.0,"Monoceros","Large wreath-shaped emission nebula."],["NGC 1499","California Nebula",["ngc 1499","california nebula"],"neb",4.013,36.42,5.0,160.0,"Perseus","Faint, very large emission nebula."],["IC 434","Horsehead Nebula",["ic 434","horsehead nebula","horsehead","barnard 33","b33"],"dark",5.683,-2.458,10.0,8.0,"Orion","Dark nebula silhouetted against glowing gas."],["NGC 2024","Flame Nebula",["ngc 2024","flame nebula"],"neb",5.68,-1.85,10.0,30.0,"Orion","Emission nebula beside Alnitak."],["Barnard's Loop","Barnard's Loop",["barnards loop","barnard's loop"],"neb",5.9,-2.0,10.0,600.0,"Orion","Faint huge arc around Orion; needs a hydrogen-alpha filter."],["NGC 2264","Cone & Christmas Tree",["ngc 2264","cone nebula","christmas tree cluster"],"neb",6.683,9.88,3.9,60.0,"Monoceros","Emission nebula and cluster."],["NGC 2174","Monkey Head Nebula",["ngc 2174","monkey head nebula"],"neb",6.1,20.5,7.0,40.0,"Orion","Faint emission nebula."],["NGC 2070","Tarantula Nebula",["ngc 2070","tarantula nebula"],"neb",5.645,-69.1,8.0,40.0,"Dorado","Giant star-forming region in the Large Magellanic Cloud."],["LMC","Large Magellanic Cloud",["lmc","large magellanic cloud","magellanic clouds"],"gal",5.392,-69.756,0.9,650.0,"Dorado","Naked-eye satellite galaxy of the Milky Way."],["SMC","Small Magellanic Cloud",["smc","small magellanic cloud"],"gal",0.877,-72.8,2.7,320.0,"Tucana","Naked-eye satellite galaxy."],["NGC 3372","Carina Nebula",["ngc 3372","carina nebula","eta carinae nebula"],"neb",10.75,-59.87,3.0,120.0,"Carina","Huge southern emission nebula."],["NGC 5139","Omega Centauri",["ngc 5139","omega centauri"],"gc",13.447,-47.48,3.9,36.0,"Centaurus","The biggest globular cluster."],["NGC 104","47 Tucanae",["ngc 104","47 tucanae","47 tuc"],"gc",0.401,-72.08,4.0,50.0,"Tucana","Brilliant southern globular cluster."],["NGC 869","Double Cluster",["ngc 869","ngc 884","double cluster","h and chi persei"],"oc",2.335,57.14,3.7,60.0,"Perseus","Pair of open clusters, naked-eye."],["NGC 281","Pacman Nebula",["ngc 281","pacman nebula"],"neb",0.88,56.62,7.4,35.0,"Cassiopeia","Emission nebula."],["IC 1805","Heart Nebula",["ic 1805","heart nebula"],"neb",2.55,61.45,6.5,60.0,"Cassiopeia","Big emission nebula."],["IC 1848","Soul Nebula",["ic 1848","soul nebula","embryo nebula"],"neb",2.85,60.43,6.5,60.0,"Cassiopeia","Neighbour of the Heart Nebula."],["IC 1396","Elephant's Trunk Nebula",["ic 1396","elephant trunk nebula","elephants trunk"],"neb",21.65,57.5,3.5,170.0,"Cepheus","Huge emission nebula."],["IC 5146","Cocoon Nebula",["ic 5146","cocoon nebula"],"neb",21.9,47.27,7.2,12.0,"Cygnus","Small emission and reflection nebula."],["NGC 6888","Crescent Nebula",["ngc 6888","crescent nebula"],"neb",20.2,38.35,7.4,20.0,"Cygnus","Wolf-Rayet bubble."],["IC 1318","Gamma Cygni Nebula",["ic 1318","gamma cygni nebula","butterfly nebula"],"neb",20.37,40.2,7.0,180.0,"Cygnus","Huge nebula around Sadr."],["NGC 253","Sculptor Galaxy",["ngc 253","sculptor galaxy","silver coin galaxy"],"gal",0.793,-25.288,7.1,27.0,"Sculptor","Bright edge-on-ish spiral."],["NGC 891","Silver Sliver Galaxy",["ngc 891"],"gal",2.376,42.35,9.9,13.0,"Andromeda","Edge-on galaxy."],["NGC 4565","Needle Galaxy",["ngc 4565","needle galaxy"],"gal",12.605,25.99,9.6,16.0,"Coma Berenices","Edge-on galaxy."],["NGC 6543","Cat's Eye Nebula",["ngc 6543","cats eye nebula","cat's eye nebula"],"pn",17.97,66.63,8.1,0.4,"Draco","Small, bright planetary nebula."],["NGC 4755","Jewel Box",["ngc 4755","jewel box","jewel box cluster"],"oc",12.894,-60.35,4.2,10.0,"Crux","Colourful open cluster by the Southern Cross."],["Coalsack","Coalsack Nebula",["coalsack","coal sack","coalsack nebula"],"dark",12.5,-62.7,0.0,420.0,"Crux","Dark nebula beside the Southern Cross."],["IC 2602","Southern Pleiades",["ic 2602","southern pleiades"],"oc",10.717,-64.4,1.9,100.0,"Carina","Bright southern open cluster."],["NGC 6188","Fighting Dragons of Ara",["ngc 6188","fighting dragons"],"neb",16.67,-48.8,9.0,20.0,"Ara","Southern emission nebula."],["IC 2944","Running Chicken Nebula",["ic 2944","running chicken nebula","lambda centauri nebula"],"neb",11.6,-63.0,4.5,75.0,"Centaurus","Southern emission nebula."],["NGC 6334","Cat's Paw Nebula",["ngc 6334","cats paw nebula","cat's paw nebula"],"neb",17.33,-35.7,7.0,35.0,"Scorpius","Southern emission nebula."],["Rho Ophiuchi","Rho Ophiuchi Cloud Complex",["rho ophiuchi","rho oph","rho ophiuchi nebula"],"neb",16.43,-24.5,5.0,300.0,"Ophiuchus","Colourful reflection nebulae and dark clouds beside Antares."],["Pipe Nebula","Pipe Nebula",["pipe nebula"],"dark",17.4,-27.0,0.0,480.0,"Ophiuchus","Dark nebula silhouetted against the core."],["Dark Horse","Dark Horse Nebula",["dark horse nebula","dark horse"],"dark",17.25,-22.5,0.0,300.0,"Ophiuchus","Dark cloud near the core."]],"mwr":[["mw:core","Galactic core (Sagittarius)",["milky way core","galactic core","galactic center","galactic centre","center of the milky way","centre of the milky way","core of the milky way"],0.0,0.0,25.0,"Sagittarius","The brightest, thickest part of the Milky Way \u2014 the classic Milky Way photo."],["mw:scutum","Scutum Star Cloud",["scutum star cloud","scutum cloud"],27.0,0.0,12.0,"Scutum","One of the brightest patches of the Milky Way."],["mw:cygnus","Cygnus Star Cloud / Great Rift",["cygnus star cloud","cygnus rift","great rift","northern cross milky way"],78.0,0.0,25.0,"Cygnus","Where the Milky Way splits in two around the Great Rift; the best part for northern observers."],["mw:cass","Cassiopeia Milky Way",["cassiopeia milky way","cassiopeia star cloud"],120.0,0.0,20.0,"Cassiopeia","Autumn Milky Way, high overhead for northern latitudes."],["mw:perseus","Perseus / Auriga Milky Way",["perseus milky way","auriga milky way","winter milky way"],150.0,0.0,25.0,"Perseus","Winter Milky Way, faint but beautiful."],["mw:carina","Carina\u2013Vela Milky Way",["carina milky way","vela milky way","southern milky way"],285.0,0.0,25.0,"Carina","Bright southern Milky Way with the Carina Nebula."],["mw:crux","Crux & Coalsack Milky Way",["crux milky way","southern cross milky way"],303.0,0.0,15.0,"Crux","Southern Cross region."],["mw:norma","Norma / Scorpius Milky Way",["norma milky way","scorpius milky way"],335.0,0.0,20.0,"Norma","Bright region just before the core rises."]],"lines":{"Orion":[["Betelgeuse","Meissa"],["Meissa","Bellatrix"],["Bellatrix","Mintaka"],["Betelgeuse","Alnitak"],["Mintaka","Alnilam"],["Alnilam","Alnitak"],["Alnitak","Saiph"],["Mintaka","Rigel"],["Rigel","Saiph"]],"Cassiopeia":[["Caph","Schedar"],["Schedar","Navi"],["Navi","Ruchbah"],["Ruchbah","Segin"]],"Ursa Major":[["Dubhe","Merak"],["Merak","Phecda"],["Phecda","Megrez"],["Megrez","Dubhe"],["Megrez","Alioth"],["Alioth","Mizar"],["Mizar","Alkaid"]],"Crux":[["Acrux","Gacrux"],["Mimosa","Imai"]],"Centaurus":[["Rigil Kentaurus","Hadar"]],"Cygnus":[["Deneb","Sadr"],["Sadr","Albireo"],["Delta Cygni","Sadr"],["Sadr","Gienah"]],"Lyra":[["Vega","Zeta Lyrae"],["Zeta Lyrae","Delta Lyrae"],["Delta Lyrae","Sulafat"],["Sulafat","Sheliak"],["Sheliak","Zeta Lyrae"]],"Aquila":[["Tarazed","Altair"],["Altair","Alshain"]],"Scorpius":[["Graffias","Dschubba"],["Dschubba","Pi Scorpii"],["Dschubba","Sigma Scorpii"],["Sigma Scorpii","Antares"],["Antares","Tau Scorpii"],["Tau Scorpii","Larawag"],["Larawag","Mu Scorpii"],["Mu Scorpii","Zeta Scorpii"],["Zeta Scorpii","Eta Scorpii"],["Eta Scorpii","Sargas"],["Sargas","Iota Scorpii"],["Iota Scorpii","Kappa Scorpii"],["Kappa Scorpii","Upsilon Scorpii"],["Upsilon Scorpii","Shaula"]],"Sagittarius":[["Alnasl","Kaus Australis"],["Kaus Australis","Kaus Media"],["Kaus Media","Kaus Borealis"],["Kaus Borealis","Phi Sagittarii"],["Phi Sagittarii","Nunki"],["Nunki","Ascella"],["Ascella","Kaus Australis"],["Kaus Media","Phi Sagittarii"],["Ascella","Tau Sagittarii"],["Tau Sagittarii","Nunki"]],"Leo":[["Regulus","Eta Leonis"],["Eta Leonis","Algieba"],["Algieba","Adhafera"],["Adhafera","Rasalas"],["Rasalas","Epsilon Leonis"],["Algieba","Zosma"],["Zosma","Denebola"],["Denebola","Chertan"],["Chertan","Regulus"]],"Taurus":[["Zeta Tauri","Aldebaran"],["Aldebaran","Theta Tauri"],["Theta Tauri","Gamma Tauri"],["Gamma Tauri","Lambda Tauri"],["Theta Tauri","Ain"],["Ain","Elnath"]],"Gemini":[["Castor","Mebsuta"],["Mebsuta","Tejat"],["Tejat","Propus"],["Pollux","Wasat"],["Wasat","Alhena"]],"Canis Major":[["Mirzam","Sirius"],["Sirius","Adhara"],["Adhara","Wezen"],["Wezen","Aludra"]],"Canis Minor":[["Procyon","Gomeisa"]],"Auriga":[["Capella","Menkalinan"],["Menkalinan","Elnath"],["Elnath","Hassaleh"],["Hassaleh","Capella"]],"Perseus":[["Gamma Persei","Mirfak"],["Mirfak","Delta Persei"],["Delta Persei","Epsilon Persei"],["Epsilon Persei","Atik"],["Mirfak","Algol"]],"Pegasus":[["Markab","Scheat"],["Scheat","Alpheratz"],["Alpheratz","Algenib"],["Algenib","Markab"],["Markab","Enif"]],"Andromeda":[["Alpheratz","Delta Andromedae"],["Delta Andromedae","Mirach"],["Mirach","Almach"]],"Bootes":[["Arcturus","Izar"],["Izar","Seginus"],["Seginus","Nekkar"],["Arcturus","Muphrid"]],"Virgo":[["Zavijava","Porrima"],["Porrima","Spica"],["Porrima","Heze"],["Porrima","Vindemiatrix"]],"Hercules":[["Zeta Herculis","Eta Herculis"],["Eta Herculis","Pi Herculis"],["Pi Herculis","Epsilon Herculis"],["Epsilon Herculis","Zeta Herculis"],["Kornephoros","Zeta Herculis"]],"Carina":[["Avior","Aspidiske"],["Aspidiske","Kappa Velorum"],["Kappa Velorum","Alsephina"],["Alsephina","Avior"]],"Summer Triangle":[["Vega","Deneb"],["Deneb","Altair"],["Altair","Vega"]]}};
+</script>
+
+<script>
+/* ===== Sky catalog runtime: stars, constellations, deep-sky objects, Milky Way regions, Milky Way shape ===== */
+(function () {
+  'use strict';
+  const WX = window.WX, D = window.WX_SKYDATA, D2R = Math.PI / 180;
+  const aG = 192.85948 * D2R, dG = 27.12825 * D2R, th = 122.93192 * D2R;
+  function gal2eq(l, b) {
+    l *= D2R; b *= D2R;
+    const dec = Math.asin(Math.sin(b) * Math.sin(dG) + Math.cos(b) * Math.cos(dG) * Math.cos(th - l));
+    const ra = aG + Math.atan2(Math.cos(b) * Math.sin(th - l), Math.sin(b) * Math.cos(dG) - Math.cos(b) * Math.sin(dG) * Math.cos(th - l));
+    return [(((ra / D2R) % 360) + 360) % 360, dec / D2R];
+  }
+  const STAR = {}, stars = D.stars.map(function (s) { const o = { name: s[0], ra: s[1] * 15, dec: s[2], mag: s[3] }; STAR[o.name] = o; return o; });
+  const lines = Object.keys(D.lines).map(function (k) { return { con: k, segs: D.lines[k].map(function (p) { return [STAR[p[0]], STAR[p[1]]]; }) }; });
+  const cons = D.cons.map(function (c) { return { name: c[0], ra: c[1] * 15, dec: c[2] }; });
+  const TYPE = { gal: 'Galaxy', neb: 'Nebula', dark: 'Dark nebula', snr: 'Supernova remnant', pn: 'Planetary nebula', oc: 'Open cluster', gc: 'Globular cluster', sc: 'Star cloud', mw: 'Milky Way region', con: 'Constellation', star: 'Star', sb: 'Deep-sky object' };
+  const SENS = { gal: 1, neb: 1, dark: 1, snr: 1, pn: .5, oc: .5, gc: .5, sc: .9, mw: 1, con: .35, star: .2, sb: .8 };
+  function nk(s) { return ' ' + String(s).toLowerCase().replace(/['’`]/g, '').replace(/[^a-z0-9]+/g, ' ').trim().replace(/\b(m|ngc|ic|messier)\s+(\d)/g, function (x, p, d) { return (p === 'messier' ? 'm' : p) + d; }) + ' '; }
+  const objects = [], byId = {};
+  function push(o) { o.al = (o.al || []).map(nk); objects.push(o); byId[o.id] = o; }
+  cons.forEach(function (c) { push({ id: 'con:' + c.name, name: c.name, label: c.name + ' (constellation)', al: [c.name], type: 'con', ra: c.ra, dec: c.dec, mag: null, size: 1500, con: c.name, note: 'The whole constellation — a wide-field subject.' }); });
+  D.dso.forEach(function (d) { push({ id: d[0], name: d[1], label: d[1] + (d[1] !== d[0] ? ' (' + d[0] + ')' : ''), al: d[2].concat([d[1]]), type: d[3], ra: d[4] * 15, dec: d[5], mag: d[6] || null, size: d[7], con: d[8], note: d[9] }); });
+  D.mwr.forEach(function (m) { const e = gal2eq(m[3], m[4]); push({ id: m[0], name: m[1], label: m[1], al: m[2], type: 'mw', l: m[3], b: m[4], ra: e[0], dec: e[1], mag: null, size: m[5] * 60, con: m[6], note: m[7] }); });
+  stars.forEach(function (s) { if (s.name.length < 5) return; push({ id: 'star:' + s.name, name: s.name, label: s.name + ' (star)', al: [s.name], type: 'star', ra: s.ra, dec: s.dec, mag: s.mag, size: 5, con: '', note: 'Bright star.' }); });
+  // aliases: constellation name alone would steal "andromeda": galaxy has +1 priority in find()
+  function find(text) {
+    const t = nk(text), hits = [];
+    objects.forEach(function (o) {
+      let best = 0;
+      o.al.forEach(function (a) { if (a.length >= 5 && t.indexOf(a) >= 0 && a.length > best) best = a.length; });
+      if (best) hits.push({ o: o, s: best + (o.type === 'con' ? 0 : 1) });
+    });
+    hits.sort(function (a, b) { return b.s - a.s; });
+    return hits.map(function (h) { return h.o; });
+  }
+  function related(o) {
+    const out = [];
+    objects.forEach(function (x) { if (x !== o && x.type !== 'star' && x.con && x.con === o.con && x.type !== 'con' && x.type !== 'mw') out.push(x); });
+    objects.forEach(function (x) { if (x !== o && x.type === 'mw' && x.con === o.con) out.push(x); });
+    out.sort(function (a, b) { return (a.mag == null ? 99 : a.mag) - (b.mag == null ? 99 : b.mag); });
+    if (o.type !== 'con' && byId['con:' + o.con]) out.push(byId['con:' + o.con]);
+    return out.slice(0, 7);
+  }
+  function lookup(text) {
+    const m = String(text).match(/\b(ngc|ic|m|sh2|sh 2|lbn|ldn|b|abell|hd|hip|ced)\s?-?(\d{1,6})\b/i);
+    const q = m ? m[1].toUpperCase().replace('SH 2', 'SH2') + ' ' + m[2] : String(text).replace(/\b(best|day|night|time|to|capture|photograph|shoot|when|is|the|a|of|for|what|whats|and|see|view|image|imaging|in|on|my)\b/gi, ' ').replace(/\s+/g, ' ').trim();
+    if (!q || q.length < 3) return Promise.reject(new Error('empty'));
+    const adql = "SELECT TOP 1 main_id, ra, dec, otype_txt, galdim_majaxis FROM basic JOIN ident ON oidref = oid WHERE id = '" + q.replace(/'/g, "''") + "'";
+    const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null; const to = setTimeout(function () { if (ctl) ctl.abort(); }, 12000);
+    return fetch('https://simbad.cds.unistra.fr/simbad/sim-tap/sync?request=doQuery&lang=adql&format=json&query=' + encodeURIComponent(adql), ctl ? { signal: ctl.signal } : {}).then(function (r) { clearTimeout(to); if (!r.ok) throw new Error('HTTP'); return r.json(); }).then(function (d) {
+      const r = d && d.data && d.data[0]; if (!r) throw new Error('none');
+      const nm = String(r[0]).replace(/^(NAME|\*|V\*)\s+/, '').replace(/\s+/g, ' ');
+      const o = { id: 'sb:' + nm, name: nm, label: nm + ' (online lookup)', al: [], type: 'sb', ra: +r[1], dec: +r[2], mag: null, size: r[4] ? +r[4] : 30, con: '', note: 'Not in the built-in catalog — found with an online lookup (SIMBAD' + (r[3] ? ', ' + r[3] : '') + ').' };
+      byId[o.id] = o; return o;
+    });
+  }
+  // approximate full-frame lens (24 mm short side) that frames the target with some room
+  function lens(sizeArcmin) {
+    const deg = Math.max(1.2, sizeArcmin * 1.6 / 60), fl = 24 / (2 * Math.tan(Math.min(100, deg) * D2R / 2));
+    if (sizeArcmin < 25) return 'Small target (' + (sizeArcmin < 3 ? '<3' : Math.round(sizeArcmin)) + '′): you need a telescope or a 400–800 mm lens on a tracker.';
+    return 'Roughly a ' + (fl < 14 ? '14' : fl > 400 ? '400' : String(Math.round(fl / 5) * 5)) + ' mm lens (full-frame) frames it with some room' + (sizeArcmin > 600 ? ' — use the widest lens you have.' : '.');
+  }
+  /* ---------- Milky Way shape: brightness map in galactic coordinates ---------- */
+  const g2 = function (x) { return Math.exp(-x * x); };
+  function mwI(l, b) {
+    const wide = 1 + 1.2 * g2(l / 40), disk = g2(b / (4.2 * wide)), base = .22 + .5 * g2(l / 70);
+    let I = base * disk + 1.05 * g2(l / 9) * g2((b + .5) / 5.5);
+    [[15, -.7, 10, 2.5, .55], [27, 0, 6, 2, .5], [-17, -1, 8, 3, .3], [-35, 0, 15, 3, .18], [76, .5, 9, 2.5, .45], [84, 1, 8, 2.5, .35], [121, 0, 10, 2.5, .3], [140, 0, 10, 2.5, .22], [-73, 0, 9, 2.5, .5], [-57, 0, 6, 2, .35], [-25, 0, 10, 2.5, .3], [-95, 0, 8, 2.5, .25]].forEach(function (k) { I += k[4] * g2((l - k[0]) / k[2]) * g2((b - k[1]) / k[3]); });
+    let dust = 0;
+    if (l > 8 && l < 85) dust += .7 * g2((b - .8) / 1.5) * Math.min(1, (l - 8) / 10, (85 - l) / 10);
+    if (l > -14 && l < 10) dust += .5 * g2((b - 2.2) / 2.4);
+    dust += .8 * g2(l / 6) * g2((b - 5.5) / 3) + .75 * g2((l + 57) / 3.5) * g2((b + .5) / 3) + .35 * g2((l - 135) / 12) * g2((b - 1) / 1.6);
+    return Math.max(0, Math.min(1.4, I * (1 - Math.min(.85, dust))));
+  }
+  let grid = null;
+  function mwgrid() {
+    if (grid) return grid; grid = [];
+    for (let l = -180; l < 180; l += 2) for (let b = -30; b <= 30; b += 2) {
+      const I = mwI(l, b); if (I < .05) continue; const e = gal2eq((l + 360) % 360, b);
+      grid.push({ ra: e[0], dec: e[1], I: I, warm: Math.min(1, .15 + g2(l / 55)) });
+    }
+    [[280.5, -32.9, 5, .55], [302.8, -44.3, 2.6, .5]].forEach(function (c) { for (let dl = -c[2]; dl <= c[2]; dl += 1.2) for (let db = -c[2]; db <= c[2]; db += 1.2) { const r = Math.hypot(dl, db) / c[2]; if (r > 1) continue; const e = gal2eq(c[0] + dl, c[1] + db); grid.push({ ra: e[0], dec: e[1], I: c[3] * (1 - r * .6), warm: .2, mc: true }); } });
+    return grid;
+  }
+  let fld = null;
+  function field() {
+    if (fld) return fld; fld = []; let a = 7;
+    const rnd = function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+    for (let i = 0; i < 1300; i++) {
+      const l = rnd() * 360, u = rnd(), b = u < .6 ? (rnd() + rnd() + rnd() - 1.5) * 16 : (rnd() * 2 - 1) * 90, e = gal2eq(l, Math.max(-89, Math.min(89, b)));
+      fld.push({ name: '', ra: e[0], dec: e[1], mag: 4.7 + Math.sqrt(rnd()) * 1.7 });
+    }
+    return fld;
+  }
+  WX.sky = { field: field, stars: stars, STAR: STAR, lines: lines, cons: cons, objects: objects, byId: byId, find: find, related: related, lookup: lookup, lens: lens, gal2eq: gal2eq, TYPE: TYPE, SENS: SENS, mwgrid: mwgrid };
+})();
+</script>
+
+<script>
 /* ===== Meteorology: general weather, aurora, solar scans, space weather, natural events ===== */
 (function () {
   'use strict';
@@ -11887,8 +11996,10 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     const place = el('div', 'mwrow'); c1.appendChild(place);
     const chips = el('div', 'mwchips'); chips.style.flexWrap = 'nowrap'; chips.style.overflowX = 'auto'; chips.style.paddingBottom = '4px'; c1.appendChild(chips);
     const panoChips = el('div', 'mwchips tight'); panoChips.style.flexWrap = 'nowrap'; panoChips.style.overflowX = 'auto'; panoChips.style.paddingBottom = '4px'; panoChips.classList.add('mwscroll'); c1.appendChild(panoChips);
+    const lyBox = el('div', 'lybox'); lyBox.hidden = true; c1.appendChild(lyBox);
     const pano = el('canvas', 'mwcv'); pano.style.height = '310px'; pano.style.marginTop = '8px'; c1.appendChild(pano);
     c1.appendChild(el('div', 'tiny', 'Horizon map. Vertical lines = compass bearing in degrees (like longitude, 0° = north, 90° = east, 180° = south, 270° = west). Horizontal lines = height above the horizon (like latitude). Gold diamond = galactic core; dotted line = its path tonight with hour marks; ▲ ▼ = where it rises and sets.'));
+    const objp = el('div', 'objp'); objp.hidden = true; c1.appendChild(objp);
     const dome = el('canvas', 'mwcv'); dome.style.height = 'auto'; dome.style.aspectRatio = '1 / 1'; dome.style.maxWidth = '460px'; dome.style.margin = '0 auto';
     const labDate = el('div', 'mwlab', '<span>Date</span><b id="mwDL"></b>'); c1.appendChild(labDate);
     const sd = el('input', 'mwrange'); sd.type = 'range'; sd.min = 0; sd.max = 364; sd.setAttribute('aria-label', 'Date'); c1.appendChild(sd);
@@ -11935,6 +12046,65 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       });
       g.restore();
     }
+    /* ---- sky layers: Milky Way shape, stars, constellations, deep-sky objects (each can be switched on/off) ---- */
+    const SK = WX.sky;
+    const LY0 = { band: true, faint: true, stars: true, names: true, lines: false, cons: false, dso: false, sunmoon: true, grid: true, gal: false, path: true, mag: 5 };
+    const LY = Object.assign({}, LY0, WX.get('mwLayers', {}));
+    function saveLY() { WX.set('mwLayers', LY); }
+    const hits = [];
+    const starVis = function (s) { return Math.max(0, Math.min(1, (-s.sun.alt - 3) / 12)) * (1 - Math.min(.7, s.il * (s.moon.alt > 0 ? Math.min(1, s.moon.alt / 20) : 0) * .8)); };
+    const DSO_COL = { gal: '#ffb27a', neb: '#ff7aa8', snr: '#c58aff', pn: '#6fe0d0', oc: '#ffe27a', gc: '#ffd27a', dark: '#9fb0b8', sc: '#e8f0ff', mw: '#7fd6ff', sb: '#ffffff' };
+    function skyUnder(g, t, s, proj, inView, pxd, wrapPx) {
+      const sv = starVis(s);
+      if (LY.band) {
+        g.save(); g.globalCompositeOperation = 'lighter'; const rr = Math.max(7, pxd * 3.8);
+        SK.mwgrid().forEach(function (q) {
+          const a = MW.altaz(q.ra, q.dec, t, cur.lat, cur.lon); if (a.alt < -1 || !inView(a.az)) return;
+          const ext = Math.min(1, (a.alt + 1) / 14), xy = proj(a.az, a.alt);
+          g.globalAlpha = Math.min(.62, q.I * .4 * s.vis * ext + .0001); g.drawImage(q.warm > .55 ? spWarm : spCool, xy[0] - rr, xy[1] - rr, rr * 2, rr * 2);
+        });
+        g.restore();
+      }
+      if (LY.faint && sv > 0) {
+        g.fillStyle = '#dfe8ff'; const lim = LY.mag + .6;
+        SK.field().forEach(function (q) { if (q.mag > lim) return; const a = MW.altaz(q.ra, q.dec, t, cur.lat, cur.lon); if (a.alt < 1 || !inView(a.az)) return; const xy = proj(a.az, a.alt); g.globalAlpha = sv * (.18 + (6.4 - q.mag) * .13); g.fillRect(xy[0], xy[1], 1.1, 1.1); });
+        g.globalAlpha = 1;
+      }
+      if (LY.lines || LY.cons) {
+        g.strokeStyle = 'rgba(140,180,255,.38)'; g.lineWidth = 1; g.font = '600 9.5px Inter'; g.textAlign = 'center';
+        if (LY.lines) SK.lines.forEach(function (c) { g.beginPath(); c.segs.forEach(function (sg) { const a = MW.altaz(sg[0].ra, sg[0].dec, t, cur.lat, cur.lon), b = MW.altaz(sg[1].ra, sg[1].dec, t, cur.lat, cur.lon); if (a.alt < -2 || b.alt < -2 || !inView(a.az) || !inView(b.az)) return; const p1 = proj(a.az, a.alt), p2 = proj(b.az, b.alt); if (Math.abs(p1[0] - p2[0]) > wrapPx) return; g.moveTo(p1[0], p1[1]); g.lineTo(p2[0], p2[1]); }); g.stroke(); });
+        if (LY.cons) { g.fillStyle = 'rgba(170,200,255,.75)'; SK.cons.forEach(function (c) { const a = MW.altaz(c.ra, c.dec, t, cur.lat, cur.lon); if (a.alt < 6 || !inView(a.az)) return; const xy = proj(a.az, a.alt); g.fillText(c.name.toUpperCase(), xy[0], xy[1]); hits.push({ x: xy[0], y: xy[1], o: SK.byId['con:' + c.name] }); }); }
+        g.textAlign = 'left';
+      }
+    }
+    function skyOver(g, t, s, proj, inView, pxd, wantHits) {
+      const sv = starVis(s), sc = Math.max(.8, Math.min(1.4, .8 + pxd / 6));
+      if (LY.stars && sv > 0) {
+        g.fillStyle = '#fff'; const named = [];
+        SK.stars.forEach(function (q) {
+          if (q.mag > LY.mag) return; const a = MW.altaz(q.ra, q.dec, t, cur.lat, cur.lon); if (a.alt < 1 || !inView(a.az)) return;
+          const xy = proj(a.az, a.alt), r = Math.max(.7, 2.5 - .38 * q.mag) * sc, ext = Math.min(1, a.alt / 8);
+          g.globalAlpha = sv * ext * Math.min(1, .55 + (5.5 - q.mag) * .12); g.beginPath(); g.arc(xy[0], xy[1], r, 0, 7); g.fill();
+          if (q.mag < 1.8) { g.globalAlpha = sv * ext * .25; g.beginPath(); g.arc(xy[0], xy[1], r * 2.6, 0, 7); g.fill(); }
+          if (q.name.length > 3) named.push([q, xy]);
+          if (wantHits && SK.byId['star:' + q.name]) hits.push({ x: xy[0], y: xy[1], o: SK.byId['star:' + q.name] });
+        });
+        g.globalAlpha = 1;
+        if (LY.names) { g.font = '10px Inter'; g.fillStyle = 'rgba(235,240,255,.85)'; const lim = Math.min(LY.mag, pxd < 1.5 ? 1.6 : pxd < 2.5 ? 2.4 : 3.2); named.forEach(function (n) { if (n[0].mag <= lim) g.fillText(n[0].name, n[1][0] + 5, n[1][1] - 4); }); }
+      }
+      if (LY.dso) {
+        g.lineWidth = 1.2; g.font = '9.5px Inter'; let nl = 0;
+        SK.objects.forEach(function (o) {
+          if (o.type === 'con' || o.type === 'star') return; if (o.type !== 'mw' && o.mag != null && o.mag > LY.mag + 3.5) return;
+          const a = MW.altaz(o.ra, o.dec, t, cur.lat, cur.lon); if (a.alt < 1 || !inView(a.az)) return; const xy = proj(a.az, a.alt), x = xy[0], y = xy[1], r = Math.max(4, Math.min(13, o.size / 60 * pxd / 2));
+          g.strokeStyle = DSO_COL[o.type] || '#fff'; g.fillStyle = g.strokeStyle; g.setLineDash([]); g.beginPath();
+          if (o.type === 'gal') g.ellipse(x, y, r * 1.3, r * .7, -.5, 0, 7); else if (o.type === 'neb' || o.type === 'snr') g.rect(x - r, y - r, r * 2, r * 2); else if (o.type === 'oc') { g.setLineDash([2, 2]); g.arc(x, y, r, 0, 7); } else if (o.type === 'gc') { g.arc(x, y, r, 0, 7); g.moveTo(x - r, y); g.lineTo(x + r, y); g.moveTo(x, y - r); g.lineTo(x, y + r); } else if (o.type === 'mw') { g.moveTo(x, y - 6); g.lineTo(x + 6, y); g.lineTo(x, y + 6); g.lineTo(x - 6, y); g.closePath(); } else g.arc(x, y, r, 0, 7);
+          g.stroke(); g.setLineDash([]);
+          if (nl < (pxd < 2 ? 18 : 40) && (o.mag == null || o.mag <= (pxd < 2 ? 6 : 7.5) || o.size > 200)) { g.fillText(o.name, x + r + 3, y + 3); nl++; }
+          if (wantHits) hits.push({ x: x, y: y, o: o });
+        });
+      }
+    }
     function drawDome() {
       const z = sizeCv(dome, dome.getBoundingClientRect().width); if (!z) return; const g = z.g, S = z.w, c = S / 2, R = c - 24;
       const t = tAt(st.doy, st.min), s = skyAt(t), col = skyCols(s.sun.alt);
@@ -11942,7 +12112,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       const proj = function (az, alt) { const r = (90 - alt) / 90 * R; return [c + r * Math.sin(az * D2R), c - r * Math.cos(az * D2R)]; };
       g.save(); g.beginPath(); g.arc(c, c, R, 0, 7); g.clip();
       const gr = g.createRadialGradient(c, c, 0, c, c, R); gr.addColorStop(0, col[0]); gr.addColorStop(1, col[1]); g.fillStyle = gr; g.fillRect(0, 0, S, S);
-      drawBand(g, t, proj, S / 420, s.vis);
+      skyUnder(g, t, s, proj, function () { return true; }, R / 90, 1e9);
       // path of the core across the night
       g.setLineDash([2, 4]); g.strokeStyle = 'rgba(246,200,120,.7)'; g.lineWidth = 1.6; g.beginPath(); let pen = false, ends = [];
       for (let m = 0; m <= SPAN; m += 6) { const q = MW.altaz(MW.core[0], MW.core[1], tAt(st.doy, m), cur.lat, cur.lon); if (q.alt < 0) { pen = false; continue; } const xy = proj(q.az, q.alt); if (pen) g.lineTo(xy[0], xy[1]); else { g.moveTo(xy[0], xy[1]); pen = true; } }
@@ -11950,8 +12120,9 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       // rings
       g.strokeStyle = 'rgba(243,231,211,.14)'; g.lineWidth = 1; [30, 60].forEach(function (a) { g.beginPath(); g.arc(c, c, (90 - a) / 90 * R, 0, 7); g.stroke(); });
       g.beginPath(); g.moveTo(c, c - R); g.lineTo(c, c + R); g.moveTo(c - R, c); g.lineTo(c + R, c); g.stroke();
+      skyOver(g, t, s, proj, function () { return true; }, R / 90, false);
       // moon
-      if (s.moon.alt > -1) { const m = proj(s.moon.az, Math.max(0, s.moon.alt)), r0 = 7; g.fillStyle = 'rgba(255,248,220,' + (.1 + s.il * .25) + ')'; g.beginPath(); g.arc(m[0], m[1], 20 + s.il * 14, 0, 7); g.fill(); g.fillStyle = 'rgb(' + Math.round(150 + 100 * s.il) + ',' + Math.round(150 + 98 * s.il) + ',' + Math.round(150 + 80 * s.il) + ')'; g.beginPath(); g.arc(m[0], m[1], r0, 0, 7); g.fill(); }
+      if (LY.sunmoon && s.moon.alt > -1) { const m = proj(s.moon.az, Math.max(0, s.moon.alt)), r0 = 7; g.fillStyle = 'rgba(255,248,220,' + (.1 + s.il * .25) + ')'; g.beginPath(); g.arc(m[0], m[1], 20 + s.il * 14, 0, 7); g.fill(); g.fillStyle = 'rgb(' + Math.round(150 + 100 * s.il) + ',' + Math.round(150 + 98 * s.il) + ',' + Math.round(150 + 80 * s.il) + ')'; g.beginPath(); g.arc(m[0], m[1], r0, 0, 7); g.fill(); }
       // sun
       if (s.sun.alt > -8) { const m = proj(s.sun.az, Math.max(0, s.sun.alt)); g.fillStyle = '#ffd36b'; g.beginPath(); g.arc(m[0], m[1], 8, 0, 7); g.fill(); }
       // core marker
@@ -11981,21 +12152,15 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       g.clearRect(0, 0, w, h); g.fillStyle = '#04060c'; g.fillRect(0, 0, w, h);
       const gr = g.createLinearGradient(0, top, 0, hz); gr.addColorStop(0, col[0]); gr.addColorStop(1, col[1]); g.fillStyle = gr; g.fillRect(x0, top, pw, hz - top);
       g.save(); g.beginPath(); g.rect(x0, top, pw, hz - top); g.clip();
-      // milky way band (re-uses the sprite glow, radius in real degrees)
-      g.save(); g.globalCompositeOperation = 'lighter'; const pxd = pw / span;
-      MW.pts.forEach(function (q) {
-        const a = MW.altaz(q.ra, q.dec, t, cur.lat, cur.lon); if (a.alt < -1 || !inView(a.az)) return;
-        const ext = Math.min(1, (a.alt + 1) / 14), rr = pxd * (3.6 + 7 * q.r);
-        g.globalAlpha = Math.min(.5, q.w * .2 * s.vis * ext + .0001); g.drawImage(q.warm > .55 ? spWarm : spCool, X(a.az) - rr, Y(a.alt) - rr, rr * 2, rr * 2);
-      });
-      g.restore();
+      const pxd = pw / span; hits.length = 0;
+      skyUnder(g, t, s, proj, inView, pxd, pw / 2);
       // grid: bearing lines every 15°, height lines every 10° (5° when zoomed low)
       const aStep = altMax <= 20 ? 5 : 10;
       g.lineWidth = 1; g.font = '10px Inter';
-      for (let az = 0; az < 360; az += 15) { if (!inView(az)) continue; const x = X(az); g.strokeStyle = az % 90 === 0 ? 'rgba(243,231,211,.28)' : az % 30 === 0 ? 'rgba(243,231,211,.15)' : 'rgba(243,231,211,.07)'; g.beginPath(); g.moveTo(x, top); g.lineTo(x, hz); g.stroke(); }
-      for (let a = aStep; a <= altMax; a += aStep) { const y = Y(a); g.strokeStyle = a % 30 === 0 ? 'rgba(243,231,211,.2)' : 'rgba(243,231,211,.1)'; g.beginPath(); g.moveTo(x0, y); g.lineTo(x0 + pw, y); g.stroke(); g.fillStyle = 'rgba(243,231,211,.7)'; g.textAlign = 'left'; g.fillText(a + '°', x0 + 3, y - 3); }
+      for (let az = 0; az < 360; az += 15) { if (!inView(az) || !LY.grid) continue; const x = X(az); g.strokeStyle = az % 90 === 0 ? 'rgba(243,231,211,.28)' : az % 30 === 0 ? 'rgba(243,231,211,.15)' : 'rgba(243,231,211,.07)'; g.beginPath(); g.moveTo(x, top); g.lineTo(x, hz); g.stroke(); }
+      for (let a = aStep; a <= (LY.grid ? altMax : 0); a += aStep) { const y = Y(a); g.strokeStyle = a % 30 === 0 ? 'rgba(243,231,211,.2)' : 'rgba(243,231,211,.1)'; g.beginPath(); g.moveTo(x0, y); g.lineTo(x0 + pw, y); g.stroke(); g.fillStyle = 'rgba(243,231,211,.7)'; g.textAlign = 'left'; g.fillText(a + '°', x0 + 3, y - 3); }
       // optional galactic grid
-      if (pv.gal) {
+      if (LY.gal) {
         g.strokeStyle = 'rgba(120,200,255,.45)'; g.fillStyle = 'rgba(150,215,255,.9)'; g.lineWidth = 1; g.font = '9.5px Inter';
         const gline = function (pairs, label) {
           let px0 = null, drewLabel = false; g.beginPath();
@@ -12006,16 +12171,17 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
         [-30, -15, 15, 30].forEach(function (b2) { const pr = []; for (let l = 0; l <= 360; l += 4) pr.push([l, b2]); gline(pr, 'b ' + (b2 > 0 ? '+' : '') + b2 + '°'); });
       }
       // path of the core tonight with hour marks
-      if (pv.path) {
+      if (LY.path) {
         g.setLineDash([2, 4]); g.strokeStyle = 'rgba(246,200,120,.85)'; g.lineWidth = 1.8; g.beginPath(); let pen = false, lastx = null;
         for (let m = 0; m <= SPAN; m += 5) { const q = MW.altaz(MW.core[0], MW.core[1], tAt(st.doy, m), cur.lat, cur.lon); if (q.alt < 0 || !inView(q.az)) { pen = false; lastx = null; continue; } const xy = proj(q.az, q.alt); if (pen && Math.abs(xy[0] - lastx) < pw / 2) g.lineTo(xy[0], xy[1]); else { g.moveTo(xy[0], xy[1]); pen = true; } lastx = xy[0]; }
         g.stroke(); g.setLineDash([]); g.font = '600 9.5px Inter'; g.textAlign = 'center';
         for (let m = 0; m <= SPAN; m += 60) { const tt = tAt(st.doy, m), q = MW.altaz(MW.core[0], MW.core[1], tt, cur.lat, cur.lon); if (q.alt < 0 || !inView(q.az)) continue; const xy = proj(q.az, q.alt); g.fillStyle = '#f6c25b'; g.beginPath(); g.arc(xy[0], xy[1], 3, 0, 7); g.fill(); g.fillStyle = 'rgba(255,230,180,.95)'; const lab = hm(tt).replace(/:00/, '').replace(' AM', 'a').replace(' PM', 'p'); g.fillText(lab, xy[0], xy[1] - 7); }
         g.textAlign = 'left';
       }
+      skyOver(g, t, s, proj, inView, pxd, true);
       // moon & sun
-      if (s.moon.alt > -1 && inView(s.moon.az)) { const m = proj(s.moon.az, s.moon.alt); g.fillStyle = 'rgba(255,248,220,' + (.12 + s.il * .25) + ')'; g.beginPath(); g.arc(m[0], m[1], 12 + s.il * 12, 0, 7); g.fill(); g.fillStyle = '#efe8d2'; g.beginPath(); g.arc(m[0], m[1], 6, 0, 7); g.fill(); }
-      if (s.sun.alt > -8 && inView(s.sun.az)) { const m = proj(s.sun.az, s.sun.alt); g.fillStyle = '#ffd36b'; g.beginPath(); g.arc(m[0], m[1], 8, 0, 7); g.fill(); }
+      if (LY.sunmoon && s.moon.alt > -1 && inView(s.moon.az)) { const m = proj(s.moon.az, s.moon.alt); g.fillStyle = 'rgba(255,248,220,' + (.12 + s.il * .25) + ')'; g.beginPath(); g.arc(m[0], m[1], 12 + s.il * 12, 0, 7); g.fill(); g.fillStyle = '#efe8d2'; g.beginPath(); g.arc(m[0], m[1], 6, 0, 7); g.fill(); }
+      if (LY.sunmoon && s.sun.alt > -8 && inView(s.sun.az)) { const m = proj(s.sun.az, s.sun.alt); g.fillStyle = '#ffd36b'; g.beginPath(); g.arc(m[0], m[1], 8, 0, 7); g.fill(); }
       // current core position
       if (s.core.alt > 0 && inView(s.core.az)) { const m = proj(s.core.az, s.core.alt); g.save(); g.translate(m[0], m[1]); g.rotate(Math.PI / 4); g.fillStyle = '#f6c25b'; g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.fillRect(-5, -5, 10, 10); g.strokeRect(-5, -5, 10, 10); g.restore(); g.fillStyle = '#fff3d6'; g.font = '700 11px Inter'; const lab = 'Core ' + Math.round(s.core.alt) + '° · ' + Math.round(s.core.az) + '° ' + compass(s.core.az), tw = g.measureText(lab).width, lx = Math.max(x0 + 4, Math.min(x0 + pw - tw - 4, m[0] - tw / 2)); g.fillStyle = 'rgba(0,0,0,.45)'; g.fillRect(lx - 3, m[1] - 25, tw + 6, 15); g.fillStyle = '#fff3d6'; g.fillText(lab, lx, m[1] - 14); }
       g.restore();
@@ -12039,7 +12205,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       panoChips.innerHTML = '';
       VIEWS.forEach(function (v) { const b = el('button', 'chip' + (pv.view === v[0] ? ' on' : ''), v[1]); b.type = 'button'; b.onclick = function () { pv.view = v[0]; paintPanoChips(); redraw(); }; panoChips.appendChild(b); });
       const hb = el('button', 'chip' + (pv.alt === 45 ? ' on' : ''), pv.alt === 45 ? 'Low sky 0–45°' : 'Full sky 0–90°'); hb.type = 'button'; hb.onclick = function () { pv.alt = pv.alt === 45 ? 90 : 45; paintPanoChips(); redraw(); }; panoChips.appendChild(hb);
-      const gb = el('button', 'chip' + (pv.gal ? ' on' : ''), 'Galactic grid'); gb.type = 'button'; gb.onclick = function () { pv.gal = !pv.gal; paintPanoChips(); redraw(); }; panoChips.appendChild(gb);
+      const lb = el('button', 'chip' + (!lyBox.hidden ? ' on' : ''), '⚙ Sky layers'); lb.type = 'button'; lb.onclick = function () { lyBox.hidden = !lyBox.hidden; if (!lyBox.hidden) paintLayers(); paintPanoChips(); }; panoChips.appendChild(lb);
     }
     paintPanoChips();
 
@@ -12176,6 +12342,31 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     [playB, tNow, dark, core].forEach(function (b) { ctl.appendChild(b); });
     sd.addEventListener('input', function () { st.doy = +sd.value; redraw(); }); sm.addEventListener('input', function () { stopPlay(); st.min = +sm.value; redraw(); });
 
+    /* ---- layer switches + tap-an-object ---- */
+    const LYS = [['band', 'Milky Way shape'], ['stars', 'Stars'], ['faint', 'Faint stars'], ['names', 'Star names'], ['lines', 'Constellation lines'], ['cons', 'Constellation names'], ['dso', 'Galaxies, nebulae & clusters'], ['sunmoon', 'Sun & moon'], ['grid', 'Bearing / height grid'], ['gal', 'Galactic grid'], ['path', 'Core path']];
+    function paintLayers() {
+      lyBox.innerHTML = '<div class="tiny" style="margin:2px 0 6px">Switch parts of the sky on or off. Tap any star, nebula, galaxy or constellation on the map to see it and plan its best night.</div>';
+      const row = el('div', 'mwchips'); row.style.marginTop = '0';
+      LYS.forEach(function (k) { const b = el('button', 'chip' + (LY[k[0]] ? ' on' : ''), esc(k[1])); b.type = 'button'; b.onclick = function () { LY[k[0]] = !LY[k[0]]; saveLY(); paintLayers(); redraw(); }; row.appendChild(b); });
+      [['All on', function () { LYS.forEach(function (k) { LY[k[0]] = true; }); }], ['Clean (shape only)', function () { LYS.forEach(function (k) { LY[k[0]] = k[0] === 'band' || k[0] === 'grid'; }); }], ['Reset', function () { Object.keys(LY0).forEach(function (k) { LY[k] = LY0[k]; }); }]].forEach(function (q) { const b = el('button', 'chip', esc(q[0])); b.type = 'button'; b.onclick = function () { q[1](); saveLY(); paintLayers(); redraw(); }; row.appendChild(b); });
+      lyBox.appendChild(row);
+      const lab = el('div', 'mwlab', '<span>Faintest star shown</span><b>mag ' + (+LY.mag).toFixed(1) + '</b>'); lab.style.marginTop = '10px'; lyBox.appendChild(lab);
+      const rg = el('input', 'mwrange'); rg.type = 'range'; rg.min = 1; rg.max = 6.5; rg.step = .5; rg.value = LY.mag; rg.setAttribute('aria-label', 'Faintest star magnitude');
+      rg.addEventListener('input', function () { LY.mag = +rg.value; saveLY(); lab.querySelector('b').textContent = 'mag ' + LY.mag.toFixed(1); redraw(); }); lyBox.appendChild(rg);
+      lyBox.appendChild(el('div', 'tiny', 'Lower number = brighter. Mag 1–2 is only the brightest stars; mag 6 is what you see under a very dark sky. The catalog holds ' + SK.stars.length + ' bright stars, ' + SK.cons.length + ' constellations, ' + (SK.objects.length - SK.stars.length - SK.cons.length - 8) + ' deep-sky objects and 8 Milky Way regions.'));
+    }
+    function showObj(o) {
+      const t = tAt(st.doy, st.min), a = MW.altaz(o.ra, o.dec, t, cur.lat, cur.lon);
+      objp.hidden = false;
+      objp.innerHTML = '<b>' + esc(o.label) + '</b> <span class="muted">· ' + esc(SK.TYPE[o.type] || '') + (o.con && o.type !== 'con' ? ' in ' + esc(o.con) : '') + (o.mag != null ? ' · mag ' + o.mag : '') + '</span><div class="muted" style="font-size:12.5px;margin:3px 0">' + (a.alt > 0 ? 'Now: ' + Math.round(a.alt) + '° high toward ' + Math.round(a.az) + '° ' + compass(a.az) + '.' : 'Below the horizon at this moment.') + ' ' + esc(o.note || '') + '</div>';
+      const go = el('button', 'btn pri', 'Plan the best night for this'); go.type = 'button'; go.onclick = function () { WX.planLog.askAbout(o.label); }; const x = el('button', 'btn', 'Close'); x.type = 'button'; x.onclick = function () { objp.hidden = true; };
+      const r = el('div', 'lg-acts'); r.style.marginTop = '6px'; r.appendChild(go); r.appendChild(x); objp.appendChild(r);
+    }
+    pano.addEventListener('click', function (e) {
+      const r = pano.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; let best = null, bd = 18;
+      hits.forEach(function (h) { const d = Math.hypot(h.x - x, h.y - y); if (d < bd && h.o) { bd = d; best = h; } });
+      if (best) showObj(best.o);
+    });
     let raf2 = 0;
     function redraw() { if (!p.isConnected || p.hidden) return; cancelAnimationFrame(raf2); raf2 = requestAnimationFrame(function () { const r = drawDome(); if (r) { drawPano(); paintRead(r); } drawYear(); }); }
     p.__redraw = function () { redraw(); computeSeason(); };
@@ -13299,6 +13490,130 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
   }
   const BEST_RX = /\b(best|ideal|perfect|good conditions|worth|should i|when (is|will|can))\b/;
 
+  /* ---------- object planner: any star, constellation, nebula, galaxy, cluster or Milky Way region ---------- */
+  const cl = function (x) { return Math.max(0, Math.min(1, x)); };
+  function angSep(a1, z1, a2, z2) { const d = Math.PI / 180; return Math.acos(cl2(Math.sin(a1 * d) * Math.sin(a2 * d) + Math.cos(a1 * d) * Math.cos(a2 * d) * Math.cos((z1 - z2) * d))) / d; }
+  function cl2(x) { return Math.max(-1, Math.min(1, x)); }
+  const aqCache = {};
+  function airQ(place) {
+    const key = place.lat.toFixed(1) + ',' + place.lon.toFixed(1); if (aqCache[key]) return aqCache[key];
+    return (aqCache[key] = WX.getJSON('https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + place.lat + '&longitude=' + place.lon + '&hourly=pm2_5,aerosol_optical_depth&forecast_days=5&timezone=UTC', { ttl: 30, timeout: 15000 }).then(function (d) { return d && d.hourly ? { T: d.hourly.time.map(function (s) { return Date.parse(s + 'Z'); }), pm: d.hourly.pm2_5, aod: d.hourly.aerosol_optical_depth } : null; }).catch(function () { return null; }));
+  }
+  function aqAt(Q, t) { if (!Q || !Q.T.length) return null; const i = Math.round((t - Q.T[0]) / 3600000); if (!(i >= 0 && i < Q.T.length)) return null; const pm = Q.pm[i], aod = Q.aod[i]; if (pm == null && aod == null) return null; return { pm: pm == null ? 0 : pm, aod: aod == null ? 0 : aod }; }
+  function objNight(o, place, D, H, Q, step) {
+    const p = P(), M = WX.mw, sens = WX.sky.SENS[o.type] == null ? .7 : WX.sky.SENS[o.type], now = Date.now();
+    const t00 = p.zoned(D.y, D.m, D.d, 12, 0), n = Math.round(24 * 3600000 / step), Sm = [];
+    for (let i = 0; i <= n; i++) {
+      const t = t00 + i * step, z = { t: t, v: 0, va: 0, ok: false }; Sm.push(z); if (t < now) continue;
+      const sun = A.sunPos(t, place.lat, place.lon); if (sun.alt > -4) continue;
+      const oa = M.altaz(o.ra, o.dec, t, place.lat, place.lon); if (oa.alt < 8) continue;
+      const mp = A.moonPos(t, place.lat, place.lon), il = A.moonIllum(t).frac, sep = angSep(oa.alt, oa.az, mp.alt, mp.az), up = mp.alt > -2 ? il * cl((mp.alt + 2) / 15) : 0;
+      const dk = cl((-sun.alt - 4) / (sens >= .8 ? 14 : 8)), af = cl((oa.alt - 8) / 34), va = dk * af * (1 - .92 * up * sens * (1 - .55 * cl(sep / 100)));
+      let wf = 1;
+      if (H) { const w = wAt(H, t); if (w) { wf = 1 - .97 * (w.cloud_cover || 0) / 100; if (w.precipitation_probability >= 50) wf *= .6; if (w.visibility != null && w.visibility < 5000) wf *= .7; if (w.wind_gusts_10m >= 45) wf *= .85; if (w.temperature_2m - w.dew_point_2m < 2 && w.relative_humidity_2m >= 95) wf *= .85; const q = aqAt(Q, t); if (q && (q.aod > .35 || q.pm > 35)) wf *= .8; } }
+      z.ok = true; z.va = va; z.v = va * wf; z.alt = oa.alt; z.az = oa.az; z.sun = sun.alt; z.up = up; z.il = il; z.sep = sep;
+    }
+    const N = Math.min(Sm.length, Math.round(2 * 3600000 / step)); let best = -1, bi = 0;
+    for (let i = 0; i + N <= Sm.length; i++) { let v = 0; for (let j = 0; j < N; j++) v += Sm[i + j].v; if (v > best) { best = v; bi = i; } }
+    const blk = Sm.slice(bi, bi + N).filter(function (z) { return z.ok; });
+    const out = { D: D, t00: t00, score: 0, none: true };
+    if (!blk.length || best <= 0) return out;
+    const t0 = blk[0].t, t1 = blk[blk.length - 1].t + step, pk = blk.reduce(function (a, z) { return z.alt > a.alt ? z : a; }, blk[0]), avg = function (k) { return blk.reduce(function (a, z) { return a + z[k]; }, 0) / blk.length; };
+    const w = H ? avgW(H, t0, t1) : null, q = H ? aqAt(Q, (t0 + t1) / 2) : null, up = avg('up'), il = avg('il'), sep = avg('sep'), sunMin = Math.min.apply(null, blk.map(function (z) { return z.sun; })), r = Math.round, pros = [], cons = [];
+    if (pk.alt >= 50) pros.push('Climbs to ' + r(pk.alt) + '° — low airmass, crisp detail'); else if (pk.alt >= 28) pros.push('Reaches ' + r(pk.alt) + '° high'); else cons.push('Stays low (peaks at ' + r(pk.alt) + '°) — you need a clear ' + p.compassPt(pk.az) + ' horizon');
+    if (sunMin <= -18) pros.push('True astronomical darkness'); else if (sunMin <= -12) pros.push('Dark enough for bright targets (nautical twilight or darker)'); else cons.push('Twilight sky never fully darkens in this window');
+    if (up < .03) pros.push('Moon is down or very thin'); else cons.push('Moon ' + r(il * 100) + '% lit, ' + r(sep) + '° from the target' + (sep > 70 ? ' (far enough to help a little)' : ' — glare'));
+    if (w) {
+      if (w.ct < 15) pros.push('Clear sky (' + r(w.ct) + '% cloud)'); else if (w.ct > 50) cons.push('Cloud cover ' + r(w.ct) + '%'); else if (w.ct >= 25) cons.push('Some cloud (' + r(w.ct) + '%)');
+      if (w.pp >= 40 || w.pr > .1) cons.push('Rain chance ' + r(w.pp) + '%');
+      if (w.vis / 1000 < 10) cons.push('Hazy (' + (w.vis / 1000).toFixed(0) + ' km visibility)'); else if (w.vis / 1000 >= 20) pros.push('Crisp air (' + r(w.vis / 1000) + ' km visibility)');
+      if (w.gust >= 40) cons.push('Gusts to ' + WX.speed(w.gust)); else if (w.gust < 20) pros.push('Calm for a tripod / tracker');
+      if (w.temp - w.dew < 2 && w.hum >= 95) cons.push('Dew/fog risk — use a dew heater or keep the lens warm');
+    }
+    if (q) { if (q.aod > .35 || q.pm > 35) cons.push('Smoky/hazy air (PM2.5 ' + r(q.pm) + ' µg/m³, AOD ' + q.aod.toFixed(2) + ')'); else pros.push('Clean air (PM2.5 ' + r(q.pm) + ' µg/m³)'); }
+    return { D: D, t00: t00, t0: t0, t1: t1, score: Math.max(0, Math.min(100, best / N * 100)), peakAlt: pk.alt, peakAz: pk.az, w: w, q: q, up: up, il: il, sep: sep, pros: pros, cons: cons };
+  }
+  const OBJ_RX = /\b(best|capture|photograph|shoot|image|imaging|when|see|view|find)\b/;
+  const MON3 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  let ans = null, ores = null, pendingReplace = null, pendingText = null, askHook = null;
+  function showObject(o, opts) {
+    opts = opts || {};
+    const place = P().S.place, p = P(), r = Math.round, sk = WX.sky;
+    ans = { obj: o, saved: opts.saved || null, replace: opts.keepReplace ? (ans && ans.replace) : pendingReplace, alts: opts.alts || [], picks: [] }; pendingReplace = null;
+    if (!place) { ores.innerHTML = '<div class="lg-res">Set your location on the Weather home screen first.</div>'; return; }
+    const mine = ans;
+    ores.innerHTML = '<div class="status" style="margin-top:10px"><span class="spin"></span><span>Combining the sky catalog, sun &amp; moon, forecast and air quality…</span></div>';
+    hourly(place).catch(function () { return null; }).then(function (H) { return airQ(place).then(function (Q) { return { H: H, Q: Q }; }); }).then(function (d) {
+      if (ans !== mine) return;
+      const nights = []; const today = p.ymd(Date.now());
+      for (let k = 0; k < (d.H ? 16 : 7); k++) nights.push(objNight(o, place, p.addDays(today, k), d.H, d.Q, 1200000));
+      const good = nights.filter(function (x) { return !x.none; }).sort(function (a, b) { return b.score - a.score; });
+      let h = '<div class="oc-head"><h4>' + esc(o.label) + '</h4><div class="muted" style="font-size:12.5px">' + esc(sk.TYPE[o.type] || '') + (o.con && o.type !== 'con' ? ' in ' + esc(o.con) : '') + (o.mag != null ? ' · mag ' + o.mag : '') + (o.size >= 1 && o.type !== 'star' ? ' · about ' + (o.size >= 60 ? (o.size / 60).toFixed(o.size >= 600 ? 0 : 1) + '°' : r(o.size) + '′') + ' across' : '') + '<br>' + esc(o.note || '') + '<br>📷 ' + esc(sk.lens(o.size)) + '</div>';
+      h += '<div class="tiny" style="margin-top:6px">Used: sun &amp; moon positions and phase · built-in catalog (' + sk.stars.length + ' stars, ' + sk.cons.length + ' constellations, ' + (sk.objects.length - sk.stars.length - sk.cons.length - 8) + ' deep-sky objects, Milky Way regions) · ' + (d.H ? 'Open-Meteo hourly forecast (16 days)' : 'no forecast (offline — astronomy only)') + (d.Q ? ' · air quality (next ~5 days)' : '') + '</div></div>';
+      h += '<div id="ocSaved"></div>';
+      if (opts.alts && opts.alts.length) h += '<div class="tiny" style="margin-top:10px">Not the one you meant?</div><div class="lg-eg" id="ocAlts"></div>';
+      h += '<div class="tiny" style="margin-top:10px">NEXT ' + (d.H ? 16 : 7) + ' NIGHTS' + (d.H ? ' · astronomy + forecast' : ' · astronomy only') + '</div>';
+      function moonTxt(x) { return x.up < .03 ? 'down or thin (' + r(x.il * 100) + '% lit)' : r(x.il * 100) + '% lit · up · ' + r(x.sep) + '° from target'; }
+      function card(x, i, tag) {
+        const w = x.w; ans.picks.push(x);
+        const idx = ans.picks.length - 1;
+        return '<div class="bestcard"><span class="pill2" style="background:' + scoreCol(x.score) + '">' + tag + r(x.score) + '/100</span> <b style="margin-left:6px">' + esc(WX.fmt(new Date(x.t0), { weekday: 'long', month: 'short', day: 'numeric' })) + '</b>' +
+          '<div class="when" style="margin-top:6px">' + esc(p.hm(x.t0)) + ' – ' + esc(p.hm(x.t1)) + '</div><div class="muted" style="font-size:12.5px">Peak ' + r(x.peakAlt) + '° toward ' + r(x.peakAz) + '° ' + esc(p.compassPt(x.peakAz)) + '</div>' +
+          '<ul>' + x.pros.map(function (q) { return '<li class="ok">✓ ' + esc(q) + '</li>'; }).join('') + x.cons.map(function (q) { return '<li class="bad">⚠ ' + esc(q) + '</li>'; }).join('') + '</ul>' +
+          (w ? '<table><tr><td>Cloud (total · low / mid / high)</td><td>' + r(w.ct) + '% · ' + r(w.cl) + ' / ' + r(w.cm) + ' / ' + r(w.ch) + '%</td></tr><tr><td>Rain chance</td><td>' + r(w.pp) + '%</td></tr><tr><td>Visibility · wind</td><td>' + (w.vis / 1000).toFixed(0) + ' km · ' + esc(WX.speed(w.wind)) + '</td></tr><tr><td>Moon</td><td>' + moonTxt(x) + '</td></tr></table>' : '<table><tr><td>Moon</td><td>' + moonTxt(x) + '</td></tr></table>') +
+          '<div class="acts" style="margin-top:10px"><button type="button" class="btn pri" data-osv="' + idx + '">＋ Save to log book</button> <button type="button" class="btn" data-oop="' + idx + '">Show on timeline</button></div></div>';
+      }
+      if (!good.length) h += '<div class="lg-res">' + esc(o.name) + ' isn\'t well placed in dark sky from here in the next ' + (d.H ? 16 : 7) + ' nights (it stays low, is up only in daylight, or the moon/clouds swamp it). See the best dates of the year below.</div>';
+      else good.slice(0, 3).forEach(function (x, i) { h += card(x, i, (i === 0 ? 'Best · ' : '#' + (i + 1) + ' · ')); });
+      if (good.length) h += '<div class="daybars">' + nights.filter(function (x) { return !x.none; }).map(function (x) { return '<div><span>' + esc(WX.fmt(new Date(x.t0), { weekday: 'short', day: 'numeric' })) + '</span><i style="width:' + Math.max(4, x.score) + '%;background:' + scoreCol(x.score) + '"></i><b style="color:var(--ink)">' + r(x.score) + '</b></div>'; }).join('') + '</div>';
+      h += '<div id="ocYear"><div class="status" style="margin-top:12px"><span class="spin"></span><span>Scanning the whole year…</span></div></div>';
+      const rel = sk.related(o); if (rel.length) h += '<div class="tiny" style="margin-top:12px">Also in this part of the sky</div><div class="lg-eg" id="ocRel"></div>';
+      h += '<div class="lg-acts" style="margin-top:12px"><button type="button" class="btn" id="ocRestart">Start over</button></div>';
+      ores.innerHTML = h;
+      function chips(id, arr) { const c = $('#' + id, ores); if (!c) return; arr.forEach(function (x) { const b = el('button', 'chip', esc(x.label)); b.type = 'button'; b.onclick = function () { showObject(x, { keepReplace: true, alts: opts.alts }); ores.scrollIntoView({ block: 'nearest' }); }; c.appendChild(b); }); }
+      chips('ocAlts', opts.alts || []); chips('ocRel', rel);
+      $('#ocRestart', ores).onclick = function () { if (askHook) askHook.clear(); };
+      wire(ores);
+      paintSaved();
+      setTimeout(function () {
+        if (ans !== mine) return;
+        const yr = []; for (let k = 0; k < 365; k++) yr.push(objNight(o, place, p.addDays(today, k), null, null, 1800000));
+        const box = $('#ocYear', ores); if (!box) return;
+        const mx = Math.max.apply(null, yr.map(function (x) { return x.score; }));
+        if (mx < 3) { box.innerHTML = '<div class="lg-res">From ' + esc(place.name || 'here') + ' this target never gets well placed in dark sky during the next year (it stays too low, or is only up in daylight).</div>'; return; }
+        const bin = []; for (let m = 0; m < 12; m++) bin.push([0, 0]);
+        yr.forEach(function (x) { const m = new Date(x.t00).getUTCMonth(); bin[m][0] += x.score; bin[m][1]++; });
+        const avgm = bin.map(function (b) { return b[1] ? b[0] / b[1] : 0; }), mm = Math.max.apply(null, avgm), bestM = MON3.filter(function (n, i) { return avgm[i] >= mm * .7; });
+        const top = yr.filter(function (x) { return !x.none; }).sort(function (a, b) { return b.score - a.score; }), pick = [];
+        top.forEach(function (x) { if (pick.length < 3 && pick.every(function (q) { return Math.abs(q.t00 - x.t00) > 6 * 86400000; })) pick.push(x); });
+        let y = '<div class="tiny" style="margin-top:14px">BEST DATES THIS YEAR · astronomy only (altitude, darkness, moon)</div><p class="learn" style="margin-top:6px">Best season from ' + esc(place.name || 'here') + ': <b>' + bestM.join(', ') + '</b>. Dates after the forecast window carry no weather — check again closer to the day.</p>';
+        pick.forEach(function (x, i) { y += card(x, i, (i === 0 ? 'Top date · ' : '#' + (i + 1) + ' · ')); });
+        y += '<div class="daybars">' + MON3.map(function (n, i) { return '<div><span>' + n + '</span><i style="width:' + Math.max(3, avgm[i] / mm * 100) + '%;background:' + scoreCol(avgm[i] / mm * 100) + '"></i><b style="color:var(--ink)">' + r(avgm[i]) + '</b></div>'; }).join('') + '</div>';
+        box.innerHTML = y; wire(box); paintSaved();
+      }, 40);
+    });
+  }
+  function wire(root) {
+    WX.$$('[data-osv]', root).forEach(function (b) { b.onclick = function () { saveObjPick(ans.picks[+b.getAttribute('data-osv')]); }; });
+    WX.$$('[data-oop]', root).forEach(function (b) { b.onclick = function () { P().open(ans.picks[+b.getAttribute('data-oop')].t0); }; });
+  }
+  function saveObjPick(x) {
+    if (!ans || !x) return; const o = ans.obj, prevId = ans.saved || ans.replace, prev = prevId ? list().find(function (q) { return q.id === prevId; }) : null; let carry = {};
+    if (prev) { carry = { notes: prev.notes, gear: prev.gear }; save(list().filter(function (q) { return q.id !== prev.id; })); }
+    const r = Math.round, it = add(Object.assign({ title: 'Photograph ' + o.name + ' (' + r(x.score) + '/100)', when: x.t0, end: x.t1, kind: 'dso', target: o.id, targetName: o.label, info: 'Peak ' + r(x.peakAlt) + '° toward ' + r(x.peakAz) + '° ' + P().compassPt(x.peakAz) + ' · moon ' + r(x.il * 100) + '% lit' + (x.w ? ' · cloud ' + r(x.w.ct) + '%' : ' · astronomy only') }, carry));
+    ans.saved = it.id; ans.replace = null; ans.savedPick = x; (WX.planLog.redrawList && WX.planLog.redrawList()); paintSaved(prev ? 'Replaced your earlier pick' : 'Saved');
+  }
+  function paintSaved(msg) {
+    const box = ores && $('#ocSaved', ores); if (!box || !ans) return;
+    const cur = ans.saved && list().find(function (q) { return q.id === ans.saved; });
+    if (ans.saved && !cur) ans.saved = null;
+    if (!cur) { box.innerHTML = ans.replace ? '<div class="savedbar">Replanning an existing log entry — tap <b>Save</b> on a night below to replace it.</div>' : ''; return; }
+    box.innerHTML = '<div class="savedbar"><b>✓ ' + esc(msg || 'In your log book') + ':</b> ' + esc(WX.fmt(new Date(cur.when), { weekday: 'short', month: 'short', day: 'numeric' })) + ' ' + esc(P().hm(cur.when)) + '–' + esc(P().hm(cur.end || cur.when)) + '<div class="muted" style="font-size:12px;margin-top:2px">Wrong one? Tap <b>Save</b> on a different night to replace it, or delete it.</div><div class="lg-acts" style="margin-top:6px"><button type="button" class="chip" id="ocDel">Delete from log book</button><button type="button" class="chip" id="ocRs">Start over</button></div></div>';
+    $('#ocDel', box).onclick = function () { save(list().filter(function (q) { return q.id !== ans.saved; })); ans.saved = null; (WX.planLog.redrawList && WX.planLog.redrawList()); paintSaved(); toast('Removed from your log book'); };
+    $('#ocRs', box).onclick = function () { if (askHook) askHook.clear(); };
+  }
+  WX.planLog.askAbout = function (text) { pendingText = text; WX.show('planner'); setTimeout(function () { WX.plan.tab('log'); }, 60); };
+
   /* ---------- UI ---------- */
   let lastQ = null, lastR = null, editing = null;
   function pad(n) { return (n < 10 ? '0' : '') + n; }
@@ -13318,7 +13633,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     const row = el('div', 'lg-ask'); const inp = el('input'); inp.type = 'search'; inp.placeholder = 'e.g. sunset June 21 · milky way next Saturday'; inp.setAttribute('aria-label', 'Ask the planner');
     const go = el('button', 'btn pri', 'Find'); go.type = 'button'; row.appendChild(inp); row.appendChild(go); ask.appendChild(row);
     const eg = el('div', 'lg-eg');
-    ['Sunset tomorrow', 'Golden hour Saturday', 'Milky Way next new moon', 'Full moon rise facing east', 'Sunset facing 300°', 'Sunrise on the summer solstice', 'Blue hour Dec 24 at 5pm', 'Best sunset this week', 'Best night for the Milky Way'].forEach(function (x) { const b = el('button', 'chip', esc(x)); b.type = 'button'; b.onclick = function () { inp.value = x; run(); }; eg.appendChild(b); });
+    ['Sunset tomorrow', 'Golden hour Saturday', 'Milky Way next new moon', 'Full moon rise facing east', 'Sunset facing 300°', 'Sunrise on the summer solstice', 'Blue hour Dec 24 at 5pm', 'Best sunset this week', 'Best night for the Milky Way', 'Best night to photograph Orion', 'When to shoot the Andromeda galaxy', 'Best night for the Pleiades'].forEach(function (x) { const b = el('button', 'chip', esc(x)); b.type = 'button'; b.onclick = function () { inp.value = x; run(); }; eg.appendChild(b); });
     ask.appendChild(eg);
     // best day & time (astronomy + forecast)
     const bf = el('div', 'lg-form'); bf.style.marginTop = '12px';
@@ -13326,6 +13641,25 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     const bgo = el('button', 'btn pri', 'Find my best day & time'); bgo.type = 'button'; bgo.style.gridColumn = '1 / -1'; bf.appendChild(bgo);
     const bres = el('div', ''); bres.style.gridColumn = '1 / -1'; bf.appendChild(bres); ask.appendChild(bf);
     bgo.onclick = function () { showBest(bres, $('#lgBK', ask).value, +$('#lgBN', ask).value); };
+    // any target: stars, galaxies, nebulae, constellations, Milky Way regions
+    const tf = el('div', 'lg-form'); tf.style.marginTop = '12px';
+    tf.innerHTML = '<label class="full" style="color:var(--ink);letter-spacing:.06em">Plan any target — uses all sky data</label><label class="full">Star, galaxy, nebula, constellation or Milky Way region<input id="lgObj" list="lgObjL" maxlength="60" placeholder="e.g. Orion, M31, Pleiades, Milky Way core" autocomplete="off"></label><datalist id="lgObjL">' + WX.sky.objects.filter(function (o) { return o.type !== 'star' || o.mag < 1.6; }).map(function (o) { return '<option value="' + esc(o.label) + '"></option>'; }).join('') + '</datalist>' +
+      '<label class="full" style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--sub)"><input type="checkbox" id="lgAll" style="height:auto;width:18px"> Use all sky data to answer questions typed above (moon, catalog, forecast, air quality)</label>';
+    const tgo = el('button', 'btn pri', 'Find the best night for it'); tgo.type = 'button'; tgo.style.gridColumn = '1 / -1'; tf.appendChild(tgo);
+    const oresEl = el('div', ''); oresEl.style.gridColumn = '1 / -1'; tf.appendChild(oresEl); ask.appendChild(tf); ores = oresEl;
+    $('#lgAll', tf).checked = WX.get('lgAll', true); $('#lgAll', tf).onchange = function () { WX.set('lgAll', this.checked); };
+    tgo.onclick = function () { const v = $('#lgObj', tf).value.trim(); if (v) runTarget(v); };
+    $('#lgObj', tf).addEventListener('keydown', function (e) { if (e.key === 'Enter') { const v = this.value.trim(); if (v) runTarget(v); } });
+    function runTarget(text) {
+      const hits = WX.sky.find(text);
+      if (hits.length) { res.innerHTML = ''; bres.innerHTML = ''; showObject(hits[0], { alts: hits.slice(1, 5) }); return; }
+      ores.innerHTML = '<div class="status" style="margin-top:10px"><span class="spin"></span><span>Not in the built-in catalog — looking it up online…</span></div>';
+      WX.sky.lookup(text).then(function (o) { showObject(o); }, function () { ores.innerHTML = '<div class="lg-res">I couldn\'t find “' + esc(text) + '” in the built-in catalog or the online lookup. Try a Messier/NGC number (M31, NGC 7000), a constellation, a bright star, or “Milky Way core”. For sunrise, sunset, golden hour, blue hour or moon events, use the questions above.</div>'; });
+    }
+    askHook = {
+      ask: function (text, rid) { pendingReplace = rid || null; $('#lgObj', tf).value = text; const o = WX.sky.byId[text] || null; const hits = o ? [o] : WX.sky.find(text); if (hits.length) { res.innerHTML = ''; showObject(hits[0], {}); } else runTarget(text); ores.scrollIntoView({ block: 'nearest' }); },
+      clear: function () { ans = null; pendingReplace = null; ores.innerHTML = ''; inp.value = ''; $('#lgObj', tf).value = ''; bres.innerHTML = ''; res.innerHTML = ''; toast('Cleared — ask again'); }
+    };
     // structured form (always matches what was understood)
     const form = el('div', 'lg-form');
     form.innerHTML = '<label class="full">I want<select id="lgKind">' + KINDS.map(function (k) { return '<option value="' + k[0] + '">' + esc(k[1]) + '</option>'; }).join('') + '</select></label>' +
@@ -13352,7 +13686,13 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     }
     function run() {
       const text = inp.value.trim(); if (!text) return;
-      const q = parse(text);
+      const q = parse(text), useAll = $('#lgAll', ask).checked, low = text.toLowerCase();
+      if (useAll) {
+        const hits = WX.sky.find(text);
+        if (hits.length && (!q.kind || q.kind === 'dark' || OBJ_RX.test(low))) { res.innerHTML = ''; bres.innerHTML = ''; $('#lgObj', ask).value = hits[0].label; showObject(hits[0], { alts: hits.slice(1, 5) }); ores.scrollIntoView({ block: 'nearest' }); return; }
+        if (!q.kind) { res.innerHTML = ''; runTarget(text); ores.scrollIntoView({ block: 'nearest' }); return; }
+      }
+      ans = null; ores.innerHTML = '';
       if (q.kind && BEST_RX.test(' ' + text.toLowerCase() + ' ') && BEST_KINDS.some(function (k) { return k[0] === q.kind; })) { $('#lgBK', ask).value = q.kind; res.innerHTML = ''; const lowered = text.toLowerCase(); showBest(bres, q.kind, /month|16/.test(lowered) ? 16 : /week|7/.test(lowered) ? 7 : 16); bres.scrollIntoView({ block: 'nearest' }); return; }
       if (!q.kind) { res.innerHTML = '<div class="lg-res">I didn\'t catch what to look for. Try words like <b>sunset</b>, <b>golden hour</b>, <b>blue hour</b>, <b>Milky Way</b>, <b>moonrise</b> or <b>full moon</b> — or use the settings below.</div>'; return; }
       const D = q.D || P().ymd(Date.now());
@@ -13432,6 +13772,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       else btn('Back to planned', function () { setStatus(e, 'planned'); });
       btn('Edit', function () { editing = e.id; drawList(); });
       btn('Timeline', function () { P().open(e.when); });
+      if (e.target) btn('Replan', function () { if (askHook) askHook.ask(e.target.indexOf('sb:') === 0 ? e.targetName : e.target, e.id); });
       const del = btn('Delete', function () {
         if (del.dataset.armed) { save(list().filter(function (x) { return x.id !== e.id; })); drawList(); return; }
         del.dataset.armed = '1'; del.textContent = 'Tap again to delete'; del.style.color = '#f0a090';
@@ -13442,6 +13783,8 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     function setStatus(e, st) { const l = list(), x = l.find(function (q) { return q.id === e.id; }); x.status = st; save(l); drawList(); }
     drawList(); WX.planLog.redrawList = drawList;
     if (lastQ) { fill(lastQ); show(lastQ); }
+    if (ans) { const k = ans; showObject(k.obj, { saved: k.saved, alts: k.alts, keepReplace: true }); }
+    if (pendingText) { const t = pendingText; pendingText = null; setTimeout(function () { if (askHook) askHook.ask(t, null); }, 90); }
   }
   WX.planLog.render = render;
 })();
