@@ -210,7 +210,8 @@ html, body { margin: 0; height: 100%; background: #07080d; }
 /* ---------- photo planner ---------- */
 #wx .navbtn.wide { grid-column: 1 / -1; min-height: 104px; }
 #wx .pl-tabs { justify-self: center; }
-#wx .pl-tabs button { padding: 8px 16px; font-size: 13px; }
+#wx .pl-tabs button { padding: 8px 13px; font-size: 13px; }
+@media (max-width: 420px) { #wx .pl-tabs button { padding: 8px 9px; font-size: 12px; } }
 #wx .pl-date { display: flex; align-items: center; gap: 10px; justify-content: center; }
 #wx .pl-date b { min-width: 170px; text-align: center; font-weight: 600; }
 #wx .pl-date .wx-back { font-size: 22px; line-height: 1; }
@@ -241,6 +242,34 @@ html, body { margin: 0; height: 100%; background: #07080d; }
 #wx .pl-tip { font-size: 12.5px; color: var(--sub); margin: 8px 0; min-height: 18px; }
 #wx .pl-grad { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--dim); margin-bottom: 8px; }
 #wx .pl-grad i { flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #f5f3ee, #000); border: 1px solid var(--line); }
+/* log book */
+#wx .lg-ask { display: flex; gap: 8px; }
+#wx .lg-ask input { flex: 1; min-width: 0; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--ink); padding: 0 12px; font: 500 14px var(--sans); outline: none; }
+#wx .lg-ask input:focus { border-color: var(--copper); }
+#wx .lg-eg { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+#wx .lg-eg .chip { height: 28px; font-size: 11.5px; font-weight: 500; }
+#wx .lg-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+#wx .lg-form label { display: grid; gap: 4px; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+#wx .lg-form label.full { grid-column: 1 / -1; }
+#wx .lg-form input, #wx .lg-form select, #wx .lg-form textarea { height: 40px; border-radius: 10px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--ink); padding: 0 10px; font: 500 13.5px var(--sans); letter-spacing: 0; text-transform: none; outline: none; color-scheme: dark; }
+#wx .lg-form textarea { height: 76px; padding: 8px 10px; resize: vertical; }
+#wx .lg-res { margin-top: 12px; border-radius: 14px; padding: 12px; background: linear-gradient(135deg, rgba(231,166,107,.16), rgba(231,166,107,.03)); border: 1px solid rgba(231,166,107,.35); }
+#wx .lg-res .when { font: 400 28px/1.1 var(--serif); }
+#wx .lg-res .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+#wx .lg-list { display: grid; gap: 8px; }
+#wx .lg-item { border-radius: 14px; background: var(--glass2); border: 1px solid var(--line); padding: 10px 12px; display: grid; gap: 4px; }
+#wx .lg-item.done { opacity: .7; }
+#wx .lg-top { display: flex; gap: 10px; align-items: baseline; }
+#wx .lg-top b { font-size: 15px; flex: 1; min-width: 0; }
+#wx .lg-top small { color: var(--copper); white-space: nowrap; font-weight: 600; }
+#wx .lg-meta { font-size: 12px; color: var(--sub); }
+#wx .lg-notes { font-size: 12.5px; white-space: pre-wrap; }
+#wx .lg-acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+#wx .lg-acts .chip { height: 28px; font-size: 11.5px; }
+#wx .lg-stat { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; background: rgba(243,231,211,.1); color: var(--sub); }
+#wx .lg-stat.shot { background: rgba(143,209,158,.18); color: #8fd19e; }
+#wx .lg-stat.missed { background: rgba(239,111,90,.16); color: #f0a090; }
+#wx .toast { position: absolute; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 30; background: var(--ink); color: #14121a; padding: 10px 16px; border-radius: 99px; font-weight: 600; font-size: 13px; box-shadow: 0 8px 30px rgba(0,0,0,.5); }
 #wx .foot { text-align: center; font-size: 11px; color: var(--dim); padding: 8px 0 4px; }
 #wx .foot a { color: var(--sub); }
 </style>
@@ -308,7 +337,7 @@ html, body { margin: 0; height: 100%; background: #07080d; }
     </header>
     <div class="wx-scroll">
       <div class="wx-wrap">
-        <div class="seg pl-tabs" id="plTabs"><button type="button" data-pt="sun">Sun &amp; Moon</button><button type="button" data-pt="cal">Calendar</button><button type="button" data-pt="sky">Clear Skies</button></div>
+        <div class="seg pl-tabs" id="plTabs"><button type="button" data-pt="sun">Sun &amp; Moon</button><button type="button" data-pt="cal">Calendar</button><button type="button" data-pt="sky">Clear Skies</button><button type="button" data-pt="log">Log Book</button></div>
         <div class="pl-date" id="plDateRow"><button class="wx-back" type="button" id="plPrev" aria-label="Previous day">‹</button><b id="plDate">–</b><button class="wx-back" type="button" id="plNext" aria-label="Next day">›</button><button class="btn" type="button" id="plToday">Today</button></div>
         <div id="plBody" style="display:grid;gap:12px"></div>
         <p class="foot">Sun and moon positions are calculated on your device (accurate to about a minute). Cloud forecast: NOAA NWS (US) · Open-Meteo (elsewhere).</p>
@@ -1840,7 +1869,8 @@ html, body { margin: 0; height: 100%; background: #07080d; }
     if (!S.place) { body.innerHTML = '<div class="card"><div class="status">Set a location on the Weather home screen (Near me or search) to plan shoots.</div></div>'; return; }
     $('#plPlace').textContent = S.place.name || (S.place.lat.toFixed(2) + ', ' + S.place.lon.toFixed(2));
     $('#plDateRow').style.display = S.tab === 'sky' ? 'none' : '';
-    if (S.tab === 'sun') renderSun(); else if (S.tab === 'cal') renderCal(); else renderSky();
+    $('#plDateRow').style.display = S.tab === 'sky' || S.tab === 'log' ? 'none' : '';
+    if (S.tab === 'sun') renderSun(); else if (S.tab === 'cal') renderCal(); else if (S.tab === 'log') WX.planLog.render(body); else renderSky();
   }
 
   /* ===================== SUN & MOON: timeline + compass ===================== */
@@ -1860,6 +1890,9 @@ html, body { margin: 0; height: 100%; background: #07080d; }
       keys.appendChild(b);
     });
     c1.appendChild(keys);
+    const sv = el('button', 'btn', '＋ Save this moment to my log book'); sv.type = 'button'; sv.style.marginTop = '10px';
+    sv.onclick = function () { const t = S.facts.t0 + S.min * 60000, p = S.place, sp = sunPos(t, p.lat, p.lon); WX.planLog.add({ title: phaseOf(sp.alt)[2] + ' shoot', when: t, kind: 'moment', info: 'Sun ' + Math.round(sp.az) + '° ' + compassPt(sp.az) + ', ' + Math.round(sp.alt) + '° high' }); };
+    c1.appendChild(sv);
     body.appendChild(c1);
 
     const c2 = el('div', 'card'); c2.innerHTML = '<h3>Compass<span class="src">sun ☀ &amp; moon ☾ directions</span></h3>';
@@ -2052,7 +2085,8 @@ html, body { margin: 0; height: 100%; background: #07080d; }
       if (!cell) return;
       skyCells.sel = cell; paintSky(performance.now());
       const ph = phaseOf(cell.sun);
-      tip.innerHTML = '<b>' + esc(WX.fmt(new Date(cell.t), { weekday: 'short', hour: 'numeric' })) + '</b> · ' + (cell.cloud == null ? 'no forecast yet' : Math.round(cell.cloud) + '% cloud') + ' · ' + esc(ph[2]) + ' · moon ' + (cell.moon > 0 ? 'up (' + Math.round(cell.illum * 100) + '% lit)' : 'down') + (cell.score >= .75 ? ' · <span style="color:#8fd19e">great for stars</span>' : '');
+      tip.innerHTML = '<b>' + esc(WX.fmt(new Date(cell.t), { weekday: 'short', hour: 'numeric' })) + '</b> · ' + (cell.cloud == null ? 'no forecast yet' : Math.round(cell.cloud) + '% cloud') + ' · ' + esc(ph[2]) + ' · moon ' + (cell.moon > 0 ? 'up (' + Math.round(cell.illum * 100) + '% lit)' : 'down') + (cell.score >= .75 ? ' · <span style="color:#8fd19e">great for stars</span>' : '') + ' <button type="button" class="chip" id="plSaveHr" style="height:28px;margin-left:4px">＋ Log</button>';
+      $('#plSaveHr').onclick = function () { WX.planLog.add({ title: cell.score >= .6 ? 'Night sky shoot' : 'Sky shoot', when: cell.t, kind: 'sky', info: (cell.cloud == null ? '' : Math.round(cell.cloud) + '% cloud forecast · ') + ph[2] }); };
     });
   }
   const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2147,6 +2181,10 @@ html, body { margin: 0; height: 100%; background: #07080d; }
     return el('div', 'score', best ? '<b>' + best.n + 'h</b><div><div style="font-weight:600">Best night for stars: ' + esc(WX.fmt(new Date(best.row.t0), { weekday: 'long' })) + '</div><div class="muted" style="font-size:12.5px">Clear, properly dark hours with little moonlight.</div></div>' : '<b>–</b><div><div style="font-weight:600">No clear, dark hours in the forecast</div><div class="muted" style="font-size:12.5px">Cloudy week — try moody cloudscapes or cityscapes instead.</div></div>');
   }
 
+  WX.plan = { S: S, zoned: zoned, ymd: ymd, addDays: addDays, dayFacts: dayFacts, hm: hm, compassPt: compassPt, off: off,
+    open: function (t) { const D = ymd(t); S.tab = 'sun'; WX.set('planTab', 'sun'); S.D = D; S.facts = dayFacts(D, S.place); S.min = Math.round((t - S.facts.t0) / 60000); $('#plDate').textContent = WX.fmt(new Date(S.facts.t0 + 12 * 3600000), { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }); render(); body.closest('.wx-scroll').scrollTop = 0; },
+    tab: function (t) { S.tab = t; WX.set('planTab', t); render(); } };
+
   /* ---------- lifecycle ---------- */
   WX.onShow.planner.push(function () {
     const p = WX.home || WX.get('place');
@@ -2156,6 +2194,309 @@ html, body { margin: 0; height: 100%; background: #07080d; }
   });
   WX.onHide.planner.push(function () { stopStars(); if (liveOn) toggleLive(); });
   window.addEventListener('resize', function () { if (WX.cur === 'planner') render(); });
+})();
+
+</script>
+<script>
+/* ===== Photo Planner: "Ask the planner" search + Log Book ===== */
+(function () {
+  'use strict';
+  const WX = window.WX, $ = WX.$, el = WX.el, esc = WX.esc;
+  const A = WX.astro;
+  const P = function () { return WX.plan; };
+
+  /* ---------- what can be searched ---------- */
+  const KINDS = [
+    ['sunset', 'Sunset'], ['sunrise', 'Sunrise'], ['goldPm', 'Evening golden hour'], ['goldAm', 'Morning golden hour'],
+    ['bluePm', 'Evening blue hour'], ['blueAm', 'Morning blue hour'], ['dark', 'Dark sky (stars / Milky Way)'], ['noon', 'Sun at its highest'],
+    ['moonrise', 'Moonrise'], ['moonset', 'Moonset'], ['full', 'Full moon'], ['new', 'New moon (darkest nights)'], ['firstq', 'First-quarter moon'], ['lastq', 'Last-quarter moon']
+  ];
+  const kindName = function (k) { const x = KINDS.find(function (q) { return q[0] === k; }); return x ? x[1] : k; };
+  const DIRS = { n: 0, north: 0, nne: 22.5, ne: 45, northeast: 45, ene: 67.5, e: 90, east: 90, ese: 112.5, se: 135, southeast: 135, sse: 157.5, s: 180, south: 180, ssw: 202.5, sw: 225, southwest: 225, wsw: 247.5, w: 270, west: 270, wnw: 292.5, nw: 315, northwest: 315, nnw: 337.5 };
+  const angDiff = function (a, b) { return Math.abs(((a - b) % 360 + 540) % 360 - 180); };
+
+  /* one event on one date (cheap: only the crossing we need) */
+  function eventOn(D, kind, place) {
+    const p = P(), t0 = p.zoned(D.y, D.m, D.d, 0, 0), t1 = p.zoned(D.y, D.m, D.d + 1, 0, 0);
+    const sf = function (t) { return A.sunPos(t, place.lat, place.lon).alt; };
+    const mf = function (t) { return A.moonPos(t, place.lat, place.lon).alt; };
+    const first = function (fn, h, rising) { const c = A.crossings(fn, t0, t1, h).filter(function (x) { return x.rising === rising; })[0]; return c ? c.t : null; };
+    switch (kind) {
+      case 'sunrise': { const t = first(sf, -0.833, true); return t && { t: t, az: A.sunPos(t, place.lat, place.lon).az }; }
+      case 'sunset': { const t = first(sf, -0.833, false); return t && { t: t, az: A.sunPos(t, place.lat, place.lon).az }; }
+      case 'goldPm': { const a = first(sf, 6, false), b = first(sf, -4, false); return a && { t: a, end: b }; }
+      case 'goldAm': { const a = first(sf, -4, true), b = first(sf, 6, true); return a && { t: a, end: b }; }
+      case 'bluePm': { const a = first(sf, -4, false), b = first(sf, -6, false); return a && { t: a, end: b }; }
+      case 'blueAm': { const a = first(sf, -6, true), b = first(sf, -4, true); return a && { t: a, end: b }; }
+      case 'dark': { const a = first(sf, -18, false); if (!a) return null; const nx = p.addDays(D, 1), b = A.crossings(sf, a, p.zoned(nx.y, nx.m, nx.d, 12, 0), -18).filter(function (x) { return x.rising; })[0]; return { t: a, end: b ? b.t : null }; }
+      case 'noon': { let best = t0, v = -99; for (let t = t0; t < t1; t += 300000) { const q = sf(t); if (q > v) { v = q; best = t; } } return { t: best, alt: v, az: A.sunPos(best, place.lat, place.lon).az }; }
+      case 'moonrise': { const t = first(mf, 0.133, true); return t && { t: t, az: A.moonPos(t, place.lat, place.lon).az, illum: A.moonIllum(t).frac }; }
+      case 'moonset': { const t = first(mf, 0.133, false); return t && { t: t, az: A.moonPos(t, place.lat, place.lon).az, illum: A.moonIllum(t).frac }; }
+    }
+    return null;
+  }
+
+  /* the moon phase moments (new 0, first quarter .25, full .5, last quarter .75) nearest T */
+  function phaseNear(T, target, future) {
+    const val = function (t) { let ph = A.moonIllum(t).phase - target; return ((ph % 1) + 1.5) % 1 - .5; };   // signed distance to target, wraps
+    const hits = [], step = 3 * 3600000;
+    let a = T - 34 * 86400000, va = val(a);
+    for (let b = a + step; b <= T + 34 * 86400000; b += step) {
+      const vb = val(b);
+      if (va < 0 && vb >= 0) { let lo = a, hi = b; for (let i = 0; i < 20; i++) { const m = (lo + hi) / 2; if (val(m) < 0) lo = m; else hi = m; } hits.push((lo + hi) / 2); }
+      a = b; va = vb;
+    }
+    hits.sort(function (x, y) { return Math.abs(x - T) - Math.abs(y - T); });
+    if (future) return hits.filter(function (h) { return h >= T; })[0] || hits[0] || null;
+    return hits[0] || null;
+  }
+
+  /* main search: closest occurrence of `kind` to time T, optionally lined up with a compass direction */
+  function search(q, place) {
+    const p = P(), T = q.T;
+    if (q.kind === 'full' || q.kind === 'new' || q.kind === 'firstq' || q.kind === 'lastq') {
+      const t = phaseNear(T, { new: 0, firstq: .25, full: .5, lastq: .75 }[q.kind], q.future);
+      if (!t) return { err: 'Couldn\'t find that moon phase nearby.' };
+      const D = p.ymd(t), mr = eventOn(D, 'moonrise', place), ms = eventOn(D, 'moonset', place);
+      return { t: t, title: kindName(q.kind), lines: [mr ? 'Moonrise ' + p.hm(mr.t) + ' toward ' + Math.round(mr.az) + '° ' + p.compassPt(mr.az) : '', ms ? 'Moonset ' + p.hm(ms.t) + ' toward ' + Math.round(ms.az) + '° ' + p.compassPt(ms.az) : '', q.kind === 'new' ? 'No moonlight: the best nights of the month for stars.' : '', 'Exact phase time is approximate (within a few hours).', q.kind === 'full' ? 'Rises around sunset — great for moon-over-landscape shots.' : ''].filter(Boolean) };
+    }
+    const D0 = p.ymd(T);
+    if (q.dir != null && /^(sunrise|sunset|moonrise|moonset)$/.test(q.kind)) {
+      const isMoon = /^moon/.test(q.kind), span = isMoon ? 400 : 370, tol = isMoon ? 2.5 : 1;
+      let bestHit = null, bestAny = null;
+      for (let k = q.future ? 0 : -span / 2; k <= (q.future ? span : span / 2); k++) {
+        const e = eventOn(p.addDays(D0, k), q.kind, place); if (!e || e.az == null) continue;
+        if (isMoon && q.fullOnly && e.illum < .85) continue;
+        if (q.future && e.t < T) continue;
+        const d = angDiff(e.az, q.dir);
+        if (!bestAny || d < bestAny.d) bestAny = { e: e, d: d };
+        if (d <= tol && (!bestHit || Math.abs(e.t - T) < Math.abs(bestHit.e.t - T))) bestHit = { e: e, d: d };
+      }
+      const hit = bestHit || bestAny;
+      if (!hit) return { err: 'That never happens here in the next year.' };
+      return { t: hit.e.t, title: kindName(q.kind) + ' lined up ' + Math.round(q.dir) + '° ' + p.compassPt(q.dir), lines: [
+        (bestHit ? 'Closest match to your date: ' : 'It never lines up exactly here — the nearest it gets: ') + Math.round(hit.e.az) + '° ' + p.compassPt(hit.e.az) + ' (off by ' + hit.d.toFixed(1) + '°).',
+        isMoon ? 'Moon ' + Math.round(hit.e.illum * 100) + '% lit.' : '',
+        'Tip: stand so your subject sits on this line — the ' + (isMoon ? 'moon' : 'sun') + ' will ' + (/rise/.test(q.kind) ? 'rise' : 'set') + ' right behind it.'].filter(Boolean) };
+    }
+    let best = null;
+    for (let k = -3; k <= 3; k++) {
+      const e = eventOn(p.addDays(D0, k), q.kind, place);
+      if (e && (!q.future || (e.end || e.t) >= T) && (!best || Math.abs(e.t - T) < Math.abs(best.t - T))) best = e;
+    }
+    if (!best) return { err: 'That doesn\'t happen around this date here (polar day or night?).' };
+    const lines = [];
+    if (best.end) lines.push('Lasts until ' + p.hm(best.end) + ' (' + Math.round((best.end - best.t) / 60000) + ' min).');
+    if (best.az != null) lines.push('Direction ' + Math.round(best.az) + '° ' + p.compassPt(best.az) + (best.alt != null ? ', ' + Math.round(best.alt) + '° high' : '') + '.');
+    if (best.illum != null) lines.push('Moon ' + Math.round(best.illum * 100) + '% lit.');
+    if (q.kind === 'dark') { const il = A.moonIllum(best.t).frac; lines.push(il < .3 ? 'Little moonlight — great for the Milky Way.' : 'The moon is ' + Math.round(il * 100) + '% lit, which will wash out faint stars when it\'s up.'); }
+    return { t: best.t, end: best.end, title: kindName(q.kind), lines: lines };
+  }
+
+  /* ---------- plain-English questions ---------- */
+  const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  const WDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  function parse(text) {
+    const p = P(), s = ' ' + text.toLowerCase().replace(/[,]/g, ' ').replace(/\s+/g, ' ') + ' ';
+    const today = p.ymd(Date.now());
+    const q = { kind: null, D: null, hm: null, dir: null, fullOnly: false };
+    // what
+    const morning = /morning|sunrise|dawn|\bam\b/.test(s);
+    if (/full moon/.test(s)) q.kind = /rise|rising/.test(s) ? 'moonrise' : /set|setting/.test(s) ? 'moonset' : 'full';
+    else if (/new moon/.test(s)) q.kind = 'new';
+    else if (/first quarter/.test(s)) q.kind = 'firstq';
+    else if (/(last|third) quarter/.test(s)) q.kind = 'lastq';
+    else if (/moon ?rise|moon rising|rising moon/.test(s)) q.kind = 'moonrise';
+    else if (/moon ?set|moon setting|setting moon/.test(s)) q.kind = 'moonset';
+    else if (/milky way|dark sky|darkness|stars|astro|night sky|\bdark\b/.test(s)) q.kind = 'dark';
+    else if (/blue hour/.test(s)) q.kind = morning ? 'blueAm' : 'bluePm';
+    else if (/gold/.test(s)) q.kind = morning ? 'goldAm' : 'goldPm';
+    else if (/sun ?rise|dawn/.test(s)) q.kind = 'sunrise';
+    else if (/sun ?set|dusk/.test(s)) q.kind = 'sunset';
+    else if (/noon|highest|midday/.test(s)) q.kind = 'noon';
+    if (/full moon/.test(s) && (q.kind === 'moonrise' || q.kind === 'moonset')) q.fullOnly = true;
+    // direction
+    let m = s.match(/(\d{1,3}(?:\.\d+)?)\s*(?:°|deg|degrees)/);
+    if (m) q.dir = (+m[1]) % 360;
+    else { m = s.match(/(?:facing|toward|towards|direction|over the|behind the|in the|to the)\s+(north|south|east|west|northeast|northwest|southeast|southwest|nne|ene|ese|sse|ssw|wsw|wnw|nnw|ne|nw|se|sw|n|s|e|w)\b/); if (m) q.dir = DIRS[m[1]]; }
+    // when: special days first
+    const yr = function (mo, d) { let y = today.y; if (mo < today.m || (mo === today.m && d < today.d)) y++; return { y: y, m: mo, d: d }; };
+    if (/summer solstice|longest day/.test(s)) q.D = yr(5, 21);
+    else if (/winter solstice|shortest day/.test(s)) q.D = yr(11, 21);
+    else if (/spring equinox|vernal equinox|march equinox/.test(s)) q.D = yr(2, 20);
+    else if (/fall equinox|autumn equinox|september equinox/.test(s)) q.D = yr(8, 22);
+    else if (/new year/.test(s)) q.D = yr(0, 1);
+    else if (/halloween/.test(s)) q.D = yr(9, 31);
+    else if (/christmas/.test(s)) q.D = yr(11, 25);
+    else if (/\btoday\b|\btonight\b|\bthis evening\b|\bthis morning\b/.test(s)) q.D = today;
+    else if (/\btomorrow\b/.test(s)) q.D = p.addDays(today, 1);
+    else if ((m = s.match(/in (\d+) (day|week|month)s?/))) q.D = p.addDays(today, +m[1] * (m[2] === 'day' ? 1 : m[2] === 'week' ? 7 : 30));
+    else if (/next week/.test(s)) q.D = p.addDays(today, 7);
+    else if ((m = s.match(/(\d{4})-(\d{1,2})-(\d{1,2})/))) q.D = { y: +m[1], m: +m[2] - 1, d: +m[3] };
+    else if ((m = s.match(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/))) { const y = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : null; q.D = y ? { y: y, m: +m[1] - 1, d: +m[2] } : yr(+m[1] - 1, +m[2]); }
+    else {
+      m = s.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.? (\d{1,2})(?:st|nd|rd|th)?(?: (\d{4}))?/) || s.match(/\b(\d{1,2})(?:st|nd|rd|th)? (?:of )?(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*(?: (\d{4}))?/);
+      if (m) { const isFirst = isNaN(+m[1]), mo = MONTHS.indexOf((isFirst ? m[1] : m[2]).slice(0, 3)), d = +(isFirst ? m[2] : m[1]); q.D = m[3] ? { y: +m[3], m: mo, d: d } : yr(mo, d); }
+      else if ((m = s.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*(?: (\d{4}))?\b/))) { const mo = MONTHS.indexOf(m[1].slice(0, 3)); q.D = m[2] ? { y: +m[2], m: mo, d: 15 } : yr(mo, 15); }
+      else if ((m = s.match(/\b(sunday|monday|mon|tuesday|tues|tue|wednesday|wed|thursday|thurs|thu|friday|fri|saturday|sat)\b/))) { const wd = WDAYS.indexOf(m[1].slice(0, 3)), now = new Date(p.zoned(today.y, today.m, today.d, 12, 0)).getUTCDay(); let add = (wd - now + 7) % 7; if (/next/.test(s) && add === 0) add = 7; q.D = p.addDays(today, add); }
+    }
+    // time of day
+    if ((m = s.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/))) q.hm = [(+m[1] % 12) + (m[3] === 'pm' ? 12 : 0), +(m[2] || 0)];
+    else if ((m = s.match(/\b(\d{1,2}):(\d{2})\b/))) q.hm = [+m[1], +m[2]];
+    return q;
+  }
+
+  /* ---------- log book storage ---------- */
+  function list() { return WX.get('log', []); }
+  function save(l) { WX.set('log', l); }
+  function toast(msg) { const t = el('div', 'toast', esc(msg)); WX.root.appendChild(t); setTimeout(function () { t.remove(); }, 2200); }
+  function add(e) {
+    const S = P().S, pl = S.place || WX.home || {};
+    const item = Object.assign({ id: 'L' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), title: 'Shoot', when: Date.now(), notes: '', gear: '', status: 'planned', created: Date.now(), place: { name: pl.name || '', lat: pl.lat, lon: pl.lon }, tz: WX.tz || null }, e);
+    const l = list(); l.push(item); save(l);
+    toast('Saved to your log book');
+    return item;
+  }
+  WX.planLog = { add: add, search: search, parse: parse, list: list };
+
+  /* ---------- UI ---------- */
+  let lastQ = null, lastR = null, editing = null;
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function localParts(t) { const o = P().off(t), x = new Date(t + o * 60000); return { date: x.getUTCFullYear() + '-' + pad(x.getUTCMonth() + 1) + '-' + pad(x.getUTCDate()), time: pad(x.getUTCHours()) + ':' + pad(x.getUTCMinutes()) }; }
+  function fromInputs(date, time) { const a = date.split('-').map(Number), b = (time || '12:00').split(':').map(Number); return P().zoned(a[0], a[1] - 1, a[2], b[0] || 0, b[1] || 0); }
+  function whenText(t) { return WX.fmt(new Date(t), { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }); }
+  function until(t) {
+    const d = t - Date.now(), a = Math.abs(d), days = Math.round(a / 86400000), hrs = Math.round(a / 3600000), mins = Math.round(a / 60000);
+    const s = days >= 2 ? days + ' days' : hrs >= 2 ? hrs + ' h' : mins + ' min';
+    return d >= 0 ? 'in ' + s : s + ' ago';
+  }
+
+  function render(body) {
+    const S = P().S;
+    /* --- ask --- */
+    const ask = el('div', 'card'); ask.innerHTML = '<h3>Ask the planner<span class="src">finds the closest match</span></h3>';
+    const row = el('div', 'lg-ask'); const inp = el('input'); inp.type = 'search'; inp.placeholder = 'e.g. sunset June 21 · milky way next Saturday'; inp.setAttribute('aria-label', 'Ask the planner');
+    const go = el('button', 'btn pri', 'Find'); go.type = 'button'; row.appendChild(inp); row.appendChild(go); ask.appendChild(row);
+    const eg = el('div', 'lg-eg');
+    ['Sunset tomorrow', 'Golden hour Saturday', 'Milky Way next new moon', 'Full moon rise facing east', 'Sunset facing 300°', 'Sunrise on the summer solstice', 'Blue hour Dec 24 at 5pm'].forEach(function (x) { const b = el('button', 'chip', esc(x)); b.type = 'button'; b.onclick = function () { inp.value = x; run(); }; eg.appendChild(b); });
+    ask.appendChild(eg);
+    // structured form (always matches what was understood)
+    const form = el('div', 'lg-form');
+    form.innerHTML = '<label class="full">I want<select id="lgKind">' + KINDS.map(function (k) { return '<option value="' + k[0] + '">' + esc(k[1]) + '</option>'; }).join('') + '</select></label>' +
+      '<label>Around date<input type="date" id="lgDate"></label><label>Around time<input type="time" id="lgTime"></label>' +
+      '<label>Line up with (°, optional)<input type="number" id="lgDir" min="0" max="359" placeholder="e.g. 270 = west"></label>' +
+      '<label style="align-content:end"><span style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--sub)"><input type="checkbox" id="lgFull" style="height:auto;width:18px"> Full moon only</span></label>';
+    ask.appendChild(form);
+    const fbtn = el('button', 'btn', 'Search with these settings'); fbtn.type = 'button'; fbtn.style.marginTop = '10px'; ask.appendChild(fbtn);
+    const res = el('div', ''); ask.appendChild(res);
+    body.appendChild(ask);
+
+    const t0 = localParts(Date.now());
+    $('#lgDate', ask).value = t0.date; $('#lgTime', ask).value = '';
+    function fill(q) { $('#lgKind', ask).value = q.kind; const lp = localParts(q.T); $('#lgDate', ask).value = lp.date; $('#lgTime', ask).value = q.hasTime ? lp.time : ''; $('#lgDir', ask).value = q.dir == null ? '' : Math.round(q.dir); $('#lgFull', ask).checked = !!q.fullOnly; }
+    function show(q) {
+      lastQ = q; const r = lastR = search(q, S.place);
+      if (r.err) { res.innerHTML = '<div class="lg-res"><span class="err">' + esc(r.err) + '</span></div>'; return; }
+      res.innerHTML = '<div class="lg-res"><div class="tiny">' + esc(r.title) + (q.future ? ' · the next one from now' : ' · closest to ' + esc(WX.fmt(new Date(q.T), { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })) + (q.hasTime ? ' ' + esc(P().hm(q.T)) : '')) + '</div>' +
+        '<div class="when">' + esc(whenText(r.t)) + (r.end ? ' – ' + esc(P().hm(r.end)) : '') + '</div>' +
+        '<div class="muted" style="font-size:12.5px;margin-top:4px">' + r.lines.map(esc).join('<br>') + '</div>' +
+        '<div class="acts"><button type="button" class="btn pri" id="lgAdd">＋ Add to log book</button><button type="button" class="btn" id="lgOpen">Show on timeline</button></div></div>';
+      $('#lgAdd', res).onclick = function () { add({ title: r.title, when: r.t, end: r.end || null, kind: q.kind, info: r.lines.join(' ') }); drawList(); };
+      $('#lgOpen', res).onclick = function () { P().open(r.t); };
+    }
+    function run() {
+      const text = inp.value.trim(); if (!text) return;
+      const q = parse(text);
+      if (!q.kind) { res.innerHTML = '<div class="lg-res">I didn\'t catch what to look for. Try words like <b>sunset</b>, <b>golden hour</b>, <b>blue hour</b>, <b>Milky Way</b>, <b>moonrise</b> or <b>full moon</b> — or use the settings below.</div>'; return; }
+      const D = q.D || P().ymd(Date.now());
+      q.hasTime = !!q.hm;
+      q.T = P().zoned(D.y, D.m, D.d, q.hm ? q.hm[0] : (/Am$|sunrise/.test(q.kind) ? 7 : 12), q.hm ? q.hm[1] : 0);
+      if (!q.D && !q.hm) { q.T = Date.now(); q.future = true; }
+      fill(q); show(q);
+    }
+    go.onclick = run; inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') run(); });
+    fbtn.onclick = function () {
+      const dir = $('#lgDir', ask).value, time = $('#lgTime', ask).value;
+      const q = { kind: $('#lgKind', ask).value, T: fromInputs($('#lgDate', ask).value || t0.date, time || '12:00'), hasTime: !!time, dir: dir === '' ? null : (+dir % 360), fullOnly: $('#lgFull', ask).checked };
+      show(q);
+    };
+
+    /* --- log book --- */
+    const lb = el('div', 'card');
+    lb.innerHTML = '<h3>My log book<span class="src" id="lgCount"></span></h3>';
+    const tools = el('div', 'lg-acts'); tools.style.marginBottom = '10px';
+    const nb = el('button', 'btn pri', '＋ New plan'); nb.type = 'button'; nb.onclick = function () { editing = 'new'; drawList(); };
+    const cp = el('button', 'btn', 'Copy log as text'); cp.type = 'button';
+    cp.onclick = function () {
+      const txt = list().sort(function (a, b) { return a.when - b.when; }).map(function (e) { return '• ' + e.title + ' — ' + whenText(e.when) + (e.place && e.place.name ? ' @ ' + e.place.name : '') + ' [' + e.status + ']' + (e.info ? '\n  ' + e.info : '') + (e.gear ? '\n  Gear: ' + e.gear : '') + (e.notes ? '\n  ' + e.notes : ''); }).join('\n');
+      try { navigator.clipboard.writeText(txt).then(function () { toast('Copied'); }, function () { toast('Copy isn\'t allowed here'); }); } catch (e) { toast('Copy isn\'t allowed here'); }
+    };
+    tools.appendChild(nb); tools.appendChild(cp); lb.appendChild(tools);
+    const box = el('div', 'lg-list'); lb.appendChild(box);
+    body.appendChild(lb);
+
+    function editor(e) {
+      const isNew = !e; e = e || { title: lastR && !lastR.err ? lastR.title : '', when: lastR && !lastR.err ? lastR.t : Date.now() + 86400000, notes: '', gear: '', status: 'planned', info: '' };
+      const lp = localParts(e.when), f = el('div', 'lg-item');
+      f.innerHTML = '<div class="lg-form" style="margin:0">' +
+        '<label class="full">Title<input id="lgT" maxlength="80" placeholder="e.g. Sunset at the pier"></label>' +
+        '<label>Date<input type="date" id="lgD"></label><label>Time<input type="time" id="lgH"></label>' +
+        '<label class="full">Location<input id="lgP" maxlength="80"></label>' +
+        '<label class="full">Gear &amp; settings<input id="lgG" maxlength="160" placeholder="e.g. 24mm f/2.8, ISO 3200, 20s, tripod"></label>' +
+        '<label class="full">Notes<textarea id="lgN" maxlength="1000" placeholder="Composition ideas, parking, tide times…"></textarea></label>' +
+        '<label class="full">Status<select id="lgS"><option value="planned">Planned</option><option value="shot">Shot it!</option><option value="missed">Missed / skipped</option></select></label></div>' +
+        '<div class="lg-acts"><button type="button" class="btn pri" id="lgSave">' + (isNew ? 'Add to log book' : 'Save changes') + '</button><button type="button" class="btn" id="lgCancel">Cancel</button></div>';
+      $('#lgT', f).value = e.title || ''; $('#lgD', f).value = lp.date; $('#lgH', f).value = lp.time; $('#lgP', f).value = (e.place && e.place.name) || (S.place && S.place.name) || ''; $('#lgG', f).value = e.gear || ''; $('#lgN', f).value = e.notes || ''; $('#lgS', f).value = e.status || 'planned';
+      $('#lgCancel', f).onclick = function () { editing = null; drawList(); };
+      $('#lgSave', f).onclick = function () {
+        const vals = { title: $('#lgT', f).value.trim() || 'Shoot', when: fromInputs($('#lgD', f).value || lp.date, $('#lgH', f).value || lp.time), gear: $('#lgG', f).value.trim(), notes: $('#lgN', f).value.trim(), status: $('#lgS', f).value };
+        const pn = $('#lgP', f).value.trim();
+        if (isNew) { const it = add(Object.assign(vals, { info: e.info || '' })); if (pn) { const l = list(); const x = l.find(function (q) { return q.id === it.id; }); x.place.name = pn; save(l); } }
+        else { const l = list(), x = l.find(function (q) { return q.id === e.id; }); Object.assign(x, vals); x.place = Object.assign({}, x.place, { name: pn }); save(l); toast('Saved'); }
+        editing = null; drawList();
+      };
+      return f;
+    }
+    function drawList() {
+      const l = list(), now = Date.now();
+      $('#lgCount').textContent = l.length ? l.length + ' plan' + (l.length === 1 ? '' : 's') : '';
+      box.innerHTML = '';
+      if (editing === 'new') box.appendChild(editor(null));
+      const up = l.filter(function (e) { return e.when >= now - 3 * 3600000 && e.status === 'planned'; }).sort(function (a, b) { return a.when - b.when; });
+      const rest = l.filter(function (e) { return up.indexOf(e) < 0; }).sort(function (a, b) { return b.when - a.when; });
+      if (!l.length && editing !== 'new') box.appendChild(el('div', 'learn', 'No plans yet. Ask the planner above and tap <b>Add to log book</b>, use <b>＋ Save this moment</b> on the timeline, or tap <b>＋ New plan</b> to write one yourself.'));
+      if (up.length) box.appendChild(el('div', 'tiny', 'COMING UP'));
+      up.forEach(function (e) { box.appendChild(item(e)); });
+      if (rest.length) box.appendChild(el('div', 'tiny', 'PAST & DONE'));
+      rest.forEach(function (e) { box.appendChild(item(e)); });
+    }
+    function item(e) {
+      if (editing === e.id) return editor(e);
+      const prevTz = WX.tz; if (e.tz) WX.tz = e.tz;
+      const d = el('div', 'lg-item' + (e.status !== 'planned' ? ' done' : ''));
+      d.innerHTML = '<div class="lg-top"><b>' + esc(e.title) + '</b><span class="lg-stat ' + esc(e.status) + '">' + (e.status === 'shot' ? 'Shot' : e.status === 'missed' ? 'Missed' : 'Planned') + '</span></div>' +
+        '<div class="lg-meta">' + esc(whenText(e.when)) + (e.end ? '–' + esc(P().hm(e.end)) : '') + ' · <span style="color:var(--copper);font-weight:600">' + esc(until(e.when)) + '</span>' + (e.place && e.place.name ? ' · ' + esc(e.place.name) : '') + '</div>' +
+        (e.info ? '<div class="lg-meta">' + esc(e.info) + '</div>' : '') + (e.gear ? '<div class="lg-meta">📷 ' + esc(e.gear) + '</div>' : '') + (e.notes ? '<div class="lg-notes">' + esc(e.notes) + '</div>' : '') +
+        '<div class="lg-acts"></div>';
+      WX.tz = prevTz;
+      const acts = $('.lg-acts', d);
+      function btn(label, fn) { const b = el('button', 'chip', label); b.type = 'button'; b.onclick = fn; acts.appendChild(b); return b; }
+      if (e.status === 'planned') { btn('✓ Shot it', function () { setStatus(e, 'shot'); }); btn('Missed', function () { setStatus(e, 'missed'); }); }
+      else btn('Back to planned', function () { setStatus(e, 'planned'); });
+      btn('Edit', function () { editing = e.id; drawList(); });
+      btn('Timeline', function () { P().open(e.when); });
+      const del = btn('Delete', function () {
+        if (del.dataset.armed) { save(list().filter(function (x) { return x.id !== e.id; })); drawList(); return; }
+        del.dataset.armed = '1'; del.textContent = 'Tap again to delete'; del.style.color = '#f0a090';
+        setTimeout(function () { if (del.isConnected) { delete del.dataset.armed; del.textContent = 'Delete'; del.style.color = ''; } }, 3000);
+      });
+      return d;
+    }
+    function setStatus(e, st) { const l = list(), x = l.find(function (q) { return q.id === e.id; }); x.status = st; save(l); drawList(); }
+    drawList();
+    if (lastQ) { fill(lastQ); show(lastQ); }
+  }
+  WX.planLog.render = render;
 })();
 
 </script>
