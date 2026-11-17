@@ -2427,7 +2427,7 @@
 #wx .pl-date { display: flex; align-items: center; gap: 10px; justify-content: center; }
 #wx .pl-date b { min-width: 170px; text-align: center; font-weight: 600; }
 #wx .pl-date .wx-back { font-size: 22px; line-height: 1; }
-#wx .pl-tl { width: 100%; display: block; border-radius: 12px; touch-action: none; cursor: ew-resize; }
+#wx .pl-tl { width: 100%; display: block; border-radius: 12px; touch-action: pan-y; cursor: ew-resize; touch-action: pan-y; }
 #wx .pl-read { display: flex; align-items: center; gap: 14px; margin: 10px 0 4px; font-size: 13px; }
 #wx .pl-time { font: 300 30px/1 var(--serif); white-space: nowrap; }
 #wx .pl-range { width: 100%; margin: 8px 0 2px; accent-color: #e7a66b; height: 28px; }
@@ -2514,7 +2514,7 @@
 #wx .tips b { color: var(--ink); }
 
 #wx .mwrange { width: 100%; accent-color: #e7a66b; height: 34px; margin: 0; }
-#wx .mwcv { display: block; width: 100%; border-radius: 14px; background: #05070f; touch-action: none; }
+#wx .mwcv { display: block; width: 100%; border-radius: 14px; background: #05070f; touch-action: pan-y; }
 #wx .mwscroll .chip { flex: none; white-space: nowrap; }
 #wx .mwrow { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 8px; font-size: 12.5px; color: var(--sub); flex-wrap: wrap; }
 #wx .mwrow b { color: var(--ink); }
@@ -2530,6 +2530,17 @@
 #wx .daybars { display: grid; gap: 4px; margin-top: 10px; font-size: 12px; }
 #wx .daybars div { display: grid; grid-template-columns: 78px 1fr 30px; gap: 8px; align-items: center; color: var(--sub); }
 #wx .daybars i { display: block; height: 8px; border-radius: 4px; }
+
+#wx .wx-scroll { touch-action: pan-y; overscroll-behavior-y: contain; padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+#wx .mwcv, #wx .mwchips, #wx .mwrange { touch-action: pan-y; }
+#wx .mwrange { touch-action: pan-x pan-y; }
+#wx .wkt { display: grid; grid-template-columns: 1.15fr 1fr 1fr 1fr; gap: 0; font-size: 11.5px; margin-top: 6px; }
+#wx .wkt > div { padding: 6px 4px; border-top: 1px solid var(--line); color: var(--sub); line-height: 1.25; }
+#wx .wkt > div.h { color: var(--dim); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; border-top: 0; }
+#wx .wkt > div.sel { background: rgba(231,166,107,.14); color: var(--ink); }
+#wx .wkt b { color: var(--ink); font-weight: 600; display: block; }
+#wx .mwchips.tight .chip { padding: 0 10px; height: 30px; font-size: 12px; }
+@media (max-width: 420px) { #wx .wkt { font-size: 10.5px; } #wx .wx-scroll { padding-left: 10px; padding-right: 10px; } }
 
     /* ================= START / HOME SCREEN CHOICE ================= */
     .ss-acct-row { gap: 10px; flex-wrap: wrap; }
@@ -11844,7 +11855,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     }
     for (let i = 0; i < 40; i++) { const q = gal2eq((Math.random() * 30 - 15 + 360) % 360, (Math.random() - .5) * 16); pts.push({ ra: q[0], dec: q[1], w: .5, r: 1.1, warm: 1 }); }
     const marks = [['Galactic core', 0, 0], ['Cygnus', 80, 0], ['Cassiopeia', 120, 0], ['Carina', 288, 0], ['Southern Cross', 300, 0]].map(function (m) { const q = gal2eq(m[1], m[2]); return { name: m[0], ra: q[0], dec: q[1] }; });
-    return { altaz: altaz, core: core, pts: pts, marks: marks, coreAlt: function (t, lat, lon) { return altaz(core[0], core[1], t, lat, lon).alt; } };
+    return { gal2eq: gal2eq, altaz: altaz, core: core, pts: pts, marks: marks, coreAlt: function (t, lat, lon) { return altaz(core[0], core[1], t, lat, lon).alt; } };
   })();
   WX.mw = MW;
 
@@ -11875,10 +11886,10 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     const c1 = card('Milky Way &amp; night sky', 'computed on your device');
     const place = el('div', 'mwrow'); c1.appendChild(place);
     const chips = el('div', 'mwchips'); chips.style.flexWrap = 'nowrap'; chips.style.overflowX = 'auto'; chips.style.paddingBottom = '4px'; c1.appendChild(chips);
-    const dome = el('canvas', 'mwcv'); dome.style.height = 'auto'; dome.style.aspectRatio = '1 / 1'; dome.style.maxWidth = '460px'; dome.style.margin = '12px auto 0'; c1.appendChild(dome);
-    c1.appendChild(el('div', 'tiny', 'Looking straight up: top = north, right = east, centre = overhead, edge = horizon. Gold diamond = galactic core; dotted line = its path across the night.'));
-    const pano = el('canvas', 'mwcv'); pano.style.height = '190px'; pano.style.marginTop = '12px'; c1.appendChild(pano);
-    c1.appendChild(el('div', 'tiny', 'Horizon view: the whole compass (N to N) left to right, height = how high above the horizon.'));
+    const panoChips = el('div', 'mwchips tight'); panoChips.style.flexWrap = 'nowrap'; panoChips.style.overflowX = 'auto'; panoChips.style.paddingBottom = '4px'; panoChips.classList.add('mwscroll'); c1.appendChild(panoChips);
+    const pano = el('canvas', 'mwcv'); pano.style.height = '310px'; pano.style.marginTop = '8px'; c1.appendChild(pano);
+    c1.appendChild(el('div', 'tiny', 'Horizon map. Vertical lines = compass bearing in degrees (like longitude, 0° = north, 90° = east, 180° = south, 270° = west). Horizontal lines = height above the horizon (like latitude). Gold diamond = galactic core; dotted line = its path tonight with hour marks; ▲ ▼ = where it rises and sets.'));
+    const dome = el('canvas', 'mwcv'); dome.style.height = 'auto'; dome.style.aspectRatio = '1 / 1'; dome.style.maxWidth = '460px'; dome.style.margin = '0 auto';
     const labDate = el('div', 'mwlab', '<span>Date</span><b id="mwDL"></b>'); c1.appendChild(labDate);
     const sd = el('input', 'mwrange'); sd.type = 'range'; sd.min = 0; sd.max = 364; sd.setAttribute('aria-label', 'Date'); c1.appendChild(sd);
     const seas = el('div', 'mwchips'); c1.appendChild(seas);
@@ -11886,7 +11897,10 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     const sm = el('input', 'mwrange'); sm.type = 'range'; sm.min = 0; sm.max = SPAN; sm.step = 5; sm.setAttribute('aria-label', 'Time of night'); c1.appendChild(sm);
     const ctl = el('div', 'mwchips'); c1.appendChild(ctl);
     const read = el('div', 'verdict'); read.style.borderLeftColor = '#e7a66b'; c1.appendChild(read);
+    const dh = el('div', 'mwlab', '<span>Top-down compass view</span>'); dh.style.marginTop = '16px'; c1.appendChild(dh); dome.style.marginTop = '8px'; c1.appendChild(dome);
+    c1.appendChild(el('div', 'tiny', 'Looking straight up: top = north, right = east, centre = overhead, edge = horizon.'));
     p.appendChild(c1);
+    const cw = card('Rise &amp; set, day by day', 'galactic core · tap a day'); const wk = el('div', 'wkt'); cw.appendChild(wk); p.appendChild(cw);
 
     const c2 = card('The core through the year', 'tap or drag the chart'); const yc = el('canvas', 'mwcv'); yc.style.height = '230px'; c2.appendChild(yc);
     c2.appendChild(el('p', 'tiny', 'Each column is a night, each row a time from 5 pm (top) to 7 am (bottom). <b style="color:#f0c27a">Gold</b> = the galactic core is above the horizon in real darkness (brighter = higher). <b style="color:#b9c3d8">Grey-gold</b> = moonlight is washing it out. Dark blue = twilight or daytime; black = core below the horizon. Dots along the top show the moon phase.'));
@@ -11952,25 +11966,87 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       g.textAlign = 'left'; g.textBaseline = 'alphabetic';
       return { t: t, s: s };
     }
+    const pv = { view: 'all', alt: (90 - Math.abs(cur.lat + 28.94)) < 35 ? 45 : 90, gal: false, path: true };
     function drawPano() {
-      const z = sizeCv(pano, 190); if (!z) return; const g = z.g, w = z.w, h = z.h, hz = h - 24, top = 8;
-      const t = tAt(st.doy, st.min), s = skyAt(t), col = skyCols(s.sun.alt);
-      const proj = function (az, alt) { return [az / 360 * w, hz - Math.max(0, alt) / 90 * (hz - top)]; };
-      const gr = g.createLinearGradient(0, 0, 0, hz); gr.addColorStop(0, col[0]); gr.addColorStop(1, col[1]); g.fillStyle = gr; g.fillRect(0, 0, w, hz);
-      drawBand(g, t, proj, w / 700, s.vis);
-      g.strokeStyle = 'rgba(243,231,211,.12)'; g.lineWidth = 1; [30, 60].forEach(function (a) { const y = proj(0, a)[1]; g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); g.fillStyle = 'rgba(243,231,211,.4)'; g.font = '10px Inter'; g.fillText(a + '°', 4, y - 3); });
-      if (s.moon.alt > 0) { const m = proj(s.moon.az, s.moon.alt); g.fillStyle = 'rgba(255,248,220,' + (.15 + s.il * .25) + ')'; g.beginPath(); g.arc(m[0], m[1], 14 + s.il * 10, 0, 7); g.fill(); g.fillStyle = '#efe8d2'; g.beginPath(); g.arc(m[0], m[1], 6, 0, 7); g.fill(); }
-      if (s.sun.alt > -8) { const m = proj(s.sun.az, s.sun.alt); g.fillStyle = '#ffd36b'; g.beginPath(); g.arc(m[0], m[1], 8, 0, 7); g.fill(); }
-      if (s.core.alt > 0) { const m = proj(s.core.az, s.core.alt); g.save(); g.translate(m[0], m[1]); g.rotate(Math.PI / 4); g.fillStyle = '#f6c25b'; g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.fillRect(-5, -5, 10, 10); g.strokeRect(-5, -5, 10, 10); g.restore(); g.fillStyle = '#ffe3a8'; g.font = '600 11px Inter'; g.fillText('Core ' + Math.round(s.core.alt) + '° · ' + compass(s.core.az), Math.min(w - 110, m[0] + 9), m[1] - 8); }
-      // ground + compass strip
-      const gg = g.createLinearGradient(0, hz, 0, h); gg.addColorStop(0, '#0a0c12'); gg.addColorStop(1, '#05060a'); g.fillStyle = gg; g.fillRect(0, hz, w, h - hz);
-      g.strokeStyle = 'rgba(243,231,211,.35)'; g.beginPath(); g.moveTo(0, hz); g.lineTo(w, hz); g.stroke();
-      g.font = '700 12px Inter'; g.textBaseline = 'middle'; [['N', 0], ['NE', 45], ['E', 90], ['SE', 135], ['S', 180], ['SW', 225], ['W', 270], ['NW', 315], ['N', 360]].forEach(function (d) { const x = d[1] / 360 * w; g.fillStyle = d[0] === 'N' ? '#ef6f5a' : '#f3e7d3'; g.textAlign = d[1] === 0 ? 'left' : d[1] === 360 ? 'right' : 'center'; g.fillText(d[0], x, hz + 12); g.fillStyle = 'rgba(243,231,211,.3)'; g.fillRect(Math.min(w - 1, x), hz, 1, 5); });
-      g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+      const z = sizeCv(pano, 310); if (!z) return; const g = z.g, w = z.w, h = z.h, x0 = 30, pw = w - x0 - 6, top = 8, hz = h - 36, altMax = pv.alt;
+      const t = tAt(st.doy, st.min), s = skyAt(t), col = skyCols(s.sun.alt), cd = coreDay(st.doy);
+      const span = pv.view === 'all' ? 360 : 120;
+      let center = { all: 180, E: 90, SE: 135, S: 180, SW: 225, W: 270 }[pv.view];
+      if (pv.view === 'core') center = s.core.alt > 0 ? s.core.az : (cd.azmax != null ? cd.azmax : 180);
+      const dx = function (az) { return ((az - center + 540) % 360) - 180; };
+      const X = function (az) { return x0 + dx(az) / span * pw + pw / 2; };
+      const Y = function (alt) { return hz - alt / altMax * (hz - top); };
+      const inView = function (az) { return Math.abs(dx(az)) <= span / 2 + .01; };
+      const proj = function (az, alt) { return [X(az), Y(Math.max(-2, alt))]; };
+      g.clearRect(0, 0, w, h); g.fillStyle = '#04060c'; g.fillRect(0, 0, w, h);
+      const gr = g.createLinearGradient(0, top, 0, hz); gr.addColorStop(0, col[0]); gr.addColorStop(1, col[1]); g.fillStyle = gr; g.fillRect(x0, top, pw, hz - top);
+      g.save(); g.beginPath(); g.rect(x0, top, pw, hz - top); g.clip();
+      // milky way band (re-uses the sprite glow, radius in real degrees)
+      g.save(); g.globalCompositeOperation = 'lighter'; const pxd = pw / span;
+      MW.pts.forEach(function (q) {
+        const a = MW.altaz(q.ra, q.dec, t, cur.lat, cur.lon); if (a.alt < -1 || !inView(a.az)) return;
+        const ext = Math.min(1, (a.alt + 1) / 14), rr = pxd * (3.6 + 7 * q.r);
+        g.globalAlpha = Math.min(.5, q.w * .2 * s.vis * ext + .0001); g.drawImage(q.warm > .55 ? spWarm : spCool, X(a.az) - rr, Y(a.alt) - rr, rr * 2, rr * 2);
+      });
+      g.restore();
+      // grid: bearing lines every 15°, height lines every 10° (5° when zoomed low)
+      const aStep = altMax <= 20 ? 5 : 10;
+      g.lineWidth = 1; g.font = '10px Inter';
+      for (let az = 0; az < 360; az += 15) { if (!inView(az)) continue; const x = X(az); g.strokeStyle = az % 90 === 0 ? 'rgba(243,231,211,.28)' : az % 30 === 0 ? 'rgba(243,231,211,.15)' : 'rgba(243,231,211,.07)'; g.beginPath(); g.moveTo(x, top); g.lineTo(x, hz); g.stroke(); }
+      for (let a = aStep; a <= altMax; a += aStep) { const y = Y(a); g.strokeStyle = a % 30 === 0 ? 'rgba(243,231,211,.2)' : 'rgba(243,231,211,.1)'; g.beginPath(); g.moveTo(x0, y); g.lineTo(x0 + pw, y); g.stroke(); g.fillStyle = 'rgba(243,231,211,.7)'; g.textAlign = 'left'; g.fillText(a + '°', x0 + 3, y - 3); }
+      // optional galactic grid
+      if (pv.gal) {
+        g.strokeStyle = 'rgba(120,200,255,.45)'; g.fillStyle = 'rgba(150,215,255,.9)'; g.lineWidth = 1; g.font = '9.5px Inter';
+        const gline = function (pairs, label) {
+          let px0 = null, drewLabel = false; g.beginPath();
+          pairs.forEach(function (q) { const e = MW.altaz.apply(null, MW.gal2eq(q[0], q[1]).concat([t, cur.lat, cur.lon])); const x = X(e.az), y = Y(e.alt); const ok = e.alt >= 0 && inView(e.az) && e.alt <= altMax * 1.05; if (ok && px0 !== null && Math.abs(x - px0) < pw / 2) g.lineTo(x, y); else if (ok) g.moveTo(x, y); if (ok && !drewLabel && x > x0 + 4 && x < x0 + pw - 30 && y > top + 8) { g.fillText(label, x + 2, y - 2); drewLabel = true; } px0 = ok ? x : null; });
+          g.stroke();
+        };
+        for (let l = 0; l < 360; l += 30) { const pr = []; for (let b2 = -60; b2 <= 60; b2 += 4) pr.push([l, b2]); gline(pr, 'l ' + l + '°'); }
+        [-30, -15, 15, 30].forEach(function (b2) { const pr = []; for (let l = 0; l <= 360; l += 4) pr.push([l, b2]); gline(pr, 'b ' + (b2 > 0 ? '+' : '') + b2 + '°'); });
+      }
+      // path of the core tonight with hour marks
+      if (pv.path) {
+        g.setLineDash([2, 4]); g.strokeStyle = 'rgba(246,200,120,.85)'; g.lineWidth = 1.8; g.beginPath(); let pen = false, lastx = null;
+        for (let m = 0; m <= SPAN; m += 5) { const q = MW.altaz(MW.core[0], MW.core[1], tAt(st.doy, m), cur.lat, cur.lon); if (q.alt < 0 || !inView(q.az)) { pen = false; lastx = null; continue; } const xy = proj(q.az, q.alt); if (pen && Math.abs(xy[0] - lastx) < pw / 2) g.lineTo(xy[0], xy[1]); else { g.moveTo(xy[0], xy[1]); pen = true; } lastx = xy[0]; }
+        g.stroke(); g.setLineDash([]); g.font = '600 9.5px Inter'; g.textAlign = 'center';
+        for (let m = 0; m <= SPAN; m += 60) { const tt = tAt(st.doy, m), q = MW.altaz(MW.core[0], MW.core[1], tt, cur.lat, cur.lon); if (q.alt < 0 || !inView(q.az)) continue; const xy = proj(q.az, q.alt); g.fillStyle = '#f6c25b'; g.beginPath(); g.arc(xy[0], xy[1], 3, 0, 7); g.fill(); g.fillStyle = 'rgba(255,230,180,.95)'; const lab = hm(tt).replace(/:00/, '').replace(' AM', 'a').replace(' PM', 'p'); g.fillText(lab, xy[0], xy[1] - 7); }
+        g.textAlign = 'left';
+      }
+      // moon & sun
+      if (s.moon.alt > -1 && inView(s.moon.az)) { const m = proj(s.moon.az, s.moon.alt); g.fillStyle = 'rgba(255,248,220,' + (.12 + s.il * .25) + ')'; g.beginPath(); g.arc(m[0], m[1], 12 + s.il * 12, 0, 7); g.fill(); g.fillStyle = '#efe8d2'; g.beginPath(); g.arc(m[0], m[1], 6, 0, 7); g.fill(); }
+      if (s.sun.alt > -8 && inView(s.sun.az)) { const m = proj(s.sun.az, s.sun.alt); g.fillStyle = '#ffd36b'; g.beginPath(); g.arc(m[0], m[1], 8, 0, 7); g.fill(); }
+      // current core position
+      if (s.core.alt > 0 && inView(s.core.az)) { const m = proj(s.core.az, s.core.alt); g.save(); g.translate(m[0], m[1]); g.rotate(Math.PI / 4); g.fillStyle = '#f6c25b'; g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.fillRect(-5, -5, 10, 10); g.strokeRect(-5, -5, 10, 10); g.restore(); g.fillStyle = '#fff3d6'; g.font = '700 11px Inter'; const lab = 'Core ' + Math.round(s.core.alt) + '° · ' + Math.round(s.core.az) + '° ' + compass(s.core.az), tw = g.measureText(lab).width, lx = Math.max(x0 + 4, Math.min(x0 + pw - tw - 4, m[0] - tw / 2)); g.fillStyle = 'rgba(0,0,0,.45)'; g.fillRect(lx - 3, m[1] - 25, tw + 6, 15); g.fillStyle = '#fff3d6'; g.fillText(lab, lx, m[1] - 14); }
+      g.restore();
+      // ground, bearing numbers, compass letters
+      const gg = g.createLinearGradient(0, hz, 0, h); gg.addColorStop(0, '#0b0d14'); gg.addColorStop(1, '#05060a'); g.fillStyle = gg; g.fillRect(x0, hz, pw, h - hz);
+      g.strokeStyle = 'rgba(243,231,211,.5)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(x0, hz); g.lineTo(x0 + pw, hz); g.stroke();
+      g.font = '10px Inter'; g.textAlign = 'center';
+      const lstep = span === 360 ? (pw < 380 ? 60 : 30) : (pw < 380 ? 30 : 15);
+      for (let az = 0; az < 360; az += 15) { if (!inView(az)) continue; const x = X(az); if (az % lstep === 0) { g.fillStyle = 'rgba(243,231,211,.7)'; g.fillText(az + '°', x, hz + 12); } }
+      g.font = '700 12px Inter';
+      [['N', 0], ['NE', 45], ['E', 90], ['SE', 135], ['S', 180], ['SW', 225], ['W', 270], ['NW', 315]].forEach(function (d) { if (!inView(d[1])) return; g.fillStyle = d[0] === 'N' ? '#ef6f5a' : '#f3e7d3'; g.fillText(d[0], X(d[1]), hz + 27); });
+      g.textAlign = 'left'; g.fillStyle = 'rgba(243,231,211,.55)'; g.font = '10px Inter'; g.fillText('0°', 6, hz + 3); g.fillText('alt', 6, top + 8);
+      // rise and set markers on the horizon
+      g.font = '700 10.5px Inter'; g.textAlign = 'center';
+      if (cd.rise && inView(cd.rise.az)) { const x = X(cd.rise.az); g.fillStyle = '#f6c25b'; g.beginPath(); g.moveTo(x, hz - 1); g.lineTo(x - 6, hz - 12); g.lineTo(x + 6, hz - 12); g.closePath(); g.fill(); g.fillStyle = '#ffe6b5'; const lt = 'rise ' + hm(cd.rise.t).replace(' AM', 'a').replace(' PM', 'p') + ' · ' + Math.round(cd.rise.az) + '°', tw = g.measureText(lt).width; const left = x - 9 - tw >= x0; g.textAlign = 'left'; g.fillText(lt, left ? x - 9 - tw : x + 9, hz - 16); g.textAlign = 'center'; }
+      if (cd.set && inView(cd.set.az)) { const x = X(cd.set.az); g.fillStyle = '#f6c25b'; g.beginPath(); g.moveTo(x, hz - 12); g.lineTo(x - 6, hz - 1); g.lineTo(x + 6, hz - 1); g.closePath(); g.fill(); g.fillStyle = '#ffe6b5'; const lt = 'set ' + hm(cd.set.t).replace(' AM', 'a').replace(' PM', 'p') + ' · ' + Math.round(cd.set.az) + '°', tw = g.measureText(lt).width; const right = x + 9 + tw <= x0 + pw; g.textAlign = 'left'; g.fillText(lt, right ? x + 9 : x - 9 - tw, hz - 16); g.textAlign = 'center'; }
+      g.textAlign = 'left';
     }
+    const VIEWS = [['all', 'All around'], ['E', 'Face E'], ['SE', 'Face SE'], ['S', 'Face S'], ['SW', 'Face SW'], ['W', 'Face W'], ['core', 'Follow core']];
+    function paintPanoChips() {
+      panoChips.innerHTML = '';
+      VIEWS.forEach(function (v) { const b = el('button', 'chip' + (pv.view === v[0] ? ' on' : ''), v[1]); b.type = 'button'; b.onclick = function () { pv.view = v[0]; paintPanoChips(); redraw(); }; panoChips.appendChild(b); });
+      const hb = el('button', 'chip' + (pv.alt === 45 ? ' on' : ''), pv.alt === 45 ? 'Low sky 0–45°' : 'Full sky 0–90°'); hb.type = 'button'; hb.onclick = function () { pv.alt = pv.alt === 45 ? 90 : 45; paintPanoChips(); redraw(); }; panoChips.appendChild(hb);
+      const gb = el('button', 'chip' + (pv.gal ? ' on' : ''), 'Galactic grid'); gb.type = 'button'; gb.onclick = function () { pv.gal = !pv.gal; paintPanoChips(); redraw(); }; panoChips.appendChild(gb);
+    }
+    paintPanoChips();
 
     /* ---- text readout ---- */
-    function coreDay(doy) {                // rise / transit / set of the core within 24 h from local noon
+    const cdCache = {};
+    function coreDay(doy) { const k = doy + '|' + cur.lat + '|' + cur.lon + '|' + cur.tz; return cdCache[k] || (cdCache[k] = coreDay0(doy)); }
+    function coreDay0(doy) {                // rise / transit / set of the core within 24 h from local noon
       const D = ymdOf(doy), t0 = zoned(D.y, D.m, D.d, 12, 0), out = { rise: null, set: null, max: -99, tmax: t0 }; let prev = null;
       for (let t = t0; t <= t0 + 24 * 3600000; t += 5 * 60000) { const q = MW.altaz(MW.core[0], MW.core[1], t, cur.lat, cur.lon); if (q.alt > out.max) { out.max = q.alt; out.tmax = t; out.azmax = q.az; } if (prev) { if (prev.alt < 0 && q.alt >= 0 && !out.rise) out.rise = { t: t, az: q.az }; if (prev.alt >= 0 && q.alt < 0 && !out.set) out.set = { t: t, az: q.az }; } prev = q; }
       return out;
@@ -11986,8 +12062,19 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       else sched = (cd.rise ? 'Rises ' + hm(cd.rise.t) + ' at ' + Math.round(cd.rise.az) + '° ' + compass(cd.rise.az) : 'Already up at noon') + ' · highest ' + hm(cd.tmax) + ' at ' + Math.round(cd.max) + '° ' + compass(cd.azmax) + ' · ' + (cd.set ? 'sets ' + hm(cd.set.t) + ' at ' + Math.round(cd.set.az) + '° ' + compass(cd.set.az) : 'no set');
       const moonTxt = s.moon.alt > 0 ? 'Moon up (' + Math.round(s.il * 100) + '% lit) at ' + Math.round(s.moon.alt) + '° — ' + (s.il > .5 ? 'strong glare, expect a washed-out band.' : 'mild glare.') : 'Moon below the horizon (' + Math.round(s.il * 100) + '% lit) — dark sky.';
       read.innerHTML = line + '<br>' + esc(sched) + '<br><span class="muted">' + phase + ' · ' + moonTxt + '</span>';
+      paintWeek();
       sd.value = st.doy; sm.value = st.min;
       c1.querySelector('#mwDL').textContent = dateLabel(st.doy); c1.querySelector('#mwTL').textContent = hm(t);
+    }
+
+    function paintWeek() {
+      const f = function (r) { return r ? '<b>' + hm(r.t) + '</b>' + Math.round(r.az) + '° ' + compass(r.az) : '—'; };
+      let h = '<div class="h">Day</div><div class="h">Rises</div><div class="h">Highest</div><div class="h">Sets</div>';
+      for (let k = -3; k <= 3; k++) {
+        const d = st.doy + k; if (d < 0 || d > 364) continue; const c = coreDay(d), sel = k === 0 ? ' sel' : '';
+        h += '<div class="' + sel.trim() + '" data-d="' + d + '"><b>' + esc(dateLabel(d).replace(/^\w+, /, '')) + '</b>' + esc(dateLabel(d).split(',')[0]) + '</div><div class="' + sel.trim() + '" data-d="' + d + '">' + (c.max < 0 ? 'never' : f(c.rise)) + '</div><div class="' + sel.trim() + '" data-d="' + d + '">' + (c.max < 0 ? '—' : '<b>' + hm(c.tmax) + '</b>' + Math.round(c.max) + '° ' + compass(c.azmax)) + '</div><div class="' + sel.trim() + '" data-d="' + d + '">' + (c.max < 0 ? '—' : f(c.set)) + '</div>';
+      }
+      wk.innerHTML = h; Array.prototype.forEach.call(wk.querySelectorAll('[data-d]'), function (n) { n.style.cursor = 'pointer'; n.onclick = function () { st.doy = +n.getAttribute('data-d'); redraw(); }; });
     }
 
     /* ---- year chart ---- */
@@ -12070,7 +12157,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
 
     /* ---- controls ---- */
     function setPlace(pl) {
-      cur = pl; yKey = ''; seasonDone = ''; paintPlaces(); redraw(); computeSeason(); paintWorld();
+      cur = pl; pv.alt = (90 - Math.abs(cur.lat + 28.94)) < 35 ? 45 : 90; paintPanoChips(); yKey = ''; seasonDone = ''; paintPlaces(); redraw(); computeSeason(); paintWorld();
     }
     function paintPlaces() {
       place.innerHTML = '<span>Viewing from <b>' + esc(cur.name) + '</b> · ' + Math.abs(cur.lat).toFixed(1) + '°' + (cur.lat >= 0 ? 'N' : 'S') + '</span>';
