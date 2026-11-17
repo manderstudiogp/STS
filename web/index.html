@@ -2553,6 +2553,27 @@
 #wx .lg-item::after { content: ""; display: block; clear: both; }
 #wx .satcv { display: block; width: 100%; max-width: 360px; border-radius: 12px; border: 1px solid var(--line); margin: 8px 0; }
 
+#wx .ck-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+#wx .ck { display: flex; flex-direction: column; gap: 2px; text-align: left; padding: 8px 7px; border-radius: 12px; border: 1px solid var(--line); background: var(--glass); color: var(--ink); min-width: 0; font: inherit; cursor: pointer; }
+#wx .ck.loc { border-color: rgba(231,166,107,.65); background: rgba(231,166,107,.1); }
+#wx .ck.sel { outline: 2px solid var(--copper, #e7a66b); }
+#wx .ck-n { font-size: 10px; letter-spacing: .03em; text-transform: uppercase; color: var(--sub); line-height: 1.2; min-height: 2.4em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; }
+#wx .ck-t small { font-size: 9.5px; font-weight: 600; margin-left: 2px; color: var(--sub); }
+#wx .ck-n i { color: #8fd19e; font-style: normal; font-size: 9px; }
+#wx .ck-t { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.15; white-space: nowrap; }
+#wx .ck-s { font-size: 10px; color: var(--dim, #8a8070); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#wx .ck-ed { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+#wx .ck-h { font-weight: 700; margin-bottom: 4px; }
+#wx .ck-note { font-size: 12.5px; color: var(--sub); margin-bottom: 6px; }
+#wx .ck-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+#wx .ck-in { flex: 1; min-width: 0; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--ink); padding: 0 12px; font-size: 16px; }
+#wx .ck-sub { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim, #8a8070); margin: 8px 0 4px; }
+#wx .ck-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+#wx .ck-chips .chip { height: 30px; font-size: 12px; }
+#wx .ck-pick { display: block; width: 100%; text-align: left; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--glass); color: var(--ink); margin: 4px 0; font: inherit; }
+#wx .ck-pick small { color: var(--sub); }
+@media (max-width: 380px) { #wx .ck { padding: 7px 5px; } #wx .ck-t { font-size: 15px; } #wx .ck-n { font-size: 9.5px; } #wx .ck-s { font-size: 9px; } }
+
     /* ================= START / HOME SCREEN CHOICE ================= */
     .ss-acct-row { gap: 10px; flex-wrap: wrap; }
     .nav-seg { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
@@ -14271,6 +14292,93 @@ window.__wxBoot = function () {
 
 </script>
 
+
+<script>
+/* ===== World clocks: 8 time zones on the Weather Station home (1 local + 3 US, then 4 global), all adjustable ===== */
+(function () {
+  'use strict';
+  const WX = window.WX, esc = WX.esc;
+  function build() {
+    const wrap = document.querySelector('#wxHome .wx-wrap'); if (!wrap || document.getElementById('wxClocks')) return !!document.getElementById('wxClocks');
+    const dev = (function () { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || null; } catch (e) { return null; } })();
+    const OK = function (tz) { try { new Intl.DateTimeFormat(undefined, { timeZone: tz }); return true; } catch (e) { return false; } };
+    const city = function (tz) { return String(tz || 'UTC').split('/').pop().replace(/_/g, ' '); };
+    const US = [['Eastern', 'America/New_York'], ['Central', 'America/Chicago'], ['Mountain', 'America/Denver'], ['Arizona', 'America/Phoenix'], ['Pacific', 'America/Los_Angeles'], ['Alaska', 'America/Anchorage'], ['Hawaii', 'Pacific/Honolulu']];
+    const WORLD = [['London', 'Europe/London'], ['Paris', 'Europe/Paris'], ['Berlin', 'Europe/Berlin'], ['Athens', 'Europe/Athens'], ['Cairo', 'Africa/Cairo'], ['Johannesburg', 'Africa/Johannesburg'], ['Dubai', 'Asia/Dubai'], ['Mumbai', 'Asia/Kolkata'], ['Bangkok', 'Asia/Bangkok'], ['Singapore', 'Asia/Singapore'], ['Hong Kong', 'Asia/Hong_Kong'], ['Tokyo', 'Asia/Tokyo'], ['Seoul', 'Asia/Seoul'], ['Sydney', 'Australia/Sydney'], ['Auckland', 'Pacific/Auckland'], ['Mexico City', 'America/Mexico_City'], ['Vancouver', 'America/Vancouver'], ['São Paulo', 'America/Sao_Paulo'], ['Reykjavik', 'Atlantic/Reykjavik'], ['UTC', 'UTC']];
+    const defs = function (local) { const us = [['New York', 'America/New_York'], ['Chicago', 'America/Chicago'], ['Denver', 'America/Denver'], ['Los Angeles', 'America/Los_Angeles']].filter(function (x) { return x[1] !== local; }).slice(0, 3); return us.concat([['London', 'Europe/London'], ['Dubai', 'Asia/Dubai'], ['Tokyo', 'Asia/Tokyo'], ['Sydney', 'Australia/Sydney']]).map(function (x) { return { name: x[0], tz: x[1] }; }); };
+    let S = WX.get('clocks', null);
+    if (!S || !S.slots || S.slots.length !== 7) { S = { local: { mode: 'auto' }, slots: null }; }
+    const localTz = function () { return S.local.mode !== 'auto' && S.local.tz && OK(S.local.tz) ? S.local.tz : (dev && OK(dev) ? dev : null); };
+    const localName = function () { if (S.local.mode !== 'auto' && S.local.name) return S.local.name; const h = WX.home; if (S.local.mode === 'auto' && h && h.name && !S.local.tz) return String(h.name).split(',')[0]; return city(localTz()); };
+    if (!S.slots) S.slots = defs(localTz());
+    const save = function () { WX.set('clocks', S); };
+
+    const card = document.createElement('div'); card.className = 'card full'; card.id = 'wxClocks';
+    card.innerHTML = '<h3>World clocks<span class="src">tap a clock to change it</span></h3><div class="ck-grid" id="ckGrid"></div><div class="ck-ed" id="ckEd" hidden></div>';
+    wrap.insertBefore(card, wrap.firstChild);
+    const grid = card.querySelector('#ckGrid'), ed = card.querySelector('#ckEd');
+    const fm = {}, fd = {}, fz = {};
+    const F = function (tz) { return fm[tz] || (fm[tz] = new Intl.DateTimeFormat(undefined, { timeZone: tz, hour: 'numeric', minute: '2-digit' })); };
+    const FD = function (tz) { return fd[tz] || (fd[tz] = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' })); };
+    const FZ = function (tz) { return fz[tz] || (fz[tz] = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'short', weekday: 'short', hour: 'numeric', hour12: false })); };
+    function cells() { const l = localTz(); return [{ name: localName(), tz: l, local: true }].concat(S.slots.map(function (x) { return { name: x.name, tz: x.tz }; })); }
+    let sel = -1;
+    function paint() {
+      const now = new Date(), cs = cells(), base = cs[0].tz ? FD(cs[0].tz).format(now) : null; grid.innerHTML = '';
+      cs.forEach(function (c, i) {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'ck' + (c.local ? ' loc' : '') + (i === sel ? ' sel' : ''); b.setAttribute('data-i', i);
+        if (!c.tz) { b.innerHTML = '<span class="ck-n">Local</span><span class="ck-t">—</span><span class="ck-s">tap to set ZIP</span>'; grid.appendChild(b); return; }
+        const parts = {}; FZ(c.tz).formatToParts(now).forEach(function (p) { parts[p.type] = p.value; });
+        const d = FD(c.tz).format(now), rel = !base ? parts.weekday : d === base ? '' : d > base ? ' +1d' : ' −1d', hr = +parts.hour % 24, day = hr >= 6 && hr < 18, tp = {}; F(c.tz).formatToParts(now).forEach(function (q) { tp[q.type] = q.value; });
+        b.innerHTML = '<span class="ck-n">' + (c.local ? '<i>●</i> ' : '') + esc(c.name) + '</span><span class="ck-t" data-t="' + esc(F(c.tz).format(now)) + '">' + esc(tp.hour + ':' + tp.minute) + (tp.dayPeriod ? '<small>' + esc(tp.dayPeriod.replace(/\./g, '').toUpperCase()) + '</small>' : '') + '</span><span class="ck-s">' + (day ? '☀ ' : '☾ ') + esc(String(parts.timeZoneName || '').replace(/^GMT(?=[+−-])/, 'UTC')) + esc(rel) + '</span>';
+        grid.appendChild(b);
+      });
+    }
+    grid.addEventListener('click', function (e) { const b = e.target.closest('.ck'); if (!b) return; const i = +b.getAttribute('data-i'); sel = sel === i ? -1 : i; paint(); edit(); });
+    function setSlot(i, name, tz) { if (!OK(tz)) return; if (i === 0) S.local = { mode: 'manual', name: name, tz: tz }; else S.slots[i - 1] = { name: name, tz: tz }; save(); sel = -1; paint(); edit(); }
+    function edit() {
+      if (sel < 0) { ed.hidden = true; ed.innerHTML = ''; return; }
+      ed.hidden = false; const i = sel;
+      let h = '<div class="ck-h">' + (i === 0 ? 'Local time' : i <= 3 ? 'US time zone ' + i : 'World clock ' + (i - 3)) + '</div>';
+      if (i === 0) h += '<div class="ck-note">' + (S.local.mode === 'auto' ? (dev ? 'Automatic — using this device\'s time zone (' + esc(dev) + '). No permission needed.' : 'Couldn\'t detect your time zone. Enter a ZIP code or city below.') : 'Set by you: ' + esc(S.local.name || '') + ' (' + esc(S.local.tz) + ').') + '</div><div class="ck-row"><button type="button" class="chip" data-a="auto">Use device time zone</button><button type="button" class="chip" data-a="gps">Use my location</button></div>';
+      h += '<div class="ck-row"><input type="search" class="ck-in" placeholder="' + (i === 0 ? 'ZIP code, city or town' : 'Search any city or ZIP') + '" autocomplete="off" aria-label="Search for a place"><button type="button" class="btn" data-a="go">Set</button></div><div class="ck-res"></div>';
+      if (i === 0 || i > 3) h += ''; 
+      h += '<div class="ck-sub">' + (i >= 1 && i <= 3 ? 'US zones' : 'US zones') + '</div><div class="ck-chips">' + US.map(function (x) { return '<button type="button" class="chip" data-n="' + esc(x[0]) + '" data-z="' + x[1] + '">' + esc(x[0]) + '</button>'; }).join('') + '</div>';
+      h += '<div class="ck-sub">World</div><div class="ck-chips">' + WORLD.map(function (x) { return '<button type="button" class="chip" data-n="' + esc(x[0]) + '" data-z="' + x[1] + '">' + esc(x[0]) + '</button>'; }).join('') + '</div><div class="ck-row"><button type="button" class="chip" data-a="close">Done</button></div>';
+      ed.innerHTML = h;
+    }
+    const msg = function (t, err) { const r = ed.querySelector('.ck-res'); if (r) r.innerHTML = '<div class="tiny' + (err ? ' err' : '') + '" style="padding:4px 2px">' + esc(t) + '</div>'; };
+    function lookup(q) {
+      q = q.trim(); if (q.length < 2) return; msg('Searching…');
+      WX.getJSON('https://geocoding-api.open-meteo.com/v1/search?count=6&language=en&format=json&name=' + encodeURIComponent(q), { ttl: 60 }).then(function (d) {
+        const list = ((d && d.results) || []).filter(function (r) { return r.timezone; }), r = ed.querySelector('.ck-res'); if (!r) return;
+        if (!list.length) { msg('No place found with a time zone. Try a city name or a ZIP code.', true); return; }
+        r.innerHTML = ''; list.forEach(function (x) { const b = document.createElement('button'); b.type = 'button'; b.className = 'ck-pick'; b.innerHTML = '<b>' + esc(x.name) + '</b> <small>' + esc([x.admin1, x.country].filter(Boolean).join(', ')) + ' · ' + esc(x.timezone) + '</small>'; b.onclick = function () { setSlot(sel, x.name, x.timezone); }; r.appendChild(b); });
+      }).catch(function () { msg('Search is offline right now. Pick a zone from the buttons below.', true); });
+    }
+    ed.addEventListener('click', function (e) {
+      const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.z) { setSlot(sel, b.dataset.n, b.dataset.z); return; }
+      const a = b.dataset.a;
+      if (a === 'close') { sel = -1; paint(); edit(); }
+      else if (a === 'go') lookup(ed.querySelector('.ck-in').value);
+      else if (a === 'auto') { S.local = { mode: 'auto' }; save(); sel = -1; paint(); edit(); }
+      else if (a === 'gps') {
+        if (!navigator.geolocation) { msg('Location isn\'t available here — enter a ZIP code instead.', true); return; }
+        msg('Finding you…');
+        navigator.geolocation.getCurrentPosition(function (p) {
+          WX.getJSON('https://api.open-meteo.com/v1/forecast?latitude=' + p.coords.latitude.toFixed(3) + '&longitude=' + p.coords.longitude.toFixed(3) + '&current=temperature_2m&timezone=auto', { ttl: 30 }).then(function (d) { if (d && d.timezone) setSlot(0, (WX.home && WX.home.name ? String(WX.home.name).split(',')[0] : city(d.timezone)), d.timezone); else msg('Couldn\'t work out the time zone — enter a ZIP code.', true); }).catch(function () { msg('Couldn\'t reach the time-zone service — enter a ZIP code.', true); });
+        }, function () { msg('Location was blocked — enter a ZIP code or city instead.', true); }, { timeout: 12000, maximumAge: 600000 });
+      }
+    });
+    ed.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.classList.contains('ck-in')) { e.preventDefault(); lookup(e.target.value); } });
+    paint(); setInterval(function () { const w = document.getElementById('wx'); if (w && w.style.display !== 'none' && !document.hidden && sel < 0 || (w && w.style.display !== 'none' && sel >= 0)) paintTick(); }, 1000);
+    function paintTick() { const cs = cells(), now = new Date(); const btns = grid.querySelectorAll('.ck'); if (btns.length !== 8) return; /* update only the time text so open editors / typing aren't disturbed */ cs.forEach(function (c, i) { if (!c.tz) return; const t = btns[i].querySelector('.ck-t'), s = F(c.tz).format(now); if (t && t.getAttribute('data-t') !== s) { paint(); } }); }
+    return true;
+  }
+  if (!build()) document.addEventListener('DOMContentLoaded', build);
+})();
+</script>
 
 
 <script>
