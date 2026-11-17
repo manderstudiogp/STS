@@ -2513,6 +2513,24 @@
 #wx .tips { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color: var(--sub); display: grid; gap: 6px; }
 #wx .tips b { color: var(--ink); }
 
+#wx .mwrange { width: 100%; accent-color: #e7a66b; height: 34px; margin: 0; }
+#wx .mwcv { display: block; width: 100%; border-radius: 14px; background: #05070f; touch-action: none; }
+#wx .mwscroll .chip { flex: none; white-space: nowrap; }
+#wx .mwrow { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 8px; font-size: 12.5px; color: var(--sub); flex-wrap: wrap; }
+#wx .mwrow b { color: var(--ink); }
+#wx .mwlab { display: flex; justify-content: space-between; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); margin-top: 10px; }
+#wx .mwlab b { color: var(--ink); letter-spacing: 0; text-transform: none; font-size: 13px; }
+#wx .mwchips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+#wx .bestcard { margin-top: 10px; padding: 12px; border-radius: 14px; background: var(--glass2); border: 1px solid var(--line); }
+#wx .bestcard .pill2 { display: inline-block; padding: 2px 9px; border-radius: 99px; font-weight: 700; font-size: 12px; color: #14121a; }
+#wx .bestcard ul { margin: 8px 0 0; padding-left: 18px; font-size: 12.5px; display: grid; gap: 3px; }
+#wx .bestcard li.ok { color: #9fd9a8; } #wx .bestcard li.bad { color: #f0b090; }
+#wx .bestcard table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+#wx .bestcard td { padding: 3px 0; border-top: 1px solid var(--line); color: var(--sub); } #wx .bestcard td:last-child { text-align: right; color: var(--ink); }
+#wx .daybars { display: grid; gap: 4px; margin-top: 10px; font-size: 12px; }
+#wx .daybars div { display: grid; grid-template-columns: 78px 1fr 30px; gap: 8px; align-items: center; color: var(--sub); }
+#wx .daybars i { display: block; height: 8px; border-radius: 4px; }
+
     /* ================= START / HOME SCREEN CHOICE ================= */
     .ss-acct-row { gap: 10px; flex-wrap: wrap; }
     .nav-seg { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
@@ -11744,6 +11762,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     { id: 'space', name: 'Space Weather', sub: 'Solar storms, flares & solar wind', art: 'linear-gradient(160deg,#2b1a40,#141026 60%,#08070f)', glyph: '<circle cx="18" cy="40" r="10" fill="#f6c25b"/><g stroke="#e7a66b" stroke-width="2" fill="none" opacity=".8"><path d="M30 30c10 4 18 4 30-4M30 40c12 2 22 2 34-2M30 50c10-2 18 0 30 6"/></g><circle cx="66" cy="40" r="5" fill="#7fb4e6"/>' },
     { id: 'events', name: 'Natural Events', sub: 'Wildfires, storms & volcanoes now (NASA)', art: 'linear-gradient(160deg,#4a2116,#24130f 60%,#0d0807)', glyph: '<path d="M22 58l14-26 8 12 6-8 12 22z" fill="#5b3a2e"/><path d="M36 32l-3-10 6 6 2-8 3 10" fill="none" stroke="#ff8a3d" stroke-width="3" stroke-linecap="round"/>' }
   ];
+  TILES.splice(2, 0, { id: 'milky', name: 'Milky Way', sub: 'Night sky: core rise & set by date, place and time', art: 'radial-gradient(ellipse at 30% 80%,#f1d9a8 0 6%,#8a6a8f 18%,#1b1a3a 45%,#04050c 75%)', glyph: '<path d="M2 66C20 44 34 56 50 34s20-22 28-26" fill="none" stroke="#f6e3b8" stroke-width="7" opacity=".5" stroke-linecap="round"/><circle cx="60" cy="22" r="1.6" fill="#fff"/><circle cx="26" cy="20" r="1.2" fill="#fff"/><circle cx="70" cy="50" r="1.2" fill="#fff"/>' });
   TILES.forEach(function (t) {
     const b = el('button', 'tile'); b.type = 'button'; b.setAttribute('data-tile', t.id);
     b.innerHTML = '<div class="art" style="background:' + t.art + '">' + (t.glyph ? '<svg viewBox="0 0 80 80" style="position:absolute;right:6px;top:6px;width:76px;height:76px">' + t.glyph + '</svg>' : '') + '</div><b>' + esc(t.name) + '</b><span>' + esc(t.sub) + '</span>';
@@ -11756,6 +11775,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     WX.$$('[data-tile]', tiles).forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-tile') === id); });
     WX.$$('.panel', panels).forEach(function (p) { p.hidden = p.getAttribute('data-p') !== id; });
     if (!built[id]) { const p = el('div', 'panel'); p.setAttribute('data-p', id); panels.appendChild(p); built[id] = p; BUILD[id](p); }
+    if (built[id].__redraw) setTimeout(built[id].__redraw, 40);
     WX.set('meteoTab', id);
     if (scroll) setTimeout(function () { const sc = built[id].closest('.wx-scroll'); sc.scrollTo({ top: built[id].offsetTop - 8, behavior: 'smooth' }); }, 50);
   }
@@ -11791,6 +11811,291 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     return cv;
   }
   function kpColor(k) { return k >= 8 ? '#d74ad0' : k >= 7 ? '#ef5d4b' : k >= 6 ? '#f08a4b' : k >= 5 ? '#f2b45b' : k >= 4 ? '#e9e27a' : '#8fd19e'; }
+
+
+  /* ===================== MILKY WAY / NIGHT SKY ===================== */
+  const MW = (function () {
+    const D2R = Math.PI / 180;
+    const jd = function (t) { return t / 86400000 + 2440587.5; };
+    function lst(t, lon) { const g = 280.46061837 + 360.98564736629 * (jd(t) - 2451545.0); return (((g + lon) % 360) + 360) % 360; }
+    const aG = 192.85948 * D2R, dG = 27.12825 * D2R, th = 122.93192 * D2R;
+    function gal2eq(l, b) {
+      l *= D2R; b *= D2R;
+      const dec = Math.asin(Math.sin(b) * Math.sin(dG) + Math.cos(b) * Math.cos(dG) * Math.cos(th - l));
+      const ra = aG + Math.atan2(Math.cos(b) * Math.sin(th - l), Math.sin(b) * Math.cos(dG) - Math.cos(b) * Math.sin(dG) * Math.cos(th - l));
+      return [(((ra / D2R) % 360) + 360) % 360, dec / D2R];
+    }
+    function altaz(ra, dec, t, lat, lon) {
+      const H = (lst(t, lon) - ra) * D2R, la = lat * D2R, de = dec * D2R;
+      const alt = Math.asin(Math.sin(de) * Math.sin(la) + Math.cos(de) * Math.cos(la) * Math.cos(H));
+      const az = Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(la) - Math.tan(de) * Math.cos(la));
+      return { alt: alt / D2R, az: (az / D2R + 180 + 360) % 360 };
+    }
+    const core = gal2eq(0, 0);
+    // the band: points along the galactic plane, brighter and fatter toward the core
+    const pts = [];
+    for (let l = 0; l < 360; l += 2) {
+      const dl = Math.min(l, 360 - l), cf = Math.exp(-Math.pow(dl / 42, 2));
+      const spread = 5 + 7 * cf, bright = .3 + .7 * cf;
+      [-2.2, -1.1, 0, 1.1, 2.2].forEach(function (k) {
+        const b = k * spread / 2, w = bright * Math.exp(-Math.pow(k / 1.6, 2));
+        const q = gal2eq(l, b); pts.push({ ra: q[0], dec: q[1], w: w, r: .8 + 1.4 * cf, warm: cf });
+      });
+    }
+    for (let i = 0; i < 40; i++) { const q = gal2eq((Math.random() * 30 - 15 + 360) % 360, (Math.random() - .5) * 16); pts.push({ ra: q[0], dec: q[1], w: .5, r: 1.1, warm: 1 }); }
+    const marks = [['Galactic core', 0, 0], ['Cygnus', 80, 0], ['Cassiopeia', 120, 0], ['Carina', 288, 0], ['Southern Cross', 300, 0]].map(function (m) { const q = gal2eq(m[1], m[2]); return { name: m[0], ra: q[0], dec: q[1] }; });
+    return { altaz: altaz, core: core, pts: pts, marks: marks, coreAlt: function (t, lat, lon) { return altaz(core[0], core[1], t, lat, lon).alt; } };
+  })();
+  WX.mw = MW;
+
+  const MW_PLACES = [
+    ['Pacific Northwest', 47.6, -122.3, 'America/Los_Angeles'], ['Oregon high desert', 43.7, -121.2, 'America/Los_Angeles'], ['Arizona / Utah', 37.6, -112.2, 'America/Denver'],
+    ['Hawaii (Mauna Kea)', 19.8, -155.5, 'Pacific/Honolulu'], ['Atacama, Chile', -23.0, -67.8, 'America/Santiago'], ['Australian Outback', -25.3, 131.0, 'Australia/Darwin'],
+    ['Namibia', -24.6, 15.9, 'Africa/Windhoek'], ['Iceland', 64.1, -21.9, 'Atlantic/Reykjavik'], ['Alps / Europe', 46.5, 8.5, 'Europe/Zurich'], ['Japan', 36.2, 138.2, 'Asia/Tokyo']
+  ];
+
+  function buildMilky(p) {
+    const D2R = Math.PI / 180, A = WX.astro, PL = WX.plan;
+    const home = WX.home || WX.get('place');
+    let cur = home ? { name: home.name || 'My location', lat: home.lat, lon: home.lon, tz: WX.tz, mine: true } : { name: MW_PLACES[0][0], lat: MW_PLACES[0][1], lon: MW_PLACES[0][2], tz: MW_PLACES[0][3] };
+    const YEAR = new Date().getFullYear();
+    const withTz = function (tz, fn) { const o = WX.tz; WX.tz = tz; try { return fn(); } finally { WX.tz = o; } };
+    const zoned = function (y, m, d, h, mi) { return withTz(cur.tz, function () { return PL.zoned(y, m, d, h, mi); }); };
+    const hm = function (t) { try { return new Intl.DateTimeFormat(undefined, { timeZone: cur.tz, hour: 'numeric', minute: '2-digit' }).format(new Date(t)); } catch (e) { return new Date(t).toUTCString().slice(17, 22); } };
+    const ymdOf = function (doy) { const d = new Date(Date.UTC(YEAR, 0, 1 + doy)); return { y: d.getUTCFullYear(), m: d.getUTCMonth(), d: d.getUTCDate() }; };
+    const dateLabel = function (doy) { return new Date(Date.UTC(YEAR, 0, 1 + doy)).toLocaleDateString(undefined, { timeZone: 'UTC', weekday: 'short', month: 'short', day: 'numeric' }); };
+    const T0 = 17 * 60, SPAN = 14 * 60;                  // slider covers 5 pm to 7 am
+    const tAt = function (doy, min) { const D = ymdOf(doy); return zoned(D.y, D.m, D.d, 0, 0) + (T0 + min) * 60000; };
+    const compass = function (az) { return ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'][Math.round(az / 22.5) % 16]; };
+    const todayDoy = (function () { const n = new Date(); return Math.floor((Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()) - Date.UTC(YEAR, 0, 1)) / 86400000); })();
+    const st = { doy: Math.max(0, Math.min(364, todayDoy)), min: 5 * 60 + 30 };
+    (function () { const n = new Date(), loc = (function () { try { const p = {}; new Intl.DateTimeFormat('en-US', { timeZone: cur.tz, hourCycle: 'h23', hour: 'numeric', minute: 'numeric' }).formatToParts(n).forEach(function (x) { p[x.type] = +x.value; }); return p.hour * 60 + p.minute; } catch (e) { return 23 * 60; } })(); const m = loc - T0; if (m >= 0 && m <= SPAN) st.min = m; })();
+
+    /* ---- layout ---- */
+    const c1 = card('Milky Way &amp; night sky', 'computed on your device');
+    const place = el('div', 'mwrow'); c1.appendChild(place);
+    const chips = el('div', 'mwchips'); chips.style.flexWrap = 'nowrap'; chips.style.overflowX = 'auto'; chips.style.paddingBottom = '4px'; c1.appendChild(chips);
+    const dome = el('canvas', 'mwcv'); dome.style.height = 'auto'; dome.style.aspectRatio = '1 / 1'; dome.style.maxWidth = '460px'; dome.style.margin = '12px auto 0'; c1.appendChild(dome);
+    c1.appendChild(el('div', 'tiny', 'Looking straight up: top = north, right = east, centre = overhead, edge = horizon. Gold diamond = galactic core; dotted line = its path across the night.'));
+    const pano = el('canvas', 'mwcv'); pano.style.height = '190px'; pano.style.marginTop = '12px'; c1.appendChild(pano);
+    c1.appendChild(el('div', 'tiny', 'Horizon view: the whole compass (N to N) left to right, height = how high above the horizon.'));
+    const labDate = el('div', 'mwlab', '<span>Date</span><b id="mwDL"></b>'); c1.appendChild(labDate);
+    const sd = el('input', 'mwrange'); sd.type = 'range'; sd.min = 0; sd.max = 364; sd.setAttribute('aria-label', 'Date'); c1.appendChild(sd);
+    const seas = el('div', 'mwchips'); c1.appendChild(seas);
+    const labTime = el('div', 'mwlab', '<span>Time of night</span><b id="mwTL"></b>'); c1.appendChild(labTime);
+    const sm = el('input', 'mwrange'); sm.type = 'range'; sm.min = 0; sm.max = SPAN; sm.step = 5; sm.setAttribute('aria-label', 'Time of night'); c1.appendChild(sm);
+    const ctl = el('div', 'mwchips'); c1.appendChild(ctl);
+    const read = el('div', 'verdict'); read.style.borderLeftColor = '#e7a66b'; c1.appendChild(read);
+    p.appendChild(c1);
+
+    const c2 = card('The core through the year', 'tap or drag the chart'); const yc = el('canvas', 'mwcv'); yc.style.height = '230px'; c2.appendChild(yc);
+    c2.appendChild(el('p', 'tiny', 'Each column is a night, each row a time from 5 pm (top) to 7 am (bottom). <b style="color:#f0c27a">Gold</b> = the galactic core is above the horizon in real darkness (brighter = higher). <b style="color:#b9c3d8">Grey-gold</b> = moonlight is washing it out. Dark blue = twilight or daytime; black = core below the horizon. Dots along the top show the moon phase.'));
+    const season = el('div', ''); c2.appendChild(season); p.appendChild(c2);
+    const c3 = card('What shows where', 'by latitude'); const world = el('div', ''); c3.appendChild(world); p.appendChild(c3);
+
+    /* ---- sprites ---- */
+    function sprite(rgb) { const c = document.createElement('canvas'); c.width = c.height = 48; const g = c.getContext('2d'), gr = g.createRadialGradient(24, 24, 0, 24, 24, 24); gr.addColorStop(0, 'rgba(' + rgb + ',1)'); gr.addColorStop(.4, 'rgba(' + rgb + ',.4)'); gr.addColorStop(1, 'rgba(' + rgb + ',0)'); g.fillStyle = gr; g.fillRect(0, 0, 48, 48); return c; }
+    const spCool = sprite('196,214,255'), spWarm = sprite('255,222,160');
+    const lerp = function (a, b, f) { return a + (b - a) * f; };
+    const hex = function (h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; };
+    const SKY = [[-18, '#03050b', '#080d1c'], [-12, '#0a122b', '#16244a'], [-6, '#1c2d5c', '#5b5278'], [0, '#34548a', '#e09a64'], [10, '#6f9bd0', '#bcd2e8']];
+    function skyCols(sa) {
+      if (sa <= SKY[0][0]) return [SKY[0][1], SKY[0][2]]; if (sa >= SKY[4][0]) return [SKY[4][1], SKY[4][2]];
+      for (let i = 1; i < SKY.length; i++) if (sa <= SKY[i][0]) { const f = (sa - SKY[i - 1][0]) / (SKY[i][0] - SKY[i - 1][0]), q = [1, 2].map(function (k) { const a = hex(SKY[i - 1][k]), b = hex(SKY[i][k]); return 'rgb(' + [0, 1, 2].map(function (j) { return Math.round(lerp(a[j], b[j], f)); }).join(',') + ')'; }); return q; }
+    }
+    function sizeCv(cv, h) { const r = cv.getBoundingClientRect(), D = Math.min(2, devicePixelRatio || 1); if (!r.width) return null; const w = r.width, hh = h || r.height; if (cv.width !== Math.round(w * D) || cv.height !== Math.round(hh * D)) { cv.width = Math.round(w * D); cv.height = Math.round(hh * D); } const g = cv.getContext('2d'); g.setTransform(D, 0, 0, D, 0, 0); return { g: g, w: w, h: hh }; }
+
+    /* ---- state of the sky at the chosen moment ---- */
+    function skyAt(t) {
+      const sun = A.sunPos(t, cur.lat, cur.lon), moon = A.moonPos(t, cur.lat, cur.lon), il = A.moonIllum(t).frac;
+      const wash = moon.alt > 0 ? il * Math.min(1, moon.alt / 20) * .6 : 0;
+      const vis = Math.max(0, Math.min(1, (-sun.alt - 4) / 14)) * (1 - wash);
+      return { sun: sun, moon: moon, il: il, vis: vis, core: MW.altaz(MW.core[0], MW.core[1], t, cur.lat, cur.lon) };
+    }
+    function drawBand(g, t, proj, scale, vis) {
+      g.save(); g.globalCompositeOperation = 'lighter';
+      MW.pts.forEach(function (q) {
+        const a = MW.altaz(q.ra, q.dec, t, cur.lat, cur.lon); if (a.alt < -1) return;
+        const ext = Math.min(1, (a.alt + 1) / 14), xy = proj(a.az, a.alt), rr = (7 + 15 * q.r) * scale;
+        g.globalAlpha = Math.min(.5, q.w * .2 * vis * ext + .0001); g.drawImage(q.warm > .55 ? spWarm : spCool, xy[0] - rr, xy[1] - rr, rr * 2, rr * 2);
+      });
+      g.restore();
+    }
+    function drawDome() {
+      const z = sizeCv(dome, dome.getBoundingClientRect().width); if (!z) return; const g = z.g, S = z.w, c = S / 2, R = c - 24;
+      const t = tAt(st.doy, st.min), s = skyAt(t), col = skyCols(s.sun.alt);
+      g.clearRect(0, 0, S, S); g.fillStyle = '#04060c'; g.fillRect(0, 0, S, S);
+      const proj = function (az, alt) { const r = (90 - alt) / 90 * R; return [c + r * Math.sin(az * D2R), c - r * Math.cos(az * D2R)]; };
+      g.save(); g.beginPath(); g.arc(c, c, R, 0, 7); g.clip();
+      const gr = g.createRadialGradient(c, c, 0, c, c, R); gr.addColorStop(0, col[0]); gr.addColorStop(1, col[1]); g.fillStyle = gr; g.fillRect(0, 0, S, S);
+      drawBand(g, t, proj, S / 420, s.vis);
+      // path of the core across the night
+      g.setLineDash([2, 4]); g.strokeStyle = 'rgba(246,200,120,.7)'; g.lineWidth = 1.6; g.beginPath(); let pen = false, ends = [];
+      for (let m = 0; m <= SPAN; m += 6) { const q = MW.altaz(MW.core[0], MW.core[1], tAt(st.doy, m), cur.lat, cur.lon); if (q.alt < 0) { pen = false; continue; } const xy = proj(q.az, q.alt); if (pen) g.lineTo(xy[0], xy[1]); else { g.moveTo(xy[0], xy[1]); pen = true; } }
+      g.stroke(); g.setLineDash([]);
+      // rings
+      g.strokeStyle = 'rgba(243,231,211,.14)'; g.lineWidth = 1; [30, 60].forEach(function (a) { g.beginPath(); g.arc(c, c, (90 - a) / 90 * R, 0, 7); g.stroke(); });
+      g.beginPath(); g.moveTo(c, c - R); g.lineTo(c, c + R); g.moveTo(c - R, c); g.lineTo(c + R, c); g.stroke();
+      // moon
+      if (s.moon.alt > -1) { const m = proj(s.moon.az, Math.max(0, s.moon.alt)), r0 = 7; g.fillStyle = 'rgba(255,248,220,' + (.1 + s.il * .25) + ')'; g.beginPath(); g.arc(m[0], m[1], 20 + s.il * 14, 0, 7); g.fill(); g.fillStyle = 'rgb(' + Math.round(150 + 100 * s.il) + ',' + Math.round(150 + 98 * s.il) + ',' + Math.round(150 + 80 * s.il) + ')'; g.beginPath(); g.arc(m[0], m[1], r0, 0, 7); g.fill(); }
+      // sun
+      if (s.sun.alt > -8) { const m = proj(s.sun.az, Math.max(0, s.sun.alt)); g.fillStyle = '#ffd36b'; g.beginPath(); g.arc(m[0], m[1], 8, 0, 7); g.fill(); }
+      // core marker
+      if (s.core.alt > 0) {
+        const m = proj(s.core.az, s.core.alt); g.save(); g.translate(m[0], m[1]); g.rotate(Math.PI / 4); g.fillStyle = '#f6c25b'; g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.fillRect(-5, -5, 10, 10); g.strokeRect(-5, -5, 10, 10); g.restore();
+        g.fillStyle = '#ffe3a8'; g.font = '600 11px Inter'; g.fillText('Core ' + Math.round(s.core.alt) + '°', m[0] + 9, m[1] - 7);
+      }
+      g.restore();
+      g.strokeStyle = 'rgba(243,231,211,.35)'; g.beginPath(); g.arc(c, c, R, 0, 7); g.stroke();
+      g.fillStyle = '#f3e7d3'; g.font = '700 13px Inter'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      [['N', 0], ['E', 90], ['S', 180], ['W', 270]].forEach(function (d) { const xy = [c + (R + 13) * Math.sin(d[1] * D2R), c - (R + 13) * Math.cos(d[1] * D2R)]; g.fillStyle = d[0] === 'N' ? '#ef6f5a' : '#f3e7d3'; g.fillText(d[0], xy[0], xy[1]); });
+      g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+      return { t: t, s: s };
+    }
+    function drawPano() {
+      const z = sizeCv(pano, 190); if (!z) return; const g = z.g, w = z.w, h = z.h, hz = h - 24, top = 8;
+      const t = tAt(st.doy, st.min), s = skyAt(t), col = skyCols(s.sun.alt);
+      const proj = function (az, alt) { return [az / 360 * w, hz - Math.max(0, alt) / 90 * (hz - top)]; };
+      const gr = g.createLinearGradient(0, 0, 0, hz); gr.addColorStop(0, col[0]); gr.addColorStop(1, col[1]); g.fillStyle = gr; g.fillRect(0, 0, w, hz);
+      drawBand(g, t, proj, w / 700, s.vis);
+      g.strokeStyle = 'rgba(243,231,211,.12)'; g.lineWidth = 1; [30, 60].forEach(function (a) { const y = proj(0, a)[1]; g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); g.fillStyle = 'rgba(243,231,211,.4)'; g.font = '10px Inter'; g.fillText(a + '°', 4, y - 3); });
+      if (s.moon.alt > 0) { const m = proj(s.moon.az, s.moon.alt); g.fillStyle = 'rgba(255,248,220,' + (.15 + s.il * .25) + ')'; g.beginPath(); g.arc(m[0], m[1], 14 + s.il * 10, 0, 7); g.fill(); g.fillStyle = '#efe8d2'; g.beginPath(); g.arc(m[0], m[1], 6, 0, 7); g.fill(); }
+      if (s.sun.alt > -8) { const m = proj(s.sun.az, s.sun.alt); g.fillStyle = '#ffd36b'; g.beginPath(); g.arc(m[0], m[1], 8, 0, 7); g.fill(); }
+      if (s.core.alt > 0) { const m = proj(s.core.az, s.core.alt); g.save(); g.translate(m[0], m[1]); g.rotate(Math.PI / 4); g.fillStyle = '#f6c25b'; g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.fillRect(-5, -5, 10, 10); g.strokeRect(-5, -5, 10, 10); g.restore(); g.fillStyle = '#ffe3a8'; g.font = '600 11px Inter'; g.fillText('Core ' + Math.round(s.core.alt) + '° · ' + compass(s.core.az), Math.min(w - 110, m[0] + 9), m[1] - 8); }
+      // ground + compass strip
+      const gg = g.createLinearGradient(0, hz, 0, h); gg.addColorStop(0, '#0a0c12'); gg.addColorStop(1, '#05060a'); g.fillStyle = gg; g.fillRect(0, hz, w, h - hz);
+      g.strokeStyle = 'rgba(243,231,211,.35)'; g.beginPath(); g.moveTo(0, hz); g.lineTo(w, hz); g.stroke();
+      g.font = '700 12px Inter'; g.textBaseline = 'middle'; [['N', 0], ['NE', 45], ['E', 90], ['SE', 135], ['S', 180], ['SW', 225], ['W', 270], ['NW', 315], ['N', 360]].forEach(function (d) { const x = d[1] / 360 * w; g.fillStyle = d[0] === 'N' ? '#ef6f5a' : '#f3e7d3'; g.textAlign = d[1] === 0 ? 'left' : d[1] === 360 ? 'right' : 'center'; g.fillText(d[0], x, hz + 12); g.fillStyle = 'rgba(243,231,211,.3)'; g.fillRect(Math.min(w - 1, x), hz, 1, 5); });
+      g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+    }
+
+    /* ---- text readout ---- */
+    function coreDay(doy) {                // rise / transit / set of the core within 24 h from local noon
+      const D = ymdOf(doy), t0 = zoned(D.y, D.m, D.d, 12, 0), out = { rise: null, set: null, max: -99, tmax: t0 }; let prev = null;
+      for (let t = t0; t <= t0 + 24 * 3600000; t += 5 * 60000) { const q = MW.altaz(MW.core[0], MW.core[1], t, cur.lat, cur.lon); if (q.alt > out.max) { out.max = q.alt; out.tmax = t; out.azmax = q.az; } if (prev) { if (prev.alt < 0 && q.alt >= 0 && !out.rise) out.rise = { t: t, az: q.az }; if (prev.alt >= 0 && q.alt < 0 && !out.set) out.set = { t: t, az: q.az }; } prev = q; }
+      return out;
+    }
+    function paintRead(res) {
+      const s = res.s, t = res.t, cd = coreDay(st.doy), alt = s.sun.alt;
+      const phase = alt > 0 ? 'Daylight' : alt > -6 ? 'Civil twilight' : alt > -12 ? 'Nautical twilight' : alt > -18 ? 'Astronomical twilight' : 'Full darkness';
+      let line;
+      if (s.core.alt > 0) line = '<b>Core is up:</b> ' + Math.round(s.core.alt) + '° high toward ' + Math.round(s.core.az) + '° ' + compass(s.core.az) + '.'; else line = '<b>Core is below the horizon</b> right now.';
+      let sched;
+      if (cd.max < 0) sched = 'The core never rises at this latitude (' + Math.abs(cur.lat).toFixed(0) + '°' + (cur.lat >= 0 ? 'N' : 'S') + ').';
+      else if (!cd.rise && !cd.set) sched = 'The core stays above the horizon all day here.';
+      else sched = (cd.rise ? 'Rises ' + hm(cd.rise.t) + ' at ' + Math.round(cd.rise.az) + '° ' + compass(cd.rise.az) : 'Already up at noon') + ' · highest ' + hm(cd.tmax) + ' at ' + Math.round(cd.max) + '° ' + compass(cd.azmax) + ' · ' + (cd.set ? 'sets ' + hm(cd.set.t) + ' at ' + Math.round(cd.set.az) + '° ' + compass(cd.set.az) : 'no set');
+      const moonTxt = s.moon.alt > 0 ? 'Moon up (' + Math.round(s.il * 100) + '% lit) at ' + Math.round(s.moon.alt) + '° — ' + (s.il > .5 ? 'strong glare, expect a washed-out band.' : 'mild glare.') : 'Moon below the horizon (' + Math.round(s.il * 100) + '% lit) — dark sky.';
+      read.innerHTML = line + '<br>' + esc(sched) + '<br><span class="muted">' + phase + ' · ' + moonTxt + '</span>';
+      sd.value = st.doy; sm.value = st.min;
+      c1.querySelector('#mwDL').textContent = dateLabel(st.doy); c1.querySelector('#mwTL').textContent = hm(t);
+    }
+
+    /* ---- year chart ---- */
+    let yBase = null, yKey = '', COLS = 122;
+    function buildYear(w, h) {
+      const L = 34, Rm = 6, Tm = 16, Bm = 18, cw = (w - L - Rm) / 365, ch = (h - Tm - Bm) / (SPAN / 20);
+      const oc = document.createElement('canvas'), D = Math.min(2, devicePixelRatio || 1); oc.width = w * D; oc.height = h * D; const g = oc.getContext('2d'); g.setTransform(D, 0, 0, D, 0, 0);
+      g.fillStyle = '#04060c'; g.fillRect(0, 0, w, h);
+      for (let doy = 0; doy < 365; doy += 3) {
+        const Dd = ymdOf(doy), base = zoned(Dd.y, Dd.m, Dd.d, 0, 0) + T0 * 60000;
+        for (let r = 0; r < SPAN / 20; r++) {
+          const t = base + r * 20 * 60000 + 10 * 60000, sa = A.sunPos(t, cur.lat, cur.lon).alt; let col;
+          if (sa > -6) col = '#26335a'; else if (sa > -18) col = '#121a37';
+          else {
+            const ca = MW.altaz(MW.core[0], MW.core[1], t, cur.lat, cur.lon).alt;
+            if (ca < 0) col = '#05070d';
+            else {
+              const mp = A.moonPos(t, cur.lat, cur.lon), il = mp.alt > 0 ? A.moonIllum(t).frac * Math.min(1, mp.alt / 15) : 0, b = Math.min(1, .3 + ca / 35), gr = Math.round(lerp(0, 1, il) * 100) / 100;
+              const rgb = [lerp(240, 150, gr) * b, lerp(190, 160, gr) * b, lerp(110, 175, gr) * b]; col = 'rgb(' + rgb.map(Math.round).join(',') + ')';
+            }
+          }
+          g.fillStyle = col; g.fillRect(L + doy * cw, Tm + r * ch, cw * 3 + .6, ch + .6);
+        }
+        if (doy % 3 === 0) { const t = base + 6 * 3600000, il = A.moonIllum(t).frac; g.fillStyle = 'rgba(240,236,220,' + (.15 + il * .85) + ')'; g.beginPath(); g.arc(L + doy * cw + cw * 1.5, 8, 2.2, 0, 7); g.fill(); }
+      }
+      g.fillStyle = '#8a8070'; g.font = '10px Inter'; g.textAlign = 'right'; [[0, '5 pm'], [4, '9 pm'], [7, '12 am'], [10.5, '3 am'], [14, '7 am']].forEach(function (q) { g.fillText(q[1], L - 4, Tm + (q[0] * 60 / 20) * ch + 3); }); g.textAlign = 'left';
+      ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'].forEach(function (m, i) { const d0 = Math.floor((Date.UTC(YEAR, i, 1) - Date.UTC(YEAR, 0, 1)) / 86400000); g.fillText(m, L + d0 * cw + 2, h - 5); });
+      return { oc: oc, L: L, Rm: Rm, Tm: Tm, Bm: Bm, cw: cw, ch: ch };
+    }
+    function drawYear() {
+      const r = yc.getBoundingClientRect(); if (!r.width) return; const key = [Math.round(r.width), cur.lat, cur.lon, cur.tz].join('|');
+      const z = sizeCv(yc, 230); if (!z) return;
+      if (key !== yKey) { yKey = key; yBase = buildYear(z.w, 230); }
+      const g = z.g, B = yBase; g.clearRect(0, 0, z.w, 230); g.drawImage(B.oc, 0, 0, z.w, 230);
+      const x = B.L + (st.doy + .5) * B.cw, y = B.Tm + st.min / 20 * B.ch;
+      g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x, B.Tm); g.lineTo(x, 230 - B.Bm); g.moveTo(B.L, y); g.lineTo(z.w - B.Rm, y); g.stroke();
+      g.fillStyle = '#fff'; g.beginPath(); g.arc(x, y, 4, 0, 7); g.fill(); g.strokeStyle = '#000'; g.stroke();
+    }
+    function yearPick(e) { if (!yBase) return; const r = yc.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; st.doy = Math.max(0, Math.min(364, Math.floor((x - yBase.L) / yBase.cw))); st.min = Math.max(0, Math.min(SPAN, Math.round((y - yBase.Tm) / yBase.ch * 20 / 5) * 5)); redraw(); }
+    let dragY = false; yc.addEventListener('pointerdown', function (e) { dragY = true; yc.setPointerCapture(e.pointerId); yearPick(e); }); yc.addEventListener('pointermove', function (e) { if (dragY) yearPick(e); }); yc.addEventListener('pointerup', function () { dragY = false; }); yc.addEventListener('pointercancel', function () { dragY = false; });
+
+    /* ---- core season & best night ---- */
+    let seasonDone = '';
+    function computeSeason() {
+      const key = cur.lat + ',' + cur.lon; if (seasonDone === key) return; seasonDone = key; season.innerHTML = '<div class="status"><span class="spin"></span><span>Working out the core season…</span></div>';
+      setTimeout(function () {
+        const sc = [];
+        for (let doy = 0; doy < 365; doy++) {
+          const D = ymdOf(doy), base = zoned(D.y, D.m, D.d, 0, 0) + T0 * 60000; let mins = 0;
+          for (let m = 0; m < SPAN; m += 20) {
+            const t = base + m * 60000; if (A.sunPos(t, cur.lat, cur.lon).alt > -18) continue; if (MW.altaz(MW.core[0], MW.core[1], t, cur.lat, cur.lon).alt < 8) continue;
+            const mp = A.moonPos(t, cur.lat, cur.lon), il = A.moonIllum(t).frac; mins += mp.alt > 0 ? (il < .25 ? 14 : il < .5 ? 6 : 1) : 20;
+          }
+          sc.push(mins);
+        }
+        const max = Math.max.apply(null, sc);
+        if (max <= 0) { season.innerHTML = '<p class="learn">From here the core never gets high enough above the horizon in real darkness (' + esc(cur.name) + '). The wider Milky Way band can still show — try the chart above.</p>'; return; }
+        let first = -1, last = -1; sc.forEach(function (v, i) { if (v >= 60) { if (first < 0) first = i; last = i; } });
+        const bi = sc.indexOf(max), tops = sc.map(function (v, i) { return [v, i]; }).sort(function (a, b) { return b[0] - a[0]; });
+        season.innerHTML = '<p class="learn" style="margin-top:10px">' + (first >= 0 ? 'Core season here: <b>' + dateLabel(first).replace(/^\w+, /, '') + ' → ' + dateLabel(last).replace(/^\w+, /, '') + '</b> (at least an hour of moon-free darkness with the core up).' : 'The core only briefly clears the horizon in real darkness here.') + ' Best night this year: <b>' + dateLabel(bi) + '</b> (about ' + Math.round(max / 60 * 10) / 10 + ' h of good viewing).</p>';
+        const b = el('button', 'btn pri', 'Jump to the best night'); b.type = 'button'; b.onclick = function () { st.doy = bi; const D = ymdOf(bi), base = zoned(D.y, D.m, D.d, 0, 0) + T0 * 60000; let bm = 0, bv = -99; for (let m = 0; m < SPAN; m += 10) { const q = MW.altaz(MW.core[0], MW.core[1], base + m * 60000, cur.lat, cur.lon).alt; if (q > bv && A.sunPos(base + m * 60000, cur.lat, cur.lon).alt < -12) { bv = q; bm = m; } } st.min = bm; redraw(); c1.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+        season.appendChild(b);
+      }, 60);
+    }
+
+    /* ---- what shows where ---- */
+    function paintWorld() {
+      const lat = cur.lat, maxAlt = 90 - Math.abs(lat + 28.94);
+      let h = '<p class="learn">' + esc(cur.name) + ' (' + Math.abs(lat).toFixed(1) + '°' + (lat >= 0 ? 'N' : 'S') + '): the core never climbs higher than <b>' + (maxAlt > 0 ? Math.round(maxAlt) + '°</b>' + ' (due ' + (lat > -28.94 ? 'south' : 'north') + ')' : '0°</b> — it never clears the horizon here') + '.</p>';
+      let say;
+      if (lat > 61) say = 'Too far north: the core never rises, and summer nights are bright with twilight. You get the northern Milky Way — Cassiopeia, Perseus and Cygnus in autumn and winter — plus aurora.';
+      else if (lat > 40) say = 'The core is a <b>low arch hugging the southern horizon</b>, best from about May to early September. The brightest part is only ~' + Math.round(Math.max(0, maxAlt)) + '° up, so you need a clear, dark southern view. The rest of the year you get the bright northern band: Cygnus in summer, Cassiopeia and Perseus in autumn and winter.';
+      else if (lat > 15) say = 'A good middle latitude: the core climbs to a respectable ' + Math.round(maxAlt) + '° and is the star of the sky from roughly April to October. Late spring: it rises after midnight; midsummer: it is up all night; late summer: it sets before dawn.';
+      else if (lat > -15) say = 'Tropics: the core passes almost overhead (about ' + Math.round(maxAlt) + '°) and the whole galactic plane stands upright — superb all year, best around May to August.';
+      else if (lat > -45) say = 'Southern hemisphere: the core rides <b>high overhead</b> (up to ' + Math.round(maxAlt) + '°) in winter (May–August). You also get the Southern Cross, the Carina nebula and the Magellanic Clouds.';
+      else say = 'Far south: the core climbs high and the Southern Cross, Carina and the Magellanic Clouds are circumpolar or nearly so. Long winter nights give the longest viewing windows.';
+      h += '<p class="learn">' + say + '</p><p class="learn"><b>Rule of thumb:</b> the core is up at night for the northern summer half-year (about March to October). Early in the season it rises just before dawn in the east-southeast; mid-season it arcs across the south; late season it sets in the southwest soon after dark. Moon phase matters as much as season — aim for the week around a new moon.</p>';
+      world.innerHTML = h;
+    }
+
+    /* ---- controls ---- */
+    function setPlace(pl) {
+      cur = pl; yKey = ''; seasonDone = ''; paintPlaces(); redraw(); computeSeason(); paintWorld();
+    }
+    function paintPlaces() {
+      place.innerHTML = '<span>Viewing from <b>' + esc(cur.name) + '</b> · ' + Math.abs(cur.lat).toFixed(1) + '°' + (cur.lat >= 0 ? 'N' : 'S') + '</span>';
+      chips.innerHTML = ''; chips.classList.add('mwscroll');
+      if (home) { const b = el('button', 'chip' + (cur.mine ? ' on' : ''), 'My location'); b.type = 'button'; b.onclick = function () { setPlace({ name: home.name || 'My location', lat: home.lat, lon: home.lon, tz: WX.tz, mine: true }); }; chips.appendChild(b); }
+      MW_PLACES.forEach(function (q) { const b = el('button', 'chip' + (!cur.mine && cur.name === q[0] ? ' on' : ''), esc(q[0])); b.type = 'button'; b.onclick = function () { setPlace({ name: q[0], lat: q[1], lon: q[2], tz: q[3] }); }; chips.appendChild(b); });
+    }
+    [['Mar 20', 78], ['Jun 21', 171], ['Sep 22', 264], ['Dec 21', 354]].forEach(function (q) { const b = el('button', 'chip', q[0]); b.type = 'button'; b.onclick = function () { st.doy = q[1]; redraw(); }; seas.appendChild(b); });
+    const nowB = el('button', 'chip', 'Today'); nowB.type = 'button'; nowB.onclick = function () { st.doy = Math.max(0, Math.min(364, todayDoy)); redraw(); }; seas.insertBefore(nowB, seas.firstChild);
+    let playT = null; const playB = el('button', 'chip', '▶ Play the night'); playB.type = 'button';
+    function stopPlay() { if (playT) { clearInterval(playT); playT = null; } playB.textContent = '▶ Play the night'; }
+    playB.onclick = function () { if (playT) { stopPlay(); return; } if (st.min >= SPAN - 5) st.min = 0; playB.textContent = '❚❚ Pause'; playT = setInterval(function () { st.min += 5; if (st.min >= SPAN) { st.min = SPAN; stopPlay(); } redraw(); }, 70); };
+    const tNow = el('button', 'chip', 'Now'); tNow.type = 'button'; tNow.onclick = function () { stopPlay(); st.doy = Math.max(0, Math.min(364, todayDoy)); const t = Date.now(), base = tAt(st.doy, 0); st.min = Math.max(0, Math.min(SPAN, Math.round((t - base) / 300000) * 5)); redraw(); };
+    const dark = el('button', 'chip', 'Darkest hour'); dark.type = 'button'; dark.onclick = function () { let bm = 0, bv = 99; for (let m = 0; m <= SPAN; m += 5) { const v = A.sunPos(tAt(st.doy, m), cur.lat, cur.lon).alt; if (v < bv) { bv = v; bm = m; } } st.min = bm; redraw(); };
+    const core = el('button', 'chip', 'Core at its highest'); core.type = 'button'; core.onclick = function () { let bm = 0, bv = -99; for (let m = 0; m <= SPAN; m += 5) { const v = MW.altaz(MW.core[0], MW.core[1], tAt(st.doy, m), cur.lat, cur.lon).alt; if (v > bv) { bv = v; bm = m; } } st.min = bm; redraw(); };
+    [playB, tNow, dark, core].forEach(function (b) { ctl.appendChild(b); });
+    sd.addEventListener('input', function () { st.doy = +sd.value; redraw(); }); sm.addEventListener('input', function () { stopPlay(); st.min = +sm.value; redraw(); });
+
+    let raf2 = 0;
+    function redraw() { if (!p.isConnected || p.hidden) return; cancelAnimationFrame(raf2); raf2 = requestAnimationFrame(function () { const r = drawDome(); if (r) { drawPano(); paintRead(r); } drawYear(); }); }
+    p.__redraw = function () { redraw(); computeSeason(); };
+    window.addEventListener('resize', function () { if (WX.cur === 'meteo') { yKey = ''; redraw(); } });
+    if (WX.onHide && WX.onHide.meteo) WX.onHide.meteo.push(stopPlay);
+    paintPlaces(); paintWorld(); redraw();
+  }
 
   /* ===================== INCOMING SOLAR WIND / Bz OUTLOOK ===================== */
   function geomagLat(lat, lon) { const d = Math.PI / 180, pl = 80.7 * d, pn = -72.7 * d, f = lat * d, l = lon * d; return Math.asin(Math.sin(f) * Math.sin(pl) + Math.cos(f) * Math.cos(pl) * Math.cos(l - pn)) / d; }
@@ -12134,7 +12439,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       }).catch(function () { failed(as); });
   }
 
-  const BUILD = { aurora: buildAurora, solar: buildSolar, space: buildSpace, events: buildEvents, general: buildGeneral };
+  const BUILD = { milky: buildMilky, aurora: buildAurora, solar: buildSolar, space: buildSpace, events: buildEvents, general: buildGeneral };
   let first = true;
   WX.onShow.meteo.push(function () { if (first) { first = false; open(WX.get('meteoTab', 'aurora'), false); } });
 
@@ -12627,7 +12932,13 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     if (!S.D) setDate(ymd(Date.now())); else render();
   });
   WX.onHide.planner.push(function () { stopStars(); if (liveOn) toggleLive(); });
-  window.addEventListener('resize', function () { if (WX.cur === 'planner') render(); });
+  /* the on-screen keyboard resizes the window: don't rebuild the page (and lose the text box) unless the width really changed */
+  let lastIW = window.innerWidth;
+  window.addEventListener('resize', function () {
+    const w = window.innerWidth, ae = document.activeElement, typing = ae && /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName) && WX.root && WX.root.contains(ae);
+    const changed = Math.abs(w - lastIW) > 1; lastIW = w;
+    if (WX.cur === 'planner' && changed && !typing) render();
+  });
 })();
 
 </script>
@@ -12793,6 +13104,114 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
   }
   WX.planLog = { add: add, search: search, parse: parse, list: list };
 
+  /* ---------- best day & time: astronomy + the whole forecast ---------- */
+  const BEST_KINDS = [['sunset', 'Sunset'], ['sunrise', 'Sunrise'], ['goldPm', 'Evening golden hour'], ['goldAm', 'Morning golden hour'], ['bluePm', 'Evening blue hour'], ['blueAm', 'Morning blue hour'], ['dark', 'Milky Way / dark sky'], ['moonrise', 'Moonrise'], ['moonset', 'Moonset']];
+  const HVARS = 'temperature_2m,relative_humidity_2m,dew_point_2m,precipitation_probability,precipitation,pressure_msl,cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,visibility,wind_speed_10m,wind_gusts_10m,weather_code';
+  const hcache = {};
+  function hourly(place) {
+    const key = place.lat.toFixed(2) + ',' + place.lon.toFixed(2);
+    if (hcache[key] && Date.now() - hcache[key].at < 20 * 60000) return Promise.resolve(hcache[key].v);
+    return WX.getJSON('https://api.open-meteo.com/v1/forecast?latitude=' + place.lat + '&longitude=' + place.lon + '&hourly=' + HVARS + '&forecast_days=16&timezone=UTC&wind_speed_unit=kmh', { ttl: 20, timeout: 25000 }).then(function (d) {
+      if (!d || !d.hourly) throw new Error('no data');
+      const v = { T: d.hourly.time.map(function (s) { return Date.parse(s + 'Z'); }), h: d.hourly }; hcache[key] = { at: Date.now(), v: v }; return v;
+    });
+  }
+  function wAt(H, t) {      // forecast values at an instant (linear between hours)
+    const T = H.T; let i = Math.floor((t - T[0]) / 3600000); if (i < 0 || i >= T.length - 1) return null;
+    const f = (t - T[i]) / 3600000, o = {};
+    ['temperature_2m', 'relative_humidity_2m', 'dew_point_2m', 'precipitation_probability', 'precipitation', 'pressure_msl', 'cloud_cover', 'cloud_cover_low', 'cloud_cover_mid', 'cloud_cover_high', 'visibility', 'wind_speed_10m', 'wind_gusts_10m'].forEach(function (k) { const a = H.h[k][i], b = H.h[k][i + 1]; o[k] = a == null ? (b == null ? null : b) : b == null ? a : a + (b - a) * f; });
+    o.code = H.h.weather_code[f < .5 ? i : i + 1]; return o;
+  }
+  function avgW(H, a, b) {
+    const n = Math.max(1, Math.round((b - a) / 900000)), acc = null; let tot = null, cnt = 0;
+    for (let k = 0; k <= n; k++) {
+      const w = wAt(H, a + (b - a) * k / n); if (!w) continue;
+      if (!tot) { tot = Object.assign({}, w); tot.pmax = w.precipitation_probability; tot.gmax = w.wind_gusts_10m; tot.rmax = w.precipitation; tot.cmax = w.code; tot.vmin = w.visibility; cnt = 1; continue; }
+      Object.keys(w).forEach(function (q) { if (q !== 'code' && w[q] != null) tot[q] = (tot[q] || 0) + w[q]; });
+      tot.pmax = Math.max(tot.pmax, w.precipitation_probability); tot.gmax = Math.max(tot.gmax, w.wind_gusts_10m); tot.rmax = Math.max(tot.rmax, w.precipitation); tot.cmax = Math.max(tot.cmax, w.code); tot.vmin = Math.min(tot.vmin, w.visibility); cnt++;
+    }
+    if (!tot) return null;
+    Object.keys(tot).forEach(function (q) { if (!/max$|min$|^code$/.test(q)) tot[q] /= cnt; });
+    return { ct: tot.cloud_cover, cl: tot.cloud_cover_low, cm: tot.cloud_cover_mid, ch: tot.cloud_cover_high, vis: tot.vmin, pp: tot.pmax, pr: tot.rmax, wind: tot.wind_speed_10m, gust: tot.gmax, temp: tot.temperature_2m, dew: tot.dew_point_2m, hum: tot.relative_humidity_2m, pres: tot.pressure_msl, code: tot.cmax };
+  }
+  function scoreShot(kind, w, ex) {
+    const r = Math.round, pros = [], cons = []; let s;
+    const colour = /^(sunrise|sunset|gold|blue)/.test(kind), moonK = /^moon/.test(kind);
+    if (colour) {
+      s = 72; const hi = Math.max(w.cm, w.ch);
+      s -= w.cl * .75;
+      if (w.cl > 50) cons.push('Low cloud on the horizon (' + r(w.cl) + '%) can block the light'); else if (w.cl < 15) pros.push('Clear low horizon (' + r(w.cl) + '% low cloud)');
+      if (hi >= 20 && hi <= 80) { s += 22; pros.push('Mid/high cloud ' + r(hi) + '% — a canvas for colour'); }
+      else if (hi < 10) cons.push('Almost cloudless — clean but plain sky');
+      else if (hi > 80) { s -= (hi - 80) * .8; cons.push('Heavy overcast above (' + r(hi) + '%)'); }
+    } else if (moonK) {
+      s = 96 - w.ct * .85; if (w.ct < 20) pros.push('Clear sky (' + r(w.ct) + '% cloud)'); else if (w.ct > 60) cons.push('Cloudy (' + r(w.ct) + '%)');
+      if (ex.illum != null) pros.push('Moon ' + r(ex.illum * 100) + '% lit');
+    } else {
+      s = 100 - w.ct * .95; if (w.ct < 15) pros.push('Clear sky (' + r(w.ct) + '% cloud)'); else if (w.ct > 50) cons.push('Cloud cover ' + r(w.ct) + '%');
+      if (ex.wash != null) { s -= ex.wash * 45; if (ex.moon === 0) pros.push('Moon stays down — no moonlight'); else if (ex.wash < .08) pros.push('Moon is low or dim in this window'); else cons.push('Moonlight washes the sky (' + r(ex.moon * 100) + '% moon up)'); }
+      if (ex.core != null) { if (ex.core < 8) { s -= 22; cons.push('Galactic core stays low or below the horizon'); } else pros.push('Galactic core up to ' + r(ex.core) + '°'); }
+    }
+    if (w.pr > .1 || w.pp >= 50) { s -= Math.min(32, w.pp * .35 + (w.pr > .1 ? 15 : 0)); cons.push('Rain chance ' + r(w.pp) + '%'); } else if (w.pp <= 10) pros.push('Dry (' + r(w.pp) + '% rain chance)');
+    const km = w.vis / 1000;
+    if (km < 5) { s -= 20; cons.push('Poor visibility (' + km.toFixed(1) + ' km) — fog or haze'); } else if (km < 10) { s -= 8; cons.push('Hazy (' + km.toFixed(0) + ' km visibility)'); } else if (km >= 20) pros.push('Crisp air (' + r(km) + ' km visibility)');
+    if (w.gust >= 45) { s -= 12; cons.push('Gusts to ' + WX.speed(w.gust) + ' — shaky tripod'); } else if (w.gust >= 30) { s -= 5; cons.push('Breezy (gusts ' + WX.speed(w.gust) + ')'); } else if (w.gust < 20) pros.push('Calm for a tripod');
+    if (w.temp - w.dew < 2 && w.hum >= 95) { if (/sunrise|goldAm|blueAm/.test(kind)) pros.push('Fog likely — can be beautiful at dawn'); else { s -= 10; cons.push('Dew/fog risk (air near dew point) — keep the lens warm'); } }
+    if (w.code >= 95) { s -= 25; cons.push('Thunderstorms forecast'); }
+    return { s: Math.max(0, Math.min(100, s)), pros: pros, cons: cons };
+  }
+  function bestFor(H, kind, place, days) {
+    const p = P(), out = [], today = p.ymd(Date.now());
+    for (let k = 0; k < days; k++) {
+      const D = p.addDays(today, k), e = eventOn(D, kind, place); if (!e) continue;
+      let a, b;
+      if (kind === 'dark') { a = e.t; b = Math.min(e.end || e.t + 8 * 3600000, e.t + 9 * 3600000); }
+      else if (e.end) { a = e.t; b = e.end; } else { a = e.t - 1800000; b = e.t + 1800000; }
+      if (b < Date.now()) continue;
+      let win = [a, b], pick;
+      if (kind === 'dark') {
+        const samples = []; for (let t = a; t <= b; t += 900000) { const w = avgW(H, t, t + 1), mp = A.moonPos(t, place.lat, place.lon), il = A.moonIllum(t).frac; if (!w) continue;
+          const wash = mp.alt > 0 ? il * Math.min(1, mp.alt / 20) : 0, core = WX.mw ? WX.mw.coreAlt(t, place.lat, place.lon) : null; samples.push({ t: t, w: w, ex: { wash: wash, moon: mp.alt > 0 ? il : 0, core: core }, sc: scoreShot('dark', w, { wash: wash, moon: mp.alt > 0 ? il : 0, core: core }).s }); }
+        if (!samples.length) continue; const N = Math.min(12, samples.length); let bi = 0, bv = -1;
+        for (let i = 0; i + N <= samples.length; i++) { let v = 0; for (let j = 0; j < N; j++) v += samples[i + j].sc; v /= N; if (v > bv) { bv = v; bi = i; } }
+        const blk = samples.slice(bi, bi + N); win = [blk[0].t, blk[blk.length - 1].t + 900000];
+        const w = avgW(H, win[0], win[1]); if (!w) continue; const ex = { wash: blk.reduce(function (q, x) { return q + x.ex.wash; }, 0) / N, moon: Math.max.apply(null, blk.map(function (x) { return x.ex.moon; })), core: Math.max.apply(null, blk.map(function (x) { return x.ex.core == null ? -99 : x.ex.core; })) };
+        pick = scoreShot('dark', w, ex); pick.w = w; pick.ex = ex; pick.s = Math.max(0, Math.min(100, (bv * 2 + pick.s) / 3));
+      } else {
+        const w = avgW(H, win[0], win[1]); if (!w) continue; const ex = { illum: e.illum }; pick = scoreShot(kind, w, ex); pick.w = w; pick.ex = ex;
+      }
+      out.push({ D: D, e: e, win: win, score: pick.s, pros: pick.pros, cons: pick.cons, w: pick.w, ex: pick.ex, t: kind === 'dark' ? win[0] : e.t });
+    }
+    return out.sort(function (x, y) { return y.score - x.score; });
+  }
+  const scoreCol = function (s) { return s >= 75 ? '#8fd19e' : s >= 50 ? '#e9e27a' : '#f0a090'; };
+  function showBest(box, kind, days) {
+    const place = P().S.place;
+    if (!place) { box.innerHTML = '<div class="lg-res">Set your location on the Weather home screen first.</div>'; return; }
+    box.innerHTML = '<div class="status" style="margin-top:10px"><span class="spin"></span><span>Reading the forecast and the sky…</span></div>';
+    hourly(place).then(function (H) {
+      const list = bestFor(H, kind, place, days), name = kindName(kind), p = P(), r = Math.round;
+      if (!list.length) { box.innerHTML = '<div class="lg-res">No usable ' + esc(name.toLowerCase()) + ' in the forecast window here.</div>'; return; }
+      let h = '<div class="tiny" style="margin-top:10px">Best ' + esc(name.toLowerCase()) + ' in the next ' + days + ' days · astronomy + hourly forecast (Open-Meteo)</div>';
+      list.slice(0, 3).forEach(function (x, i) {
+        const w = x.w, tz = [];
+        h += '<div class="bestcard"><span class="pill2" style="background:' + scoreCol(x.score) + '">' + (i === 0 ? 'Best · ' : '#' + (i + 1) + ' · ') + r(x.score) + '/100</span> <b style="margin-left:6px">' + esc(WX.fmt(new Date(x.t), { weekday: 'long', month: 'short', day: 'numeric' })) + '</b>' +
+          '<div class="when" style="margin-top:6px">' + esc(p.hm(x.win[0])) + ' – ' + esc(p.hm(x.win[1])) + '</div>' +
+          (x.e.az != null ? '<div class="muted" style="font-size:12.5px">Toward ' + Math.round(x.e.az) + '° ' + esc(p.compassPt(x.e.az)) + '</div>' : '') +
+          '<ul>' + x.pros.map(function (q) { return '<li class="ok">✓ ' + esc(q) + '</li>'; }).join('') + x.cons.map(function (q) { return '<li class="bad">⚠ ' + esc(q) + '</li>'; }).join('') + '</ul>' +
+          '<table><tr><td>Cloud (total · low / mid / high)</td><td>' + r(w.ct) + '% · ' + r(w.cl) + ' / ' + r(w.cm) + ' / ' + r(w.ch) + '%</td></tr><tr><td>Rain chance · amount</td><td>' + r(w.pp) + '% · ' + w.pr.toFixed(1) + ' mm</td></tr><tr><td>Visibility</td><td>' + (w.vis / 1000).toFixed(0) + ' km</td></tr><tr><td>Wind · gusts</td><td>' + esc(WX.speed(w.wind)) + ' · ' + esc(WX.speed(w.gust)) + '</td></tr><tr><td>Temperature · dew point</td><td>' + esc(WX.t(w.temp)) + ' · ' + esc(WX.t(w.dew)) + '</td></tr><tr><td>Humidity · pressure</td><td>' + r(w.hum) + '% · ' + r(w.pres) + ' hPa</td></tr>' +
+          (kind === 'dark' ? '<tr><td>Moon in that window</td><td>' + (x.ex.moon > 0 ? r(x.ex.moon * 100) + '% lit, up' : 'down') + '</td></tr>' + (x.ex.core > -90 ? '<tr><td>Galactic core (highest)</td><td>' + (x.ex.core < 0 ? 'below the horizon' : r(x.ex.core) + '°') + '</td></tr>' : '') : (x.ex.illum != null ? '<tr><td>Moon</td><td>' + r(x.ex.illum * 100) + '% lit</td></tr>' : '')) + '</table>' +
+          '<div class="acts" style="margin-top:10px"><button type="button" class="btn pri" data-add="' + i + '">＋ Add to log book</button> <button type="button" class="btn" data-open="' + i + '">Show on timeline</button></div></div>';
+      });
+      h += '<div class="daybars">' + list.slice().sort(function (a, b) { return a.t - b.t; }).map(function (x) { return '<div><span>' + esc(WX.fmt(new Date(x.t), { weekday: 'short', day: 'numeric' })) + '</span><i style="width:' + Math.max(4, x.score) + '%;background:' + scoreCol(x.score) + '"></i><b style="color:var(--ink)">' + r(x.score) + '</b></div>'; }).join('') + '</div>';
+      h += '<p class="tiny" style="margin-top:8px">Scores weigh cloud layers, rain, visibility, wind, dew/fog, moonlight and (for the Milky Way) core height. Forecasts beyond about 5 days are less certain — check again closer to the day.</p>';
+      box.innerHTML = h;
+      WX.$$('[data-add]', box).forEach(function (b) { b.onclick = function () { const x = list[+b.getAttribute('data-add')]; add({ title: 'Best ' + name.toLowerCase() + ' (forecast ' + r(x.score) + '/100)', when: x.win[0], end: x.win[1], kind: kind, info: x.pros.concat(x.cons).slice(0, 3).join(' · ') }); (WX.planLog.redrawList && WX.planLog.redrawList()); }; });
+      WX.$$('[data-open]', box).forEach(function (b) { b.onclick = function () { P().open(list[+b.getAttribute('data-open')].t); }; });
+    }).catch(function () { box.innerHTML = '<div class="lg-res"><span class="err">Couldn\'t reach the forecast. Check your connection and try again.</span></div>'; });
+  }
+  const BEST_RX = /\b(best|ideal|perfect|good conditions|worth|should i|when (is|will|can))\b/;
+
   /* ---------- UI ---------- */
   let lastQ = null, lastR = null, editing = null;
   function pad(n) { return (n < 10 ? '0' : '') + n; }
@@ -12812,8 +13231,14 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     const row = el('div', 'lg-ask'); const inp = el('input'); inp.type = 'search'; inp.placeholder = 'e.g. sunset June 21 · milky way next Saturday'; inp.setAttribute('aria-label', 'Ask the planner');
     const go = el('button', 'btn pri', 'Find'); go.type = 'button'; row.appendChild(inp); row.appendChild(go); ask.appendChild(row);
     const eg = el('div', 'lg-eg');
-    ['Sunset tomorrow', 'Golden hour Saturday', 'Milky Way next new moon', 'Full moon rise facing east', 'Sunset facing 300°', 'Sunrise on the summer solstice', 'Blue hour Dec 24 at 5pm'].forEach(function (x) { const b = el('button', 'chip', esc(x)); b.type = 'button'; b.onclick = function () { inp.value = x; run(); }; eg.appendChild(b); });
+    ['Sunset tomorrow', 'Golden hour Saturday', 'Milky Way next new moon', 'Full moon rise facing east', 'Sunset facing 300°', 'Sunrise on the summer solstice', 'Blue hour Dec 24 at 5pm', 'Best sunset this week', 'Best night for the Milky Way'].forEach(function (x) { const b = el('button', 'chip', esc(x)); b.type = 'button'; b.onclick = function () { inp.value = x; run(); }; eg.appendChild(b); });
     ask.appendChild(eg);
+    // best day & time (astronomy + forecast)
+    const bf = el('div', 'lg-form'); bf.style.marginTop = '12px';
+    bf.innerHTML = '<label class="full" style="color:var(--ink);letter-spacing:.06em">Best day &amp; time — uses the forecast</label><label>Shot<select id="lgBK">' + BEST_KINDS.map(function (k) { return '<option value="' + k[0] + '">' + esc(k[1]) + '</option>'; }).join('') + '</select></label><label>Look ahead<select id="lgBN"><option value="7">7 days</option><option value="10">10 days</option><option value="16" selected>16 days</option></select></label>';
+    const bgo = el('button', 'btn pri', 'Find my best day & time'); bgo.type = 'button'; bgo.style.gridColumn = '1 / -1'; bf.appendChild(bgo);
+    const bres = el('div', ''); bres.style.gridColumn = '1 / -1'; bf.appendChild(bres); ask.appendChild(bf);
+    bgo.onclick = function () { showBest(bres, $('#lgBK', ask).value, +$('#lgBN', ask).value); };
     // structured form (always matches what was understood)
     const form = el('div', 'lg-form');
     form.innerHTML = '<label class="full">I want<select id="lgKind">' + KINDS.map(function (k) { return '<option value="' + k[0] + '">' + esc(k[1]) + '</option>'; }).join('') + '</select></label>' +
@@ -12841,6 +13266,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
     function run() {
       const text = inp.value.trim(); if (!text) return;
       const q = parse(text);
+      if (q.kind && BEST_RX.test(' ' + text.toLowerCase() + ' ') && BEST_KINDS.some(function (k) { return k[0] === q.kind; })) { $('#lgBK', ask).value = q.kind; res.innerHTML = ''; const lowered = text.toLowerCase(); showBest(bres, q.kind, /month|16/.test(lowered) ? 16 : /week|7/.test(lowered) ? 7 : 16); bres.scrollIntoView({ block: 'nearest' }); return; }
       if (!q.kind) { res.innerHTML = '<div class="lg-res">I didn\'t catch what to look for. Try words like <b>sunset</b>, <b>golden hour</b>, <b>blue hour</b>, <b>Milky Way</b>, <b>moonrise</b> or <b>full moon</b> — or use the settings below.</div>'; return; }
       const D = q.D || P().ymd(Date.now());
       q.hasTime = !!q.hm;
@@ -12927,7 +13353,7 @@ window.WX_BORDERS={c110:"-1305,548,5,5,0,6,-17,7,-10,11,-7,7,-9,5,-6,4,-6,5,-10,
       return d;
     }
     function setStatus(e, st) { const l = list(), x = l.find(function (q) { return q.id === e.id; }); x.status = st; save(l); drawList(); }
-    drawList();
+    drawList(); WX.planLog.redrawList = drawList;
     if (lastQ) { fill(lastQ); show(lastQ); }
   }
   WX.planLog.render = render;
