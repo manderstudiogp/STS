@@ -14526,7 +14526,7 @@ window.__wxBoot = function () {
   }
   /* ---------- screen ---------- */
   const root = document.getElementById('wxSunq'); if (!root) return;
-  const body = root.querySelector('#sqBody'), ST = { p: null, data: null, sel: null, kind: 'set', day: 0, zoom: 1, grid: {}, probe: null };
+  const body = root.querySelector('#sqBody'), ST = { p: null, data: null, sel: null, kind: 'set', day: 0, hr: 0, zoom: 1, grid: {}, probe: null };
   const ZOOMS = [{ n: 'Local', h: 1.3 }, { n: 'Regional', h: 4 }, { n: 'Wide', h: 12 }];
   WX.sunq.open = function (kind) { ST.kind = kind === 'rise' ? 'rise' : 'set'; ST.p = WX.home; ST.sel = null; ST.day = 0; WX.show('sunq', true); };
   WX.onShow.sunq.push(function () { build(); });
@@ -14568,6 +14568,7 @@ window.__wxBoot = function () {
       '<div class="sqleg"><span><i style="background:#f0a25a"></i>Sunset</span><span><i style="background:#f08fc0"></i>Sunrise (dashed)</span><span><i class="band"></i>Models\' range = how sure</span></div><div id="sqDetail">' + detail(ST.sel) + '</div></div>';
     h += '<div class="card"><h3>Sky colour map<span class="src">' + esc(ST.kind === 'set' ? 'Sunset' : 'Sunrise') + '</span></h3><div class="seg" id="sqKind"><button type="button" data-k="set" class="' + (ST.kind === 'set' ? 'on' : '') + '">Sunset</button><button type="button" data-k="rise" class="' + (ST.kind === 'rise' ? 'on' : '') + '">Sunrise</button></div>' +
       '<div class="mwlab" style="margin-top:10px"><span>Scrub the day</span><b id="sqDayLab"></b></div><input type="range" class="mwrange" id="sqDay" min="0" max="5" step="1" value="' + ST.day + '" aria-label="Day"><div class="sqdays" id="sqDays"></div>' +
+      '<div class="mwlab"><span>Scrub the hour</span><b id="sqHrLab"></b></div><input type="range" class="mwrange" id="sqHr" min="-6" max="3" step="1" value="' + ST.hr + '" aria-label="Hour"><div class="sqdays" id="sqHrs"><span>-6h</span><span>-4h</span><span>-2h</span><span>At ' + (ST.kind === 'set' ? 'sunset' : 'sunrise') + '</span><span>+2h</span></div>' +
       '<div class="chips" id="sqZoom" style="margin:6px 0">' + ZOOMS.map(function (z, i) { return '<button type="button" class="chip' + (i === ST.zoom ? ' on' : '') + '" data-z="' + i + '">' + z.n + '</button>'; }).join('') + '</div>' +
       '<div class="sqmapbox"><canvas id="sqMap"></canvas><div class="sqprobe" id="sqProbe" hidden></div></div>' +
       '<div class="sqkey"><span><i style="background:rgba(255,255,255,.7)"></i>Cloudy / blocked</span><span><i style="background:transparent;border:1px solid rgba(255,255,255,.3)"></i>Clear</span><span><i style="background:#ffb4d0"></i>Nice colour</span><span><i style="background:#ff6aa0"></i>Hot pink</span><span><i style="background:#ff7a3a"></i>Hot spot</span></div>' +
@@ -14580,6 +14581,7 @@ window.__wxBoot = function () {
     body.querySelectorAll('#sqKind button').forEach(function (b) { b.onclick = function () { ST.kind = b.getAttribute('data-k'); const e = ST.data.evs.filter(function (x) { return x.k === ST.kind && x.d === ST.day; })[0] || ST.data.evs.filter(function (x) { return x.k === ST.kind; })[0]; ST.sel = e || ST.sel; paint(); }; });
     body.querySelectorAll('#sqZoom .chip').forEach(function (b) { b.onclick = function () { ST.zoom = +b.getAttribute('data-z'); ST.probe = null; paint(); }; });
     const sl = body.querySelector('#sqDay'); sl.addEventListener('input', function () { ST.day = +sl.value; const e = ST.data.evs.filter(function (x) { return x.k === ST.kind && x.d === ST.day; })[0]; if (e) { ST.sel = e; const dt = body.querySelector('#sqDetail'); if (dt) dt.innerHTML = detail(e); } ST.probe = null; drawMap(); });
+    const hs = body.querySelector('#sqHr'); hs.addEventListener('input', function () { ST.hr = +hs.value; drawMap(); });
     const cv = body.querySelector('#sqMap'); cv.addEventListener('click', function (ev) { const rc = cv.getBoundingClientRect(); probeAt(ev.clientX - rc.left, ev.clientY - rc.top, rc.width, rc.height); });
   }
   /* ---------- map ---------- */
@@ -14596,13 +14598,13 @@ window.__wxBoot = function () {
     const base = Date.now() + day * DAY, F = [];
     G.pts.forEach(function (q, i) {
       const s = WX.sunCross(new Date(base), q.lat, q.lon, -0.833), t = s[kind], o = G.d[i]; if (!t || !o) { F.push(null); return; }
-      const tt = t.getTime(), v = { H: at(o.T, o.H, tt), M: at(o.T, o.M, tt), L: at(o.T, o.L, tt), pr: at(o.T, o.pr, tt) || 0, t: tt }; if (v.H == null || v.M == null || v.L == null) { F.push(null); return; } v.az = sunAz(tt, q.lat, q.lon); F.push(v);
+      const tt = t.getTime() + ST.hr * HOUR, v = { H: at(o.T, o.H, tt), M: at(o.T, o.M, tt), L: at(o.T, o.L, tt), pr: at(o.T, o.pr, tt) || 0, t: tt }; if (v.H == null || v.M == null || v.L == null) { F.push(null); return; } v.az = sunAz(t.getTime(), q.lat, q.lon); let al = -30; try { al = WX.astro.sunPos(tt, q.lat, q.lon).alt; } catch (e) {} v.w = al < -9 || al > 12 ? 0 : 1 - cl((Math.abs(al + 1) - 2) / 9, 0, 1); F.push(v);
     });
     const bil = function (lat, lon, key) { const fy = cl((1 - (lat - (V.p.lat - V.h)) / (2 * V.h)) * (GN - 1), 0, GN - 1), hw = V.w / 2 / (V.k * V.cos), fx = cl((lon - (V.p.lon - hw)) / (2 * hw) * (GN - 1), 0, GN - 1), i0 = Math.min(GN - 2, Math.floor(fx)), j0 = Math.min(GN - 2, Math.floor(fy)), ax = fx - i0, ay = fy - j0; let s = 0, w = 0; [[0, 0, (1 - ax) * (1 - ay)], [1, 0, ax * (1 - ay)], [0, 1, (1 - ax) * ay], [1, 1, ax * ay]].forEach(function (c) { const v = F[(j0 + c[1]) * GN + i0 + c[0]]; if (v && c[2] > 0) { s += v[key] * c[2]; w += c[2]; } }); return w ? s / w : null; };
     // light-path: low cloud ~110 km toward the sun's direction decides if the horizon is blocked (scaled to the map so far-away cells matter less)
     const out = F.map(function (v, i) {
       if (!v) return null; const q = G.pts[i], dk = .9, la = q.lat + dk * Math.cos(v.az * D2R), lo = q.lon + dk * Math.sin(v.az * D2R) / Math.max(.2, Math.cos(q.lat * D2R)), Ls0 = bil(la, lo, 'L'), Ls = Ls0 == null ? v.L : .3 * v.L + .7 * Ls0;
-      const f = { H: v.H, M: v.M, L: v.L, Ls: Ls, pr: v.pr, vis: 20000, rh: 60 }; return { f: f, s: score(f), cloud: 1 - (1 - v.H / 100) * (1 - v.M / 100) * (1 - v.L / 100), t: v.t };
+      const f = { H: v.H, M: v.M, L: v.L, Ls: Ls, pr: v.pr, vis: 20000, rh: 60 }; return { f: f, s: score(f), cloud: 1 - (1 - v.H / 100) * (1 - v.M / 100) * (1 - v.L / 100), t: v.t, w: v.w };
     });
     return out;
   }
@@ -14628,15 +14630,16 @@ window.__wxBoot = function () {
     const probeBox = body.querySelector('#sqProbe');
     gridP.then(function (G) {
       if (self !== ST.tick) return;
-      const F = field(G, V, ST.kind, ST.day); ST.F = F; ST.G = G; ST.V = V;
+      const F = field(G, V, ST.kind, ST.day); ST.F = F; ST.G = G; ST.V = V; const mid = F[Math.round((GN - 1) / 2) * GN + Math.round((GN - 1) / 2)], hl = body.querySelector('#sqHrLab'); if (hl && mid) hl.textContent = WX.hm(new Date(mid.t)) + (ST.hr === 0 ? ' · at ' + (ST.kind === 'set' ? 'sunset' : 'sunrise') : ' · ' + (ST.hr > 0 ? '+' : '') + ST.hr + ' h');
       // colour field at 1/3 resolution, bilinear on the 9x9 grid
       const sw = Math.ceil(V.w / 3), sh = Math.ceil(V.hpx / 3), im = g.createImageData(sw, sh), hw = V.w / 2 / (V.k * V.cos);
       for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) {
         const lon = V.p.lon + ((x + .5) * 3 - V.w / 2) / (V.k * V.cos), lat = V.p.lat - ((y + .5) * 3 - V.hpx / 2) / V.k;
         const fy = cl((1 - (lat - (V.p.lat - V.h)) / (2 * V.h)) * (GN - 1), 0, GN - 1), fx = cl((lon - (V.p.lon - hw)) / (2 * hw) * (GN - 1), 0, GN - 1), i0 = Math.min(GN - 2, Math.floor(fx)), j0 = Math.min(GN - 2, Math.floor(fy)), ax = fx - i0, ay = fy - j0;
-        let s = 0, c = 0, w = 0; [[0, 0, (1 - ax) * (1 - ay)], [1, 0, ax * (1 - ay)], [0, 1, (1 - ax) * ay], [1, 1, ax * ay]].forEach(function (q) { const v = F[(j0 + q[1]) * GN + i0 + q[0]]; if (v && q[2] > 0) { s += v.s * q[2]; c += v.cloud * q[2]; w += q[2]; } });
-        const o = (y * sw + x) * 4; if (!w) { im.data[o + 3] = 0; continue; } s /= w; c /= w;
-        const hc = hot(s), hk = cl((s - 5) / 3.5, 0, 1), wa = .62 * Math.pow(c, 1.15) * (1 - hk * .85);
+        let s = 0, c = 0, w = 0, sw2 = 0; [[0, 0, (1 - ax) * (1 - ay)], [1, 0, ax * (1 - ay)], [0, 1, (1 - ax) * ay], [1, 1, ax * ay]].forEach(function (q) { const v = F[(j0 + q[1]) * GN + i0 + q[0]]; if (v && q[2] > 0) { s += v.s * q[2]; c += v.cloud * q[2]; sw2 += v.w * q[2]; w += q[2]; } });
+        const o = (y * sw + x) * 4; if (!w) { im.data[o + 3] = 0; continue; } s /= w; c /= w; sw2 /= w;
+        const hc = hot(s); hc[3] *= sw2;
+        const hk = sw2 * cl((s - 5) / 3.5, 0, 1), wa = .62 * Math.pow(c, 1.15) * (1 - hk * .85);
         // white (cloudy) first, then colour on top
         const a1 = wa, a2 = hc[3], aa = a2 + a1 * (1 - a2);
         im.data[o] = aa ? (hc[0] * a2 + 255 * a1 * (1 - a2)) / aa : 0; im.data[o + 1] = aa ? (hc[1] * a2 + 255 * a1 * (1 - a2)) / aa : 0; im.data[o + 2] = aa ? (hc[2] * a2 + 255 * a1 * (1 - a2)) / aa : 0; im.data[o + 3] = aa * 255;
@@ -14654,7 +14657,7 @@ window.__wxBoot = function () {
     if (LND) { g.strokeStyle = 'rgba(190,210,255,.28)'; g.lineWidth = 1; g.beginPath(); LND.forEach(function (r) { let mnx = 999, mxx = -999, mny = 999, mxy = -999; for (let i = 0; i < r.length; i += 2) { const x = r[i], y = r[i + 1]; if (x < mnx) mnx = x; if (x > mxx) mxx = x; if (y < mny) mny = y; if (y > mxy) mxy = y; } const hw = V.w / 2 / (V.k * V.cos); if (mxx < V.p.lon - hw - 1 || mnx > V.p.lon + hw + 1 || mxy < V.p.lat - V.h - 1 || mny > V.p.lat + V.h + 1) return; const s = 1; for (let i = 0; i < r.length; i += 2 * s) { const q = proj(V, r[i], r[i + 1]); if (i === 0) g.moveTo(q[0], q[1]); else g.lineTo(q[0], q[1]); } g.closePath(); }); g.stroke(); }
     lines(geo.us, 'rgba(255,255,255,.28)', .8); lines(V.h > 6 ? geo.c110 : geo.c50, 'rgba(255,255,255,.38)', 1);
     // best spots
-    let top = []; F.forEach(function (v, i) { if (v) top.push({ s: v.s, i: i }); }); top.sort(function (a, b) { return b.s - a.s; });
+    let top = []; F.forEach(function (v, i) { if (v && v.w > .4) top.push({ s: v.s, i: i }); }); top.sort(function (a, b) { return b.s - a.s; });
     const picked = []; top.forEach(function (c) { const q = G.pts[c.i]; const xy0 = proj(V, G.pts[c.i].lon, G.pts[c.i].lat); if (xy0[0] > 12 && xy0[0] < V.w - 12 && xy0[1] > 12 && xy0[1] < V.hpx - 12 && picked.length < 3 && c.s >= 5.5 && picked.every(function (o) { return Math.hypot((G.pts[o.i].lon - q.lon) * V.cos, G.pts[o.i].lat - q.lat) > V.h * .45; })) picked.push(c); });
     // cities
     const boxes = [], maxT = V.h < 2 ? 3 : V.h < 6 ? 2 : 1; g.font = '600 10.5px Inter'; g.textAlign = 'left';
@@ -14666,8 +14669,8 @@ window.__wxBoot = function () {
     const me = proj(V, V.p.lon, V.p.lat); g.strokeStyle = '#6fe0d0'; g.lineWidth = 2.2; g.fillStyle = 'rgba(111,224,208,.25)'; g.beginPath(); g.arc(me[0], me[1], 8, 0, 7); g.fill(); g.stroke(); g.fillStyle = '#6fe0d0'; g.beginPath(); g.arc(me[0], me[1], 2.6, 0, 7); g.fill();
     g.font = '700 10.5px Inter'; g.fillStyle = '#9ff2e6'; g.shadowColor = 'rgba(0,0,0,.9)'; g.shadowBlur = 3; g.textAlign = 'right'; g.fillText('You', me[0] - 11, me[1] + 4); g.textAlign = 'left'; g.shadowBlur = 0;
     const best = body.querySelector('#sqBest'), mine = F[Math.round((GN - 1) / 2) * GN + Math.round((GN - 1) / 2)];
-    let t = ''; if (mine) t += '<b>Here:</b> ' + mine.s.toFixed(1) + '/10 (' + level(mine.s)[1] + ')'; 
-    if (ST.spots && ST.spots.length) t += ' · <b>Best colour in view:</b> ' + ST.spots.map(function (s, i) { return (i + 1) + '. ' + (s.near ? 'near ' + esc(s.near.n) : s.lat.toFixed(2) + ', ' + s.lon.toFixed(2)) + ' (' + s.s.toFixed(1) + ')'; }).join(' · '); else if (mine) t += ' · No standout colour spots in this view — try a wider zoom or another day.';
+    let t = ''; if (mine && mine.w < .4) t += '<b>Clouds only:</b> the sun isn\'t near the horizon at this hour, so there\'s no sunset/sunrise colour. Slide toward "At ' + (ST.kind === 'set' ? 'sunset' : 'sunrise') + '" to see colour.'; else if (mine) t += '<b>Here:</b> ' + mine.s.toFixed(1) + '/10 (' + level(mine.s)[1] + ')'; 
+    if (mine && mine.w < .4) { } else if (ST.spots && ST.spots.length) t += ' · <b>Best colour in view:</b> ' + ST.spots.map(function (s, i) { return (i + 1) + '. ' + (s.near ? 'near ' + esc(s.near.n) : s.lat.toFixed(2) + ', ' + s.lon.toFixed(2)) + ' (' + s.s.toFixed(1) + ')'; }).join(' · '); else if (mine) t += ' · No standout colour spots in this view — try a wider zoom or another day.';
     best.innerHTML = t + '<div class="tiny" style="margin-top:4px">Tap the map for any town\'s clouds and score.</div>';
   }
   function probeAt(x, y, w, h) {
@@ -14675,7 +14678,7 @@ window.__wxBoot = function () {
     const fy = cl((1 - (lat - (V.p.lat - V.h)) / (2 * V.h)) * (GN - 1), 0, GN - 1), fx = cl((lon - (V.p.lon - hw)) / (2 * hw) * (GN - 1), 0, GN - 1), v = ST.F[Math.round(fy) * GN + Math.round(fx)], box = body.querySelector('#sqProbe'); if (!v) return;
     const near = cityName(lat, lon, 60), f = v.f, r = Math.round;
     box.hidden = false; box.style.left = cl(x - 80, 4, V.w - 170) + 'px'; box.style.top = cl(y - 86, 4, V.hpx - 84) + 'px';
-    box.innerHTML = '<b>' + (near ? 'Near ' + esc(near.n) : lat.toFixed(2) + ', ' + lon.toFixed(2)) + '</b><br><span style="color:' + level(v.s)[2] + '">' + v.s.toFixed(1) + '/10 · ' + level(v.s)[1] + '</span><br>High ' + r(f.H) + '% · Mid ' + r(f.M) + '% · Low ' + r(f.L) + '%<br>Toward sun: low ' + r(f.Ls) + '%<br>' + esc(ST.kind === 'set' ? 'Sunset ' : 'Sunrise ') + esc(WX.hm(new Date(v.t)));
+    box.innerHTML = '<b>' + (near ? 'Near ' + esc(near.n) : lat.toFixed(2) + ', ' + lon.toFixed(2)) + '</b><br><span style="color:' + level(v.s)[2] + '">' + v.s.toFixed(1) + '/10 · ' + level(v.s)[1] + '</span><br>High ' + r(f.H) + '% · Mid ' + r(f.M) + '% · Low ' + r(f.L) + '%<br>Toward sun: low ' + r(f.Ls) + '%<br>' + (v.w < .4 ? 'Clouds at ' : (ST.kind === 'set' ? 'Sunset ' : 'Sunrise ') + (ST.hr ? 'light ' : '') + 'at ') + esc(WX.hm(new Date(v.t)));
     const tok = ST.ptok = (ST.ptok || 0) + 1, kd = ST.kind, dd = ST.day;
     load({ lat: lat, lon: lon }).then(function (r) { if (tok !== ST.ptok || box.hidden) return; const e = r.evs.filter(function (x) { return x.k === kd && x.d === dd; })[0]; if (!e) return; const lv = level(e.s); box.innerHTML += '<div class="sqpx">3-model score here: <b style="color:' + lv[2] + '">' + e.s.toFixed(1) + '</b> (' + e.lo.toFixed(1) + '–' + e.hi.toFixed(1) + ')</div>'; }, function () {});
     clearTimeout(probeAt.t); probeAt.t = setTimeout(function () { box.hidden = true; }, 9000);
